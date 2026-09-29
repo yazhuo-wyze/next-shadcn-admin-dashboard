@@ -99,6 +99,10 @@ export const en = {
       },
       table: {
         selectAll: "Select all customers on this page",
+        customer: "Customer",
+        plan: "Plan",
+        joined: "Joined",
+        selectRow: "Select {name}",
         searchPlaceholder: "Search customers...",
         status: "Status",
         joinedDate: "Joined date",
@@ -134,6 +138,9 @@ export const en = {
       invoice: "Invoice",
       users: "Users",
       roles: "Roles",
+      fileManager: "File Manager",
+      patientMonitoring: "Patient Monitoring",
+      profile: "Profile",
       authentication: "Authentication",
       loginV1: "Login v1",
       loginV2: "Login v2",
@@ -166,9 +173,12 @@ export const en = {
   },
 
   support: {
-    title: "Looking for something more?",
-    body: "Open an issue or do reach out to me on",
+    title: "Have something in mind?",
+    body: "Suggest a feature or discuss custom work with me on",
+    orBy: "or by",
+    suffix: ".",
     ctaX: "Reach out on X",
+    emailLabel: "email",
   },
 
   search: {

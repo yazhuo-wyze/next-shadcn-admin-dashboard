@@ -1,8 +1,18 @@
 import { Save, Send } from "lucide-react";
+import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 
 import { Invoice } from "./_components/invoice";
+
+export const metadata: Metadata = {
+  title: "Open Source Invoice Dashboard with shadcn/ui",
+  description:
+    "Explore an open source invoice dashboard for creating, reviewing, saving, and sending customer invoices.",
+  alternates: {
+    canonical: "/dashboard/invoice",
+  },
+};
 
 export default function Page() {
   return (

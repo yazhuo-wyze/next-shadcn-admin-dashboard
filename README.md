@@ -6,13 +6,17 @@
 
 Most admin templates I found, free or paid, felt cluttered, outdated, or too rigid. I built this as a cleaner alternative with features often missing in others, such as theme toggling and layout controls, while keeping the design modern, minimal, and flexible.
 
-> **View demo:** [studio admin](https://next-shadcn-admin-dashboard.vercel.app)
+> **View demo:** [studio admin](https://studio-admin.arhamkhnz.com)
 
 > [!NOTE]
 > Looking for the Base UI version? Check out [next-shadcn-admin-dashboard-baseui](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-baseui).
+>
+> Looking for the React Aria version? Check out [arhamkhnz/next-shadcn-admin-dashboard-aria](https://github.com/arhamkhnz/next-shadcn-admin-dashboard-aria).
+>
+> Looking for the TanStack Start version? Check out [tanstack-shadcn-admin-dashboard](https://github.com/arhamkhnz/tanstack-shadcn-admin-dashboard).
 
 > [!TIP]
-> I’m also working on Nuxt.js, Svelte, and React (Vite + TanStack Router) versions of this dashboard. They’ll be live soon.
+> I’m also working on Nuxt.js and Svelte versions of this dashboard. They’ll be live soon.
 
 ## Features
 
@@ -63,8 +67,11 @@ Most admin templates I found, free or paid, felt cluttered, outdated, or too rig
 - Academy Dashboard  
 - Logistics Dashboard  
 - Infrastructure Dashboard  
+- File Manager  
+- Patient Monitoring  
 - Chat Page  
 - Email Page  
+- Profile  
 - Users Management  
 - Roles Management  
 - Kanban Board  

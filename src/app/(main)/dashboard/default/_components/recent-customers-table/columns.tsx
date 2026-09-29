@@ -1,12 +1,12 @@
 "use client";
-"use no memo";
-
 import type { ColumnDef } from "@tanstack/react-table";
+import { Subscribe } from "@tanstack/react-table";
 import { addMinutes, differenceInCalendarDays, endOfToday, format, parseISO } from "date-fns";
 import { CircleAlertIcon, CircleCheckIcon, Clock3Icon, LoaderIcon, UserRound } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 import type { TFunction } from "@/lib/i18n/dictionary";
 
 import type { RecentCustomerRow } from "./schema";
@@ -26,33 +26,47 @@ function billingIcon(billing: string) {
   }
 }
 
-export function recentCustomersColumns(t: TFunction): ColumnDef<RecentCustomerRow>[] {
+export function recentCustomersColumns(t: TFunction): ColumnDef<DataTableFeatures, RecentCustomerRow>[] {
   return [
     {
       id: "select",
       header: ({ table }) => (
         <div className="flex items-center justify-center">
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label={t("dashboard.default.table.selectAll")}
-          />
+          <Subscribe
+            source={table.atoms.rowSelection}
+            selector={() =>
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected() && "indeterminate")
+            }
+          >
+            {(checked) => (
+              <Checkbox
+                checked={checked}
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label={t("dashboard.default.table.selectAll")}
+              />
+            )}
+          </Subscribe>
         </div>
       ),
       cell: ({ row }) => (
         <div className="flex items-center justify-center">
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label={`Select ${row.original.name}`}
-          />
+          <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
+            {(checked) => (
+              <Checkbox
+                checked={checked}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label={t("dashboard.default.table.selectRow", { name: row.original.name })}
+              />
+            )}
+          </Subscribe>
         </div>
       ),
       enableHiding: false,
     },
     {
       accessorKey: "name",
-      header: "Customer",
+      header: t("dashboard.default.table.customer"),
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <span className="flex size-8 items-center justify-center rounded-md border bg-muted">
@@ -78,7 +92,7 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<RecentCustomerRo
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t("dashboard.default.table.status"),
       filterFn: "equalsString",
       cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
@@ -88,7 +102,7 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<RecentCustomerRo
     },
     {
       accessorKey: "billing",
-      header: "Billing",
+      header: t("dashboard.default.table.billing"),
       filterFn: "equalsString",
       cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
@@ -99,7 +113,7 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<RecentCustomerRo
     },
     {
       accessorKey: "plan",
-      header: "Plan",
+      header: t("dashboard.default.table.plan"),
       cell: ({ row }) => <span className="text-sm">{row.original.plan}</span>,
     },
     {
@@ -116,7 +130,7 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<RecentCustomerRo
     },
     {
       accessorKey: "joined",
-      header: "Joined",
+      header: t("dashboard.default.table.joined"),
       cell: ({ row }) => {
         const baseDate = parseISO(row.original.joined);
         const joinedAt = addMinutes(baseDate, 9 * 60 + (Number(row.original.id) % 12) * 17);

@@ -14,8 +14,12 @@ import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provi
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://studio-admin.arhamkhnz.com"),
   title: APP_CONFIG.meta.title,
   description: APP_CONFIG.meta.description,
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

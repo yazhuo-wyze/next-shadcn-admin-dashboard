@@ -1,7 +1,6 @@
 "use client";
-"use no memo";
-
-import type { Table } from "@tanstack/react-table";
+import type { ReactTable, RowData } from "@tanstack/react-table";
+import { cn } from "cn";
 import { ListFilter, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,15 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 
 import { statuses } from "./data";
 
-interface TaskStatusFilterProps<TData> {
-  table: Table<TData>;
+interface TaskStatusFilterProps<TData extends RowData> {
+  table: ReactTable<DataTableFeatures, TData>;
 }
 
-export function TaskStatusFilter<TData>({ table }: TaskStatusFilterProps<TData>) {
+export function TaskStatusFilter<TData extends RowData>({ table }: TaskStatusFilterProps<TData>) {
   const column = table.getColumn("status");
 
   if (!column) {

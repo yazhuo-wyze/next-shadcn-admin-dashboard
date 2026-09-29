@@ -1,8 +1,16 @@
 import Link from "next/link";
 
 import { ExternalLink } from "lucide-react";
+import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function Page() {
   return (
@@ -15,7 +23,7 @@ export default function Page() {
           </p>
         </div>
         <Button asChild variant="ghost" size="icon-sm">
-          <Link href="/mail" target="_blank" rel="noreferrer" aria-label="Open mail in new tab">
+          <Link href="/mail" prefetch={false} target="_blank" rel="noreferrer" aria-label="Open mail in new tab">
             <ExternalLink />
           </Link>
         </Button>

@@ -7,8 +7,9 @@ export const APP_CONFIG = {
   version: packageJson.version,
   copyright: `© ${currentYear}, Studio Admin.`,
   meta: {
-    title: "Studio Admin - 现代化 Next.js 后台管理系统模板",
+    // 上游（main）更新了这段英文文案，这里跟着翻成中文，内容与上游保持一致
+    title: "Studio Admin：基于 shadcn/ui 的开源后台管理系统",
     description:
-      "Studio Admin 是一个现代化、开源的仪表盘起步模板，基于 Next.js 16、Tailwind CSS v4 与 shadcn/ui 构建。适用于 SaaS 应用、管理后台与内部工具，可完全自定义，开箱即用。",
+      "一个精雕细琢的开源 shadcn/ui 后台管理系统，包含 25+ 个界面，并提供 Radix UI、Base UI、React Aria 与 TanStack Start 版本。",
   },
 };

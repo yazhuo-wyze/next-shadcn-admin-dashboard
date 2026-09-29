@@ -101,6 +101,10 @@ export const zhCN = {
       },
       table: {
         selectAll: "全选本页客户",
+        customer: "客户",
+        plan: "套餐",
+        joined: "加入时间",
+        selectRow: "选择 {name}",
         searchPlaceholder: "搜索客户…",
         status: "状态",
         joinedDate: "注册日期",
@@ -136,6 +140,9 @@ export const zhCN = {
       invoice: "发票",
       users: "用户",
       roles: "角色",
+      fileManager: "文件管理",
+      patientMonitoring: "患者监护",
+      profile: "个人资料",
       authentication: "身份认证",
       loginV1: "登录 v1",
       loginV2: "登录 v2",
@@ -168,9 +175,12 @@ export const zhCN = {
   },
 
   support: {
-    title: "还想要更多功能？",
-    body: "欢迎提 issue，或通过以下方式联系我：",
+    title: "有什么想法？",
+    body: "欢迎提功能建议，或与我讨论定制开发：可在",
+    orBy: "或通过",
+    suffix: "联系。",
     ctaX: "在 X 上联系我",
+    emailLabel: "邮件",
   },
 
   search: {

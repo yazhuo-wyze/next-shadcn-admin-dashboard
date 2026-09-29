@@ -1,7 +1,6 @@
 "use client";
-"use no memo";
-
-import type { Table } from "@tanstack/react-table";
+import type { ReactTable, RowData } from "@tanstack/react-table";
+import { cn } from "cn";
 import { Settings2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,17 +14,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import type { DataTableFeatures } from "@/lib/data-table-features";
 
 import { TaskPriorityFilter } from "./task-priority-filter";
 import { TaskStatusFilter } from "./task-status-filter";
 
-interface TasksToolbarProps<TData> {
-  table: Table<TData>;
+interface TasksToolbarProps<TData extends RowData> {
+  table: ReactTable<DataTableFeatures, TData>;
 }
 
-export function TasksToolbar<TData>({ table }: TasksToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps<TData>) {
+  const isFiltered = table.state.columnFilters.length > 0;
   const searchValue = (table.getColumn("title")?.getFilterValue() as string | undefined) ?? "";
   const hideableColumns = table
     .getAllColumns()
