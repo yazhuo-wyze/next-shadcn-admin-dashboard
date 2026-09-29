@@ -6,6 +6,8 @@ import { Label, Pie, PieChart } from "recharts";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const chartData = [{ month: "current", "in-stock": 760, "low-stock": 320, "out-of-stock": 160 }];
 const totalUnits = chartData[0]["in-stock"] + chartData[0]["low-stock"] + chartData[0]["out-of-stock"];
@@ -35,46 +37,53 @@ const gaugeSegments = Array.from({ length: gaugeSegmentCount }, (_, index) => {
     value: 1,
   };
 });
-const inventorySummary = [
-  {
-    icon: PackageCheck,
-    label: "In stock",
-    value: chartData[0]["in-stock"],
-  },
-  {
-    icon: TriangleAlert,
-    label: "Low stock",
-    value: chartData[0]["low-stock"],
-  },
-  {
-    icon: PackageX,
-    label: "Out",
-    value: chartData[0]["out-of-stock"],
-  },
-] as const;
-
-const chartConfig = {
-  "in-stock": {
-    label: "In stock",
-    color: "var(--chart-2)",
-  },
-  "low-stock": {
-    label: "Low stock",
-    color: "var(--chart-1)",
-  },
-  "out-of-stock": {
-    label: "Out of stock",
-    color: "var(--destructive)",
-  },
-} satisfies ChartConfig;
+/** 显示的 label 需要跟随语言，所以改成接收 t 的函数。 */
+const inventorySummary = (t: TFunction) =>
+  [
+    {
+      icon: PackageCheck,
+      label: t("dashboard.ecommerce.inventory.inStock"),
+      value: chartData[0]["in-stock"],
+    },
+    {
+      icon: TriangleAlert,
+      label: t("dashboard.ecommerce.inventory.lowStock"),
+      value: chartData[0]["low-stock"],
+    },
+    {
+      icon: PackageX,
+      label: t("dashboard.ecommerce.inventory.out"),
+      value: chartData[0]["out-of-stock"],
+    },
+  ] as const;
 
 export function Inventory() {
+  const { t } = useI18n();
+
+  // chartConfig 的 label 需要跟随语言，所以从模块级挪进组件内部。
+  const chartConfig = {
+    "in-stock": {
+      label: t("dashboard.ecommerce.inventory.inStock"),
+      color: "var(--chart-2)",
+    },
+    "low-stock": {
+      label: t("dashboard.ecommerce.inventory.lowStock"),
+      color: "var(--chart-1)",
+    },
+    "out-of-stock": {
+      label: t("dashboard.ecommerce.inventory.outOfStock"),
+      color: "var(--destructive)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="font-normal text-muted-foreground text-sm">Inventory</CardTitle>
+        <CardTitle className="font-normal text-muted-foreground text-sm">
+          {t("dashboard.ecommerce.inventory.title")}
+        </CardTitle>
         <CardDescription className="text-foreground text-xl tabular-nums leading-none tracking-tight">
-          {availablePercent}% available
+          {t("dashboard.ecommerce.inventory.available", { percent: availablePercent })}
         </CardDescription>
         <CardAction>
           <ArrowUpRight className="size-4" />
@@ -110,7 +119,7 @@ export function Inventory() {
                           {availablePercent}%
                         </tspan>
                         <tspan className="fill-muted-foreground text-xs" x={viewBox.cx} y={(viewBox.cy || 0) + 38}>
-                          Available
+                          {t("dashboard.ecommerce.inventory.availableLabel")}
                         </tspan>
                       </text>
                     );
@@ -123,7 +132,7 @@ export function Inventory() {
         <Separator />
 
         <div className="grid grid-cols-3 divide-x">
-          {inventorySummary.map((item, _index) => (
+          {inventorySummary(t).map((item, _index) => (
             <div key={item.label} className="flex flex-col items-center gap-3 text-center">
               <div className="grid size-9 place-items-center rounded-full bg-muted">
                 <item.icon className="size-4 text-muted-foreground" />

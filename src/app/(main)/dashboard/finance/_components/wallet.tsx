@@ -3,11 +3,13 @@ import { siBarclays, siBitcoin, siEthereum, siHsbc, siRevolut } from "simple-ico
 import { SimpleIcon } from "@/components/simple-icon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { getT } from "@/lib/i18n/server";
 
+// 账户名/资产名属于演示数据，直接写中文，不参与语言切换。
 const walletCards = [
   {
     id: 1,
-    bank: "Revolut Premium",
+    bank: "Revolut 高级版",
     last4: "4182",
     balance: "$12,450.60",
     icon: siRevolut,
@@ -15,7 +17,7 @@ const walletCards = [
   },
   {
     id: 2,
-    bank: "HSBC Bank",
+    bank: "汇丰银行",
     last4: "1004",
     balance: "$3,200.11",
     icon: siHsbc,
@@ -24,7 +26,7 @@ const walletCards = [
 
   {
     id: 4,
-    bank: "Barclays Bank",
+    bank: "巴克莱银行",
     last4: "9912",
     balance: "$1,450.00",
     icon: siBarclays,
@@ -35,15 +37,15 @@ const walletCards = [
 const cryptoAssets = [
   {
     id: 1,
-    name: "Bitcoin",
-    vault: "Binance",
+    name: "比特币",
+    vault: "币安",
     balance: "0.42 BTC",
     usdValue: "$24,150.00",
     icon: siBitcoin,
   },
   {
     id: 2,
-    name: "Ethereum",
+    name: "以太坊",
     vault: "MetaMask",
     balance: "4.85 ETH",
     usdValue: "$12,420.10",
@@ -51,11 +53,13 @@ const cryptoAssets = [
   },
 ];
 
-export function Wallet() {
+export async function Wallet() {
+  const t = await getT();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal">Wallet</CardTitle>
+        <CardTitle className="font-normal">{t("dashboard.finance.wallet.title")}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
@@ -101,12 +105,14 @@ export function Wallet() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="font-medium text-[10px] text-muted-foreground">
-              Physical Vault: <span className="text-foreground">Ledger Nano X</span>
+              {t("dashboard.finance.wallet.physicalVault")} <span className="text-foreground">Ledger Nano X</span>
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="size-1 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-            <span className="font-bold text-[9px] text-green-500 uppercase tracking-widest">Air-Gapped</span>
+            <span className="font-bold text-[9px] text-green-500 uppercase tracking-widest">
+              {t("dashboard.finance.wallet.airGapped")}
+            </span>
           </div>
         </div>
       </CardContent>

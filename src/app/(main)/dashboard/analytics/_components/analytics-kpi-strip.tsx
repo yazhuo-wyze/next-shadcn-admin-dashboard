@@ -2,14 +2,17 @@ import { ArrowDownRight, ArrowUpRight, Ellipsis } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getT } from "@/lib/i18n/server";
 
-export function AnalyticsKpiStrip() {
+export async function AnalyticsKpiStrip() {
+  const t = await getT();
+
   return (
     <div className="overflow-hidden rounded-xl bg-card shadow-xs ring-1 ring-foreground/10">
       <div className="grid divide-y *:data-[slot=card]:rounded-none *:data-[slot=card]:ring-0 md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-5">
         <Card>
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Unique Visitors</CardTitle>
+            <CardTitle className="font-normal text-sm">{t("analytics.kpi.uniqueVisitors")}</CardTitle>
             <CardAction>
               <Ellipsis className="size-4" />
             </CardAction>
@@ -25,17 +28,17 @@ export function AnalyticsKpiStrip() {
 
             <div className="flex items-center gap-2 text-muted-foreground text-xs">
               <span>
-                from <span className="text-foreground">207.3k</span>
+                {t("analytics.kpi.from")} <span className="text-foreground">207.3k</span>
               </span>
               <span>•</span>
-              <span>last 4 weeks</span>
+              <span>{t("common.time.last4Weeks")}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Sessions</CardTitle>
+            <CardTitle className="font-normal text-sm">{t("analytics.kpi.sessions")}</CardTitle>
             <CardAction>
               <Ellipsis className="size-4" />
             </CardAction>
@@ -51,17 +54,17 @@ export function AnalyticsKpiStrip() {
 
             <div className="flex items-center gap-2 text-muted-foreground text-xs">
               <span>
-                from <span className="text-foreground">243.5k</span>
+                {t("analytics.kpi.from")} <span className="text-foreground">243.5k</span>
               </span>
               <span>•</span>
-              <span>last 4 weeks</span>
+              <span>{t("common.time.last4Weeks")}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Pageviews</CardTitle>
+            <CardTitle className="font-normal text-sm">{t("analytics.kpi.pageviews")}</CardTitle>
             <CardAction>
               <Ellipsis className="size-4" />
             </CardAction>
@@ -77,17 +80,17 @@ export function AnalyticsKpiStrip() {
 
             <div className="flex items-center gap-2 text-muted-foreground text-xs">
               <span>
-                from <span className="text-foreground">566.8k</span>
+                {t("analytics.kpi.from")} <span className="text-foreground">566.8k</span>
               </span>
               <span>•</span>
-              <span>last 4 weeks</span>
+              <span>{t("common.time.last4Weeks")}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Engagement Rate</CardTitle>
+            <CardTitle className="font-normal text-sm">{t("analytics.kpi.engagementRate")}</CardTitle>
             <CardAction>
               <Ellipsis className="size-4" />
             </CardAction>
@@ -103,17 +106,17 @@ export function AnalyticsKpiStrip() {
 
             <div className="flex items-center gap-2 text-muted-foreground text-xs">
               <span>
-                from <span className="text-foreground">58.9%</span>
+                {t("analytics.kpi.from")} <span className="text-foreground">58.9%</span>
               </span>
               <span>•</span>
-              <span>last 4 weeks</span>
+              <span>{t("common.time.last4Weeks")}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Conversion Rate</CardTitle>
+            <CardTitle className="font-normal text-sm">{t("analytics.kpi.conversionRate")}</CardTitle>
             <CardAction>
               <Ellipsis className="size-4" />
             </CardAction>
@@ -129,10 +132,10 @@ export function AnalyticsKpiStrip() {
 
             <div className="flex items-center gap-2 text-muted-foreground text-xs">
               <span>
-                from <span className="text-foreground">8.9%</span>
+                {t("analytics.kpi.from")} <span className="text-foreground">8.9%</span>
               </span>
               <span>•</span>
-              <span>last 4 weeks</span>
+              <span>{t("common.time.last4Weeks")}</span>
             </div>
           </CardContent>
         </Card>

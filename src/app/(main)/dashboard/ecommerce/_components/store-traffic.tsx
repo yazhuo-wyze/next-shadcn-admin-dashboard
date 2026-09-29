@@ -15,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const trafficIntervalMinutes = 15;
 
@@ -126,40 +127,44 @@ function getTrafficData() {
   }));
 }
 
-const trafficConfig = {
-  visitors: {
-    label: "Visitors",
-    color: "var(--chart-3)",
-  },
-  anomalies: {
-    label: "Anomalies",
-    color: "var(--destructive)",
-  },
-} satisfies ChartConfig;
-
 function formatTrafficTooltipLabel(value: string) {
   return format(new Date(value), "h:mm a, do MMMM yyyy");
 }
 
 export function StoreTraffic() {
+  const { t } = useI18n();
   const [trafficData] = useState(() => getTrafficData());
   const firstTrafficTimestamp = trafficData[0].timestamp;
   const lastTrafficTimestamp = trafficData.at(-1)?.timestamp ?? "";
 
+  // chartConfig 的 label 需要跟随语言，所以从模块级挪进组件内部。
+  const trafficConfig = {
+    visitors: {
+      label: t("dashboard.ecommerce.storeTraffic.visitors"),
+      color: "var(--chart-3)",
+    },
+    anomalies: {
+      label: t("dashboard.ecommerce.storeTraffic.anomalies"),
+      color: "var(--destructive)",
+    },
+  } satisfies ChartConfig;
+
   function formatTrafficTick(value: string) {
     if (value === firstTrafficTimestamp) {
-      return "24h ago";
+      return t("dashboard.ecommerce.storeTraffic.hoursAgo24");
     }
 
-    return value === lastTrafficTimestamp ? "now" : "";
+    return value === lastTrafficTimestamp ? t("dashboard.ecommerce.storeTraffic.now") : "";
   }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal text-muted-foreground text-sm">Store Traffic</CardTitle>
+        <CardTitle className="font-normal text-muted-foreground text-sm">
+          {t("dashboard.ecommerce.storeTraffic.title")}
+        </CardTitle>
         <CardDescription className="text-foreground text-xl tabular-nums leading-none tracking-tight">
-          12.9K visits
+          {t("dashboard.ecommerce.storeTraffic.visits", { count: "12.9K" })}
         </CardDescription>
         <CardAction>
           <ArrowUpRight className="size-4" />

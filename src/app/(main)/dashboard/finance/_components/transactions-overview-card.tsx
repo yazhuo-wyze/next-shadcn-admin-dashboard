@@ -5,6 +5,7 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -60,22 +61,24 @@ const formatWeekday = (value: number) => weekdayFormatter.format(new Date(value)
 const chartDomain = [weekStart, weekStart + 7 * DAY_MS];
 const formatTooltipCurrency = (value: number | string) => formatCurrency(Number(value), { noDecimals: true });
 
-const chartConfig = {
-  expense: {
-    color: "var(--chart-4)",
-    label: "Expense",
-  },
-  income: {
-    color: "var(--chart-2)",
-    label: "Income",
-  },
-} satisfies ChartConfig;
-
 export function TransactionsOverviewCard() {
+  const { t } = useI18n();
+
+  const chartConfig = {
+    expense: {
+      color: "var(--chart-4)",
+      label: t("dashboard.finance.spending.expense"),
+    },
+    income: {
+      color: "var(--chart-2)",
+      label: t("dashboard.finance.spending.income"),
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal">Spending Overview</CardTitle>
+        <CardTitle className="font-normal">{t("dashboard.finance.spending.title")}</CardTitle>
         <CardAction>
           <Select defaultValue="weekly">
             <SelectTrigger className="w-28" size="sm">
@@ -83,9 +86,9 @@ export function TransactionsOverviewCard() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="weekly">Weekly</SelectItem>
-                <SelectItem value="monthly">Monthly</SelectItem>
-                <SelectItem value="yearly">Yearly</SelectItem>
+                <SelectItem value="weekly">{t("dashboard.finance.spending.weekly")}</SelectItem>
+                <SelectItem value="monthly">{t("dashboard.finance.spending.monthly")}</SelectItem>
+                <SelectItem value="yearly">{t("dashboard.finance.spending.yearly")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

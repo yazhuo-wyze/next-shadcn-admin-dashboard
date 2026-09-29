@@ -7,33 +7,37 @@ import { siClaude, siLinear, siResend } from "simple-icons";
 import { SimpleIcon } from "@/components/simple-icon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
+// 交易标题属于演示数据，直接写中文，不参与语言切换。
 const transactions = [
   {
     id: 1,
-    title: "Claude Pro Subscription",
+    title: "Claude Pro 订阅",
     date: format(set(addDays(new Date(), 2), { hours: 14, minutes: 45 }), "hh.mm a '•' MMMM dd, yyyy"),
     icon: siClaude,
   },
   {
     id: 2,
-    title: "Resend Pro Team",
+    title: "Resend Pro 团队版",
     date: format(set(addDays(new Date(), 4), { hours: 7, minutes: 0 }), "hh.mm a '•' MMMM dd, yyyy"),
     icon: siResend,
   },
   {
     id: 3,
-    title: "Linear Plus Plan",
+    title: "Linear Plus 套餐",
     date: format(set(addDays(new Date(), 10), { hours: 7, minutes: 0 }), "hh.mm a '•' MMMM dd, yyyy"),
     icon: siLinear,
   },
 ];
 
 export function UpcomingTransactions() {
+  const { t } = useI18n();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal">Upcoming Bills & Payments</CardTitle>
+        <CardTitle className="font-normal">{t("dashboard.finance.upcoming.title")}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <div className="flex flex-col gap-3">
@@ -43,13 +47,17 @@ export function UpcomingTransactions() {
               <span className="text-muted-foreground text-xl">.00</span>
             </h2>
             <p className="text-muted-foreground text-sm leading-none">
-              You have <span className="font-medium text-foreground">3</span> bills due this month
+              {t("dashboard.finance.upcoming.billsDuePrefix")}
+              <span className="font-medium text-foreground">3</span>
+              {t("dashboard.finance.upcoming.billsDueSuffix")}
             </p>
           </div>
           <div className="flex w-max items-center gap-2 rounded-md border border-border bg-muted/70 px-2 py-1.5 text-sm">
             <Zap className="size-4 fill-primary text-primary" />
             <span className="text-muted-foreground">
-              Autopay will process <span className="font-medium text-foreground">$145.00</span> today
+              {t("dashboard.finance.upcoming.autopayPrefix")}
+              <span className="font-medium text-foreground">$145.00</span>
+              {t("dashboard.finance.upcoming.autopaySuffix")}
             </span>
           </div>
         </div>

@@ -11,51 +11,54 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getT } from "@/lib/i18n/server";
 
-export function AnalyticsToolbar() {
+export async function AnalyticsToolbar() {
+  const t = await getT();
+
   return (
     <div className="flex items-center gap-2">
       <Select defaultValue="last-4-weeks">
         <SelectTrigger className="w-34">
-          <SelectValue placeholder="Select range" />
+          <SelectValue placeholder={t("analytics.toolbar.selectRange")} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="last-7-days">Last 7 days</SelectItem>
-            <SelectItem value="last-4-weeks">Last 4 weeks</SelectItem>
-            <SelectItem value="last-3-months">Last 3 months</SelectItem>
-            <SelectItem value="year-to-date">Year to date</SelectItem>
+            <SelectItem value="last-7-days">{t("common.time.last7Days")}</SelectItem>
+            <SelectItem value="last-4-weeks">{t("common.time.last4Weeks")}</SelectItem>
+            <SelectItem value="last-3-months">{t("common.time.last3Months")}</SelectItem>
+            <SelectItem value="year-to-date">{t("analytics.toolbar.yearToDate")}</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button size="icon" variant="outline" aria-label="More analytics actions">
+          <Button size="icon" variant="outline" aria-label={t("analytics.toolbar.moreActions")}>
             <Ellipsis />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Analytics actions</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("analytics.toolbar.actions")}</DropdownMenuLabel>
             <DropdownMenuItem>
               <FileDown />
-              Export report
+              {t("analytics.toolbar.exportReport")}
             </DropdownMenuItem>
             <DropdownMenuItem>
               <FileUp />
-              Import data
+              {t("analytics.toolbar.importData")}
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Share2 />
-              Share dashboard
+              {t("analytics.toolbar.shareDashboard")}
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <RefreshCw />
-              Refresh metrics
+              {t("analytics.toolbar.refreshMetrics")}
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

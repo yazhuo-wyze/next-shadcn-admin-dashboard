@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getT } from "@/lib/i18n/server";
 
 import { BalanceDistributionCard } from "./_components/balance-distribution-card";
 import { FinanceNotification } from "./_components/finance-notification";
@@ -14,45 +15,50 @@ import { TransactionsOverviewCard } from "./_components/transactions-overview-ca
 import { UpcomingTransactions } from "./_components/upcoming-transactions";
 import { Wallet } from "./_components/wallet";
 
-export const metadata: Metadata = {
-  title: "Open Source Finance Dashboard with shadcn/ui",
-  description:
-    "Explore an open source personal finance dashboard with net worth, spending, income sources, account allocation, transactions, and wallets.",
-  alternates: {
-    canonical: "/dashboard/finance",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function Page() {
+  return {
+    title: t("dashboard.finance.metadataTitle"),
+    description: t("dashboard.finance.metadataDescription"),
+    alternates: {
+      canonical: "/dashboard/finance",
+    },
+  };
+}
+
+export default async function Page() {
+  const t = await getT();
+  // 注意：这里的日期格式化使用 date-fns 默认语言（en-US），语言环境本地化属于后续独立阶段，本轮不处理。
   const formattedDate = format(new Date(), "EEEE, do MMMM yyyy");
 
   return (
     <div className="flex flex-col gap-4">
       <div className="space-y-1">
-        <h1 className="text-3xl tracking-tight">Personal Finances</h1>
+        <h1 className="text-3xl tracking-tight">{t("dashboard.finance.title")}</h1>
         <p className="text-muted-foreground text-sm">{formattedDate}</p>
       </div>
 
       <Tabs defaultValue="30-days" className="flex flex-col gap-4">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <TabsList variant="line">
-            <TabsTrigger value="30-days">Dashboard</TabsTrigger>
-            <TabsTrigger value="12-months">Accounts</TabsTrigger>
-            <TabsTrigger value="custom">Transactions</TabsTrigger>
+            <TabsTrigger value="30-days">{t("dashboard.finance.tab.dashboard")}</TabsTrigger>
+            <TabsTrigger value="12-months">{t("dashboard.finance.tab.accounts")}</TabsTrigger>
+            <TabsTrigger value="custom">{t("dashboard.finance.tab.transactions")}</TabsTrigger>
           </TabsList>
 
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
               <RotateCw className="size-4" />
-              <span>Updated 5 min ago</span>
+              <span>{t("dashboard.finance.updatedAgo", { minutes: 5 })}</span>
             </div>
             <Button size="sm" variant="outline">
               <Settings2 />
-              Settings
+              {t("shell.settings")}
             </Button>
             <Button size="sm" variant="outline">
               <Download data-icon="inline-start" />
-              Export
+              {t("common.actions.export")}
             </Button>
           </div>
         </div>
@@ -93,13 +99,13 @@ export default function Page() {
 
         <TabsContent value="12-months">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Accounts view coming soon.
+            {t("dashboard.finance.comingSoon", { tab: t("dashboard.finance.tab.accounts") })}
           </div>
         </TabsContent>
 
         <TabsContent value="custom">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Transactions view coming soon.
+            {t("dashboard.finance.comingSoon", { tab: t("dashboard.finance.tab.transactions") })}
           </div>
         </TabsContent>
       </Tabs>

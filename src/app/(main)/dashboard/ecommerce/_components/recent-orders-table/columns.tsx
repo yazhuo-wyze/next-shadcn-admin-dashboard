@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
 
 import type { OrderRow } from "./schema";
 
@@ -22,7 +23,11 @@ function formatOrderDate(date: string) {
   return format(parseISO(date), "h:mm a, d MMM yyyy");
 }
 
-function PaymentBadge({ status }: { status: OrderRow["payment"] }) {
+/**
+ * 徽章的 `status` 是数据值（枚举），判断仍用英文；
+ * 展示文案走 `common.enums.<维度>.<英文原值>`，值本身一个字都不改。
+ */
+function PaymentBadge({ status, t }: { status: OrderRow["payment"]; t: TFunction }) {
   if (status === "Paid") {
     return (
       <Badge
@@ -30,7 +35,7 @@ function PaymentBadge({ status }: { status: OrderRow["payment"] }) {
         variant="outline"
       >
         <span className="size-1.5 rounded-full bg-current" />
-        Paid
+        {t(`common.enums.payment.${status}`)}
       </Badge>
     );
   }
@@ -39,7 +44,7 @@ function PaymentBadge({ status }: { status: OrderRow["payment"] }) {
     return (
       <Badge variant="destructive">
         <span className="size-1.5 rounded-full bg-current" />
-        Refunded
+        {t(`common.enums.payment.${status}`)}
       </Badge>
     );
   }
@@ -50,12 +55,12 @@ function PaymentBadge({ status }: { status: OrderRow["payment"] }) {
       variant="outline"
     >
       <span className="size-1.5 rounded-full bg-current" />
-      Pending
+      {t(`common.enums.payment.${status}`)}
     </Badge>
   );
 }
 
-function FulfillmentBadge({ status }: { status: OrderRow["fulfillment"] }) {
+function FulfillmentBadge({ status, t }: { status: OrderRow["fulfillment"]; t: TFunction }) {
   if (status === "Fulfilled") {
     return (
       <Badge
@@ -63,7 +68,7 @@ function FulfillmentBadge({ status }: { status: OrderRow["fulfillment"] }) {
         variant="outline"
       >
         <span className="size-1.5 rounded-full bg-current" />
-        Fulfilled
+        {t(`common.enums.fulfillment.${status}`)}
       </Badge>
     );
   }
@@ -72,7 +77,7 @@ function FulfillmentBadge({ status }: { status: OrderRow["fulfillment"] }) {
     return (
       <Badge variant="destructive">
         <span className="size-1.5 rounded-full bg-current" />
-        Returned
+        {t(`common.enums.fulfillment.${status}`)}
       </Badge>
     );
   }
@@ -80,131 +85,133 @@ function FulfillmentBadge({ status }: { status: OrderRow["fulfillment"] }) {
   return (
     <Badge variant="destructive">
       <span className="size-1.5 rounded-full bg-current" />
-      Unfulfilled
+      {t(`common.enums.fulfillment.${status}`)}
     </Badge>
   );
 }
 
-export const recentOrdersColumns: ColumnDef<DataTableFeatures, OrderRow>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="w-10">
-        <Subscribe
-          source={table.atoms.rowSelection}
-          selector={() =>
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected() && "indeterminate")
-          }
-        >
-          {(checked) => (
-            <Checkbox
-              aria-label="Select all orders"
-              checked={checked}
-              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            />
-          )}
-        </Subscribe>
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="w-10">
-        <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
-          {(checked) => (
-            <Checkbox
-              aria-label={`Select order ${row.original.id}`}
-              checked={checked}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
-            />
-          )}
-        </Subscribe>
-      </div>
-    ),
-    enableHiding: false,
-    enableSorting: false,
-  },
-  {
-    accessorKey: "id",
-    header: "Order",
-    cell: ({ row }) => (
-      <div className="flex flex-col gap-0.5">
-        <div className="font-medium leading-none">{row.original.id}</div>
-        <div className="text-muted-foreground text-xs">{row.original.items}</div>
-      </div>
-    ),
-    enableHiding: false,
-  },
-  {
-    accessorKey: "customer",
-    header: "Customer",
-  },
-  {
-    id: "statusSummary",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <PaymentBadge status={row.original.payment} />
-        <FulfillmentBadge status={row.original.fulfillment} />
-      </div>
-    ),
-    filterFn: (row, _columnId, value) => {
-      if (value === "Needs action") {
-        return (
-          row.original.payment === "Pending" ||
-          row.original.payment === "Refunded" ||
-          row.original.fulfillment === "Unfulfilled" ||
-          row.original.fulfillment === "Returned"
-        );
-      }
-
-      if (value === "Unfulfilled") {
-        return row.original.fulfillment === "Unfulfilled";
-      }
-
-      if (value === "Unpaid") {
-        return row.original.payment === "Pending";
-      }
-
-      if (value === "Returns") {
-        return row.original.payment === "Refunded" || row.original.fulfillment === "Returned";
-      }
-
-      return true;
+export function recentOrdersColumns(t: TFunction): ColumnDef<DataTableFeatures, OrderRow>[] {
+  return [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="w-10">
+          <Subscribe
+            source={table.atoms.rowSelection}
+            selector={() =>
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected() && "indeterminate")
+            }
+          >
+            {(checked) => (
+              <Checkbox
+                aria-label={t("dashboard.ecommerce.orders.selectAll")}
+                checked={checked}
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+              />
+            )}
+          </Subscribe>
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="w-10">
+          <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
+            {(checked) => (
+              <Checkbox
+                aria-label={t("dashboard.ecommerce.orders.selectRow", { id: row.original.id })}
+                checked={checked}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+              />
+            )}
+          </Subscribe>
+        </div>
+      ),
+      enableHiding: false,
+      enableSorting: false,
     },
-  },
-  {
-    accessorKey: "total",
-    header: () => <div className="w-28">Total</div>,
-    cell: ({ row }) => <div className="w-28 tabular-nums">{row.original.total}</div>,
-  },
-  {
-    accessorKey: "date",
-    header: () => <div className="w-44">Date</div>,
-    cell: ({ row }) => <div className="w-44 text-muted-foreground">{formatOrderDate(row.original.date)}</div>,
-  },
-  {
-    id: "actions",
-    header: () => <div className="flex w-full justify-end">Actions</div>,
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="flex w-full justify-end">
-            <Button aria-label="Open order actions" size="icon-sm" variant="ghost">
-              <MoreHorizontal />
-            </Button>
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-40">
-          <DropdownMenuLabel>Order Actions</DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem>View order</DropdownMenuItem>
-            <DropdownMenuItem>Contact customer</DropdownMenuItem>
-            <DropdownMenuItem>Copy order ID</DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-    enableHiding: false,
-    enableSorting: false,
-  },
-];
+    {
+      accessorKey: "id",
+      header: t("dashboard.ecommerce.orders.columnOrder"),
+      cell: ({ row }) => (
+        <div className="flex flex-col gap-0.5">
+          <div className="font-medium leading-none">{row.original.id}</div>
+          <div className="text-muted-foreground text-xs">{row.original.items}</div>
+        </div>
+      ),
+      enableHiding: false,
+    },
+    {
+      accessorKey: "customer",
+      header: t("dashboard.ecommerce.orders.columnCustomer"),
+    },
+    {
+      id: "statusSummary",
+      header: t("dashboard.ecommerce.orders.columnStatus"),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <PaymentBadge status={row.original.payment} t={t} />
+          <FulfillmentBadge status={row.original.fulfillment} t={t} />
+        </div>
+      ),
+      filterFn: (row, _columnId, value) => {
+        if (value === "Needs action") {
+          return (
+            row.original.payment === "Pending" ||
+            row.original.payment === "Refunded" ||
+            row.original.fulfillment === "Unfulfilled" ||
+            row.original.fulfillment === "Returned"
+          );
+        }
+
+        if (value === "Unfulfilled") {
+          return row.original.fulfillment === "Unfulfilled";
+        }
+
+        if (value === "Unpaid") {
+          return row.original.payment === "Pending";
+        }
+
+        if (value === "Returns") {
+          return row.original.payment === "Refunded" || row.original.fulfillment === "Returned";
+        }
+
+        return true;
+      },
+    },
+    {
+      accessorKey: "total",
+      header: () => <div className="w-28">{t("dashboard.ecommerce.orders.columnTotal")}</div>,
+      cell: ({ row }) => <div className="w-28 tabular-nums">{row.original.total}</div>,
+    },
+    {
+      accessorKey: "date",
+      header: () => <div className="w-44">{t("dashboard.ecommerce.orders.columnDate")}</div>,
+      cell: ({ row }) => <div className="w-44 text-muted-foreground">{formatOrderDate(row.original.date)}</div>,
+    },
+    {
+      id: "actions",
+      header: () => <div className="flex w-full justify-end">{t("dashboard.ecommerce.orders.columnActions")}</div>,
+      cell: () => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex w-full justify-end">
+              <Button aria-label={t("dashboard.ecommerce.orders.openActions")} size="icon-sm" variant="ghost">
+                <MoreHorizontal />
+              </Button>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuLabel>{t("dashboard.ecommerce.orders.actionsLabel")}</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem>{t("dashboard.ecommerce.orders.viewOrder")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.ecommerce.orders.contactCustomer")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.ecommerce.orders.copyOrderId")}</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+      enableHiding: false,
+      enableSorting: false,
+    },
+  ];
+}

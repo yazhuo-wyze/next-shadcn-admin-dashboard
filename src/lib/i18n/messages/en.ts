@@ -1,5 +1,5 @@
 /**
- * 英文词条。这份是**结构基准**：`zh-CN.ts` 用 `satisfies Messages` 约束，
+ * 英文词条。这份是**结构基准**：`zh-cn.ts` 用 `satisfies Messages` 约束，
  * 所以少写/写错一个 key 会在 `tsc` 阶段就报错，不会等到运行时才发现漏翻。
  *
  * 命名约定：`页面/模块.子区域.字段`，例如 `settings.controls.themeMode`、`nav.item.finance`。
@@ -70,8 +70,38 @@ export const en = {
       vsLastWeek: "vs last week",
       vsLastMonth: "vs last month",
     },
+    enums: {
+      stage: {
+        "Proposal Sent": "Proposal Sent",
+        Discovery: "Discovery",
+        Negotiation: "Negotiation",
+        Qualified: "Qualified",
+      },
+      health: {
+        "On Track": "On Track",
+        "Needs Review": "Needs Review",
+        "At Risk": "At Risk",
+        "On Hold": "On Hold",
+      },
+      plan: {
+        Enterprise: "Enterprise",
+        Growth: "Growth",
+        Pro: "Pro",
+        Starter: "Starter",
+      },
+      status: {
+        Subscribed: "Subscribed",
+        Inactive: "Inactive",
+        Unsubscribed: "Unsubscribed",
+      },
+      billing: {
+        Paid: "Paid",
+        Pending: "Pending",
+        Overdue: "Overdue",
+        Trial: "Trial",
+      },
+    },
   },
-
   dashboard: {
     default: {
       metric: {
@@ -113,8 +143,238 @@ export const en = {
         rowsSelected: "{selected} of {total} row(s) selected.",
       },
     },
+    crm: {
+      metadataTitle: "Open Source CRM Dashboard with shadcn/ui",
+      metadataDescription:
+        "Explore an open source CRM dashboard with pipeline activity, opportunities, sales performance, and task reminders.",
+      kpi: {
+        title: "Pipeline Overview",
+        description:
+          "Keep tabs on lead quality, open opportunities, and conversion rates across the current sales cycle.",
+        leadPipelineValue: "Lead Pipeline Value",
+        qualifiedLeadRate: "Qualified Lead Rate",
+        openOpportunities: "Open Opportunities",
+        leadToDealRate: "Lead-to-Deal Rate",
+      },
+      pipeline: {
+        title: "Qualified Lead Flow",
+        qualified: "Qualified",
+        lastQuarter: "Last quarter",
+        last12Months: "Last 12 months",
+        leads: "leads",
+        totalQualifiedDescription: "Total qualified leads captured over the last 12 months.",
+        discoveryCallsBooked: "Discovery Calls Booked",
+        meetings: "meetings",
+        discoveryProgress: "{progress}% of qualified leads booked a first call.",
+        booked: "{count} booked",
+        qualifiedCount: "{count} qualified",
+      },
+      taskReminders: {
+        upcomingMeetings: "Upcoming Meetings",
+        viewCalendar: "View Calendar",
+        monthlyProposalGoal: "Monthly Proposal Goal",
+        sent: "sent",
+        target: "{target} target",
+        proposalProgress: "{progress}% of this month's proposal target reached.",
+      },
+      table: {
+        title: "Recent Opportunities",
+        description: "Track qualified leads moving through discovery, proposal, and closing stages.",
+        searchPlaceholder: "Search deals...",
+        stage: "Stage",
+        health: "Health",
+        allStages: "All stages",
+        allHealth: "All health",
+        id: "ID",
+        account: "Account",
+        priority: "Priority",
+        value: "Value",
+        selectAll: "Select all opportunities",
+        selectRow: "Select {name}",
+        editOpportunity: "Edit opportunity",
+        viewing: "Viewing {visible} out of {total} opportunities",
+      },
+    },
+    ecommerce: {
+      metadataTitle: "Open Source E-commerce Dashboard with shadcn/ui",
+      metadataDescription:
+        "Explore an open source e-commerce dashboard with sales metrics, orders, store traffic, inventory, products, and reviews.",
+      title: "Store Overview",
+      filters: {
+        allChannels: "All Channels",
+        onlineStore: "Online Store",
+        marketplace: "Marketplace",
+        social: "Social",
+        retail: "Retail",
+      },
+      kpi: {
+        totalSales: "Total Sales",
+        totalOrders: "Total Orders",
+        customerGrowth: "Customer Growth",
+        averageOrder: "Average Order",
+        returnRequests: "Return Requests",
+        stockAccuracy: "Stock Accuracy",
+        salesOverview: "Sales Overview",
+        revenue: "Revenue",
+        profit: "Profit",
+        vsLastAudit: "vs last audit",
+      },
+      inventory: {
+        title: "Inventory",
+        inStock: "In stock",
+        lowStock: "Low stock",
+        out: "Out",
+        outOfStock: "Out of stock",
+        available: "{percent}% available",
+        availableLabel: "Available",
+      },
+      topProducts: {
+        title: "Top Products",
+        shareOfSales: "{percent}% of sales",
+        products: "Products",
+        share: "Share",
+        sales: "Sales",
+        salesByCategory: "Sales by category",
+      },
+      storeTraffic: {
+        title: "Store Traffic",
+        visits: "{count} visits",
+        visitors: "Visitors",
+        anomalies: "Anomalies",
+        hoursAgo24: "24h ago",
+        now: "now",
+      },
+      trafficSources: {
+        title: "Traffic Sources",
+        visits: "Visits",
+        visitsTotal: "{count} visits",
+      },
+      reviews: {
+        title: "Reviews",
+        averageRating: "{rating} average rating",
+        count: "{count} reviews",
+        customersThisMonth: "Customers reviewed this month",
+        previous: "Previous review",
+        next: "Next review",
+      },
+      orders: {
+        title: "Recent Orders",
+        openOrders: "Open orders",
+        downloadOrders: "Download orders",
+        noResults: "No orders found.",
+        viewing: "Viewing {visible} out of {total} orders",
+        previous: "Previous",
+        next: "Next",
+        filterNeedsAction: "Needs action",
+        filterUnfulfilled: "Unfulfilled",
+        filterUnpaid: "Unpaid",
+        filterReturns: "Returns",
+        orderOne: "order",
+        orderOther: "orders",
+        needsActionOne: "{count} order need action",
+        needsActionOther: "{count} orders need action",
+        returnOne: "{count} return",
+        returnOther: "{count} returns",
+        unfulfilledOne: "{count} unfulfilled order",
+        unfulfilledOther: "{count} unfulfilled orders",
+        unpaidOne: "{count} unpaid order",
+        unpaidOther: "{count} unpaid orders",
+        selectedOne: "{count} order selected",
+        selectedOther: "{count} orders selected",
+        selectAll: "Select all orders",
+        selectRow: "Select order {id}",
+        columnOrder: "Order",
+        columnCustomer: "Customer",
+        columnStatus: "Status",
+        columnTotal: "Total",
+        columnDate: "Date",
+        columnActions: "Actions",
+        openActions: "Open order actions",
+        actionsLabel: "Order Actions",
+        viewOrder: "View order",
+        contactCustomer: "Contact customer",
+        copyOrderId: "Copy order ID",
+        paymentRefunded: "Refunded",
+        fulfillmentFulfilled: "Fulfilled",
+        fulfillmentReturned: "Returned",
+        fulfillmentUnfulfilled: "Unfulfilled",
+      },
+    },
+    finance: {
+      metadataTitle: "Open Source Finance Dashboard with shadcn/ui",
+      metadataDescription:
+        "Explore an open source personal finance dashboard with net worth, spending, income sources, account allocation, transactions, and wallets.",
+      title: "Personal Finances",
+      updatedAgo: "Updated {minutes} min ago",
+      tab: {
+        dashboard: "Dashboard",
+        accounts: "Accounts",
+        transactions: "Transactions",
+      },
+      comingSoon: "{tab} view coming soon.",
+      kpi: {
+        netWorth: "Net worth",
+        availableCash: "Available cash",
+        monthlySpend: "Monthly spend",
+        savingsRate: "Savings rate",
+        above30DayAverage: "{amount} above your 30-day average",
+        moreThanLastMonth: "{amount} more than last month",
+        upFromLastMonth: "Up from {previous} last month",
+      },
+      income: {
+        title: "Income sources",
+        primarySalary: "Primary salary",
+        freelanceProjects: "Freelance projects",
+        dividendsAndInterest: "Dividends and interest",
+      },
+      notification: {
+        title: "Credit score updated",
+        description: "Your score increased by {points} points to {score}.",
+        viewDetails: "View details",
+      },
+      quickTransfer: {
+        title: "Quick Transfer",
+        send: "Send",
+      },
+      shortcuts: {
+        title: "Shortcuts",
+        scanQr: "Scan QR",
+        transfer: "Transfer",
+        payBills: "Pay Bills",
+        history: "History",
+        mobile: "Mobile",
+        electricity: "Electricity",
+        water: "Water",
+      },
+      allocation: {
+        title: "Account Allocation",
+        eurBalance: "Euro Balance",
+        gbpBalance: "GBP Balance",
+        usdBalance: "USD Balance",
+        total: "Total",
+      },
+      spending: {
+        title: "Spending Overview",
+        weekly: "Weekly",
+        monthly: "Monthly",
+        yearly: "Yearly",
+        expense: "Expense",
+        income: "Income",
+      },
+      upcoming: {
+        title: "Upcoming Bills & Payments",
+        billsDuePrefix: "You have ",
+        billsDueSuffix: " bills due this month",
+        autopayPrefix: "Autopay will process ",
+        autopaySuffix: " today",
+      },
+      wallet: {
+        title: "Wallet",
+        physicalVault: "Physical Vault:",
+        airGapped: "Air-Gapped",
+      },
+    },
   },
-
   analytics: {
     metadataTitle: "Open Source Analytics Dashboard with shadcn/ui",
     metadataDescription:
@@ -135,6 +395,7 @@ export const en = {
       pageviews: "Pageviews",
       engagementRate: "Engagement Rate",
       conversionRate: "Conversion Rate",
+      from: "from",
     },
     visitors: "Visitors",
     trafficSources: "Traffic Sources",
@@ -162,7 +423,6 @@ export const en = {
       refreshMetrics: "Refresh metrics",
     },
   },
-
   nav: {
     group: {
       dashboards: "Dashboards",
@@ -208,7 +468,6 @@ export const en = {
       soon: "soon",
     },
   },
-
   shell: {
     toggleSidebar: "Toggle Sidebar",
     openMenu: "Open menu",
@@ -221,7 +480,6 @@ export const en = {
     quickCreate: "Quick Create",
     inbox: "Inbox",
   },
-
   support: {
     title: "Have something in mind?",
     body: "Suggest a feature or discuss custom work with me on",
@@ -230,14 +488,12 @@ export const en = {
     ctaX: "Reach out on X",
     emailLabel: "email",
   },
-
   search: {
     trigger: "Search",
     placeholder: "Search dashboards, users, and more…",
     empty: "No results found.",
     other: "Other",
   },
-
   settings: {
     title: "Preferences",
     description: "Customize your dashboard layout preferences.",

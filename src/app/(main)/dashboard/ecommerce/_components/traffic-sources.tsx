@@ -7,6 +7,7 @@ import { siEbay, siGoogle, siMeta, siShopify, siTiktok } from "simple-icons";
 import { SimpleIcon } from "@/components/simple-icon";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const trafficSources = [
   {
@@ -45,13 +46,6 @@ const trafficSources = [
     icon: siEbay,
   },
 ] as const;
-
-const trafficSourcesConfig = {
-  share: {
-    label: "Visits",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig;
 
 type IconLabelProps = {
   height?: number | string;
@@ -157,12 +151,24 @@ function TrafficSourceChangeLabel({ height, value, y }: SourceChangeLabelProps) 
 }
 
 export function TrafficSources() {
+  const { t } = useI18n();
+
+  // chartConfig 的 label 需要跟随语言，所以从模块级挪进组件内部。
+  const trafficSourcesConfig = {
+    share: {
+      label: t("dashboard.ecommerce.trafficSources.visits"),
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal text-muted-foreground text-sm">Traffic Sources</CardTitle>
+        <CardTitle className="font-normal text-muted-foreground text-sm">
+          {t("dashboard.ecommerce.trafficSources.title")}
+        </CardTitle>
         <CardDescription className="text-foreground text-xl tabular-nums leading-none tracking-tight">
-          14.8K visits
+          {t("dashboard.ecommerce.trafficSources.visitsTotal", { count: "14.8K" })}
         </CardDescription>
         <CardAction>
           <ArrowUpRight className="size-4" />
@@ -206,7 +212,7 @@ export function TrafficSources() {
               dataKey="share"
               fill="var(--color-share)"
               fillOpacity={0.5}
-              name="Visits"
+              name={t("dashboard.ecommerce.trafficSources.visits")}
               radius={8}
               stroke="var(--color-share)"
               strokeOpacity={0.1}

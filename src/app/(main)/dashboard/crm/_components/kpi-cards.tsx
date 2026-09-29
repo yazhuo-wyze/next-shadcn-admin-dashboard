@@ -2,21 +2,22 @@ import { ArrowUpRight, TrendingDown, TrendingUp } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardAction, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import { getT } from "@/lib/i18n/server";
 
-export function KpiCards() {
+export async function KpiCards() {
+  const t = await getT();
+
   return (
     <section className="space-y-5">
       <div className="space-y-1">
-        <h2 className="text-3xl tracking-tight">Pipeline Overview</h2>
-        <p className="text-muted-foreground text-sm">
-          Keep tabs on lead quality, open opportunities, and conversion rates across the current sales cycle.
-        </p>
+        <h2 className="text-3xl tracking-tight">{t("dashboard.crm.kpi.title")}</h2>
+        <p className="text-muted-foreground text-sm">{t("dashboard.crm.kpi.description")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardHeader>
-            <CardDescription>Lead Pipeline Value</CardDescription>
+            <CardDescription>{t("dashboard.crm.kpi.leadPipelineValue")}</CardDescription>
             <CardAction>
               <ArrowUpRight className="size-4" />
             </CardAction>
@@ -35,14 +36,14 @@ export function KpiCards() {
             </div>
             <p className="text-sm">
               <span className="font-medium text-foreground">$254,200</span>{" "}
-              <span className="text-muted-foreground">last month</span>
+              <span className="text-muted-foreground">{t("common.time.lastMonth")}</span>
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardDescription>Qualified Lead Rate</CardDescription>
+            <CardDescription>{t("dashboard.crm.kpi.qualifiedLeadRate")}</CardDescription>
             <CardAction>
               <ArrowUpRight className="size-4" />
             </CardAction>
@@ -58,14 +59,14 @@ export function KpiCards() {
             </div>
             <p className="text-sm">
               <span className="font-medium text-foreground">30.9%</span>{" "}
-              <span className="text-muted-foreground">last month</span>
+              <span className="text-muted-foreground">{t("common.time.lastMonth")}</span>
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardDescription>Open Opportunities</CardDescription>
+            <CardDescription>{t("dashboard.crm.kpi.openOpportunities")}</CardDescription>
             <CardAction>
               <ArrowUpRight className="size-4" />
             </CardAction>
@@ -84,14 +85,14 @@ export function KpiCards() {
             </div>
             <p className="text-sm">
               <span className="font-medium text-foreground">35</span>{" "}
-              <span className="text-muted-foreground">last month</span>
+              <span className="text-muted-foreground">{t("common.time.lastMonth")}</span>
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardDescription>Lead-to-Deal Rate</CardDescription>
+            <CardDescription>{t("dashboard.crm.kpi.leadToDealRate")}</CardDescription>
             <CardAction>
               <ArrowUpRight className="size-4" />
             </CardAction>
@@ -110,7 +111,7 @@ export function KpiCards() {
             </div>
             <p className="text-sm">
               <span className="font-medium text-foreground">16.5%</span>{" "}
-              <span className="text-muted-foreground">last month</span>
+              <span className="text-muted-foreground">{t("common.time.lastMonth")}</span>
             </p>
           </CardContent>
         </Card>

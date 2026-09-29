@@ -96,7 +96,7 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<DataTableFeature
       filterFn: "equalsString",
       cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.status}
+          {t(`common.enums.status.${row.original.status}`)}
         </Badge>
       ),
     },
@@ -107,14 +107,14 @@ export function recentCustomersColumns(t: TFunction): ColumnDef<DataTableFeature
       cell: ({ row }) => (
         <Badge variant="outline" className="px-1.5 text-muted-foreground">
           {billingIcon(row.original.billing)}
-          {row.original.billing}
+          {t(`common.enums.billing.${row.original.billing}`)}
         </Badge>
       ),
     },
     {
       accessorKey: "plan",
       header: t("dashboard.default.table.plan"),
-      cell: ({ row }) => <span className="text-sm">{row.original.plan}</span>,
+      cell: ({ row }) => <span className="text-sm">{t(`common.enums.plan.${row.original.plan}`)}</span>,
     },
     {
       id: "joinedWindow",

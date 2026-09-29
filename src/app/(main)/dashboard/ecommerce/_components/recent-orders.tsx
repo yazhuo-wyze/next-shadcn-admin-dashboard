@@ -18,6 +18,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { recentOrdersColumns } from "./recent-orders-table/columns";
 import recentOrdersData from "./recent-orders-table/data.json";
@@ -31,6 +32,7 @@ import { type OrderFilter, type OrderRow, orderFilters } from "./recent-orders-t
 const recentOrders = recentOrdersData as OrderRow[];
 
 export function RecentOrders() {
+  const { t } = useI18n();
   const [rowSelection, setRowSelection] = React.useState({});
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -42,7 +44,7 @@ export function RecentOrders() {
   const table = useTable({
     features: dataTableFeatures,
     data: recentOrders,
-    columns: recentOrdersColumns,
+    columns: recentOrdersColumns(t),
     state: {
       rowSelection,
       sorting,
@@ -64,7 +66,10 @@ export function RecentOrders() {
   const currentPage = table.state.pagination.pageIndex + 1;
   const pageCount = table.getPageCount();
   const orderCountDescription =
-    selectedOrderCount > 0 ? formatSelectedOrderCount(selectedOrderCount) : formatOrderCount(activeFilter, orderCount);
+    selectedOrderCount > 0
+      ? formatSelectedOrderCount(selectedOrderCount, t)
+      : formatOrderCount(activeFilter, orderCount, t);
+
   const pageNumbers = React.useMemo(() => {
     if (pageCount <= 3) {
       return Array.from({ length: pageCount }, (_, index) => index + 1);
@@ -79,15 +84,17 @@ export function RecentOrders() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-normal text-muted-foreground text-sm">Recent Orders</CardTitle>
+        <CardTitle className="font-normal text-muted-foreground text-sm">
+          {t("dashboard.ecommerce.orders.title")}
+        </CardTitle>
         <CardDescription className="text-foreground text-xl tabular-nums leading-none tracking-tight">
           {orderCountDescription}
         </CardDescription>
         <CardAction className="flex items-center gap-1">
-          <Button aria-label="Open orders" size="icon-sm" variant="outline">
+          <Button aria-label={t("dashboard.ecommerce.orders.openOrders")} size="icon-sm" variant="outline">
             <ArrowUpRight />
           </Button>
-          <Button aria-label="Download orders" size="icon-sm" variant="outline">
+          <Button aria-label={t("dashboard.ecommerce.orders.downloadOrders")} size="icon-sm" variant="outline">
             <Download />
           </Button>
           <Button size="icon-sm" variant="outline">
@@ -110,9 +117,10 @@ export function RecentOrders() {
             type="single"
             value={activeFilter}
           >
+            {/* `value` 是筛选逻辑依赖的英文枚举值，显示文案走 common.enums.orderFilter.* */}
             {orderFilters.map((filter) => (
               <ToggleGroupItem key={filter} value={filter}>
-                {filter}
+                {t(`common.enums.orderFilter.${filter}`)}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
@@ -153,7 +161,7 @@ export function RecentOrders() {
               ) : (
                 <TableRow>
                   <TableCell className="h-24 text-center" colSpan={table.getVisibleLeafColumns().length}>
-                    No orders found.
+                    {t("dashboard.ecommerce.orders.noResults")}
                   </TableCell>
                 </TableRow>
               )}
@@ -163,7 +171,10 @@ export function RecentOrders() {
 
         <div className="flex items-center justify-between gap-4 px-4 pb-1">
           <p className="text-muted-foreground text-sm">
-            Viewing {visibleOrderCount} out of {orderCount.toLocaleString()} orders
+            {t("dashboard.ecommerce.orders.viewing", {
+              visible: visibleOrderCount,
+              total: orderCount.toLocaleString(),
+            })}
           </p>
 
           <Pagination className="mx-0 w-auto justify-end">
@@ -172,6 +183,7 @@ export function RecentOrders() {
                 <PaginationPrevious
                   className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : undefined}
                   href="#"
+                  text={t("dashboard.ecommerce.orders.previous")}
                   onClick={(event) => {
                     preventPaginationNavigation(event);
                     table.previousPage();
@@ -206,6 +218,7 @@ export function RecentOrders() {
                 <PaginationNext
                   className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : undefined}
                   href="#"
+                  text={t("dashboard.ecommerce.orders.next")}
                   onClick={(event) => {
                     preventPaginationNavigation(event);
                     table.nextPage();

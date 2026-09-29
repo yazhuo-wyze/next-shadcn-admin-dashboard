@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getT } from "@/lib/i18n/server";
 
 import { AnalyticsKpiStrip } from "./_components/analytics-kpi-strip";
 import { AnalyticsToolbar } from "./_components/analytics-toolbar";
@@ -12,33 +13,36 @@ import { TrafficQuality } from "./_components/traffic-quality";
 // Import this stylesheet in any page or component that renders country flag classes.
 import "@/styles/flag-icons/flags.css";
 
-export const metadata: Metadata = {
-  title: "Open Source Analytics Dashboard with shadcn/ui",
-  description:
-    "Explore an open source analytics dashboard with traffic metrics, realtime visitors, page performance, and conversion insights.",
-  alternates: {
-    canonical: "/dashboard/analytics",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function Page() {
+  return {
+    title: t("analytics.metadataTitle"),
+    description: t("analytics.metadataDescription"),
+    alternates: {
+      canonical: "/dashboard/analytics",
+    },
+  };
+}
+
+export default async function Page() {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-4">
       <div className="space-y-1">
-        <h1 className="text-3xl tracking-tight">Hello, Aiy</h1>
-        <p className="text-muted-foreground text-sm">
-          Monitor traffic, engagement, and conversion performance in one view.
-        </p>
+        <h1 className="text-3xl tracking-tight">{t("analytics.greeting", { name: "Aiy" })}</h1>
+        <p className="text-muted-foreground text-sm">{t("analytics.subtitle")}</p>
       </div>
 
       <Tabs defaultValue="overview" className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <TabsList className="gap-1">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="audience">Audience</TabsTrigger>
-            <TabsTrigger value="acquisition">Acquisition</TabsTrigger>
-            <TabsTrigger value="engagement">Engagement</TabsTrigger>
-            <TabsTrigger value="conversions">Conversions</TabsTrigger>
+            <TabsTrigger value="overview">{t("analytics.tabs.overview")}</TabsTrigger>
+            <TabsTrigger value="audience">{t("analytics.tabs.audience")}</TabsTrigger>
+            <TabsTrigger value="acquisition">{t("analytics.tabs.acquisition")}</TabsTrigger>
+            <TabsTrigger value="engagement">{t("analytics.tabs.engagement")}</TabsTrigger>
+            <TabsTrigger value="conversions">{t("analytics.tabs.conversions")}</TabsTrigger>
           </TabsList>
 
           <AnalyticsToolbar />
@@ -68,25 +72,25 @@ export default function Page() {
 
         <TabsContent value="audience">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Audience view coming soon.
+            {t("analytics.comingSoon", { tab: t("analytics.tabs.audience") })}
           </div>
         </TabsContent>
 
         <TabsContent value="acquisition">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Acquisition view coming soon.
+            {t("analytics.comingSoon", { tab: t("analytics.tabs.acquisition") })}
           </div>
         </TabsContent>
 
         <TabsContent value="engagement">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Engagement view coming soon.
+            {t("analytics.comingSoon", { tab: t("analytics.tabs.engagement") })}
           </div>
         </TabsContent>
 
         <TabsContent value="conversions">
           <div className="flex h-64 items-center justify-center rounded-xl border border-border border-dashed text-muted-foreground">
-            Conversions view coming soon.
+            {t("analytics.comingSoon", { tab: t("analytics.tabs.conversions") })}
           </div>
         </TabsContent>
       </Tabs>

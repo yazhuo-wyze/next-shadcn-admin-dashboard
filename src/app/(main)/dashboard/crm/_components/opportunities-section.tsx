@@ -30,13 +30,36 @@ import {
 } from "@/components/ui/pagination";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { opportunitiesColumns } from "./opportunities-table/columns";
 import opportunitiesData from "./opportunities-table/data.json";
 import { opportunitiesSchema } from "./opportunities-table/schema";
 
-const stageOptions = ["all", "Proposal Sent", "Discovery", "Negotiation", "Qualified"] as const;
-const healthOptions = ["all", "On Track", "Needs Review", "At Risk", "On Hold"] as const;
+/**
+ * 筛选项的写法：`value` 必须与 data.json 里的英文值一致（`filterFn: "equalsString"` 依赖它），
+ * 只把 `label`（展示给用户的那部分）本地化 —— 所以这些列表改成了接收 t 的函数。
+ * 枚举 label 与单元格渲染共用 `common.enums.<维度>.<英文值>` 词条，避免两处不一致。
+ */
+const stageOptions = (t: TFunction) =>
+  [
+    { value: "all", label: t("dashboard.crm.table.allStages") },
+    { value: "Proposal Sent", label: t("common.enums.stage.Proposal Sent") },
+    { value: "Discovery", label: t("common.enums.stage.Discovery") },
+    { value: "Negotiation", label: t("common.enums.stage.Negotiation") },
+    { value: "Qualified", label: t("common.enums.stage.Qualified") },
+  ] as const;
+
+const healthOptions = (t: TFunction) =>
+  [
+    { value: "all", label: t("dashboard.crm.table.allHealth") },
+    { value: "On Track", label: t("common.enums.health.On Track") },
+    { value: "Needs Review", label: t("common.enums.health.Needs Review") },
+    { value: "At Risk", label: t("common.enums.health.At Risk") },
+    { value: "On Hold", label: t("common.enums.health.On Hold") },
+  ] as const;
+
 const opportunities = opportunitiesSchema.parse(opportunitiesData);
 
 function preventPaginationNavigation(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -44,6 +67,7 @@ function preventPaginationNavigation(event: React.MouseEvent<HTMLAnchorElement>)
 }
 
 export function OpportunitiesSection() {
+  const { t } = useI18n();
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility] = React.useState<ColumnVisibilityState>({});
@@ -56,7 +80,7 @@ export function OpportunitiesSection() {
   const table = useTable({
     features: dataTableFeatures,
     data: opportunities,
-    columns: opportunitiesColumns,
+    columns: opportunitiesColumns(t),
     state: {
       rowSelection,
       columnFilters,
@@ -94,15 +118,13 @@ export function OpportunitiesSection() {
     <section>
       <Card>
         <CardHeader>
-          <CardTitle className="leading-none">Recent Opportunities</CardTitle>
-          <CardDescription>
-            Track qualified leads moving through discovery, proposal, and closing stages.
-          </CardDescription>
+          <CardTitle className="leading-none">{t("dashboard.crm.table.title")}</CardTitle>
+          <CardDescription>{t("dashboard.crm.table.description")}</CardDescription>
           <CardAction>
             <div className="flex items-center gap-2">
               <Input
                 className="h-7 w-44 md:w-52"
-                placeholder="Search deals..."
+                placeholder={t("dashboard.crm.table.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(event) => {
                   table.setGlobalFilter(event.target.value || undefined);
@@ -113,7 +135,7 @@ export function OpportunitiesSection() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
                     <ListFilter data-icon="inline-start" />
-                    Stage
+                    {t("dashboard.crm.table.stage")}
                     <ChevronDownIcon data-icon="inline-end" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -125,9 +147,9 @@ export function OpportunitiesSection() {
                       table.setPageIndex(0);
                     }}
                   >
-                    {stageOptions.map((option) => (
-                      <DropdownMenuRadioItem key={option} value={option}>
-                        {option === "all" ? "All stages" : option}
+                    {stageOptions(t).map((option) => (
+                      <DropdownMenuRadioItem key={option.value} value={option.value}>
+                        {option.label}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>
@@ -137,7 +159,7 @@ export function OpportunitiesSection() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm">
                     <ListFilter data-icon="inline-start" />
-                    Health
+                    {t("dashboard.crm.table.health")}
                     <ChevronDownIcon data-icon="inline-end" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -149,9 +171,9 @@ export function OpportunitiesSection() {
                       table.setPageIndex(0);
                     }}
                   >
-                    {healthOptions.map((option) => (
-                      <DropdownMenuRadioItem key={option} value={option}>
-                        {option === "all" ? "All health" : option}
+                    {healthOptions(t).map((option) => (
+                      <DropdownMenuRadioItem key={option.value} value={option.value}>
+                        {option.label}
                       </DropdownMenuRadioItem>
                     ))}
                   </DropdownMenuRadioGroup>
@@ -188,7 +210,7 @@ export function OpportunitiesSection() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-24 text-center">
-                      No results.
+                      {t("common.states.noResults")}
                     </TableCell>
                   </TableRow>
                 )}
@@ -197,7 +219,10 @@ export function OpportunitiesSection() {
           </div>
           <div className="flex items-center justify-between gap-4 px-4 pb-1">
             <p className="text-muted-foreground text-sm">
-              Viewing {visibleOpportunityCount} out of {filteredOpportunityCount.toLocaleString()} opportunities
+              {t("dashboard.crm.table.viewing", {
+                visible: visibleOpportunityCount,
+                total: filteredOpportunityCount.toLocaleString(),
+              })}
             </p>
 
             <Pagination className="mx-0 w-auto justify-end">
