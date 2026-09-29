@@ -17,26 +17,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
 import { getInitials } from "@/lib/utils";
 
 import { statusMeta, type UserRow } from "./data";
 
-function RoleCell({ role, team }: { role: string; team: string }) {
+function RoleCell({ role, team, t }: { role: string; team: string; t: TFunction }) {
   return (
     <div className="grid gap-0.5">
-      <span className="whitespace-nowrap">{role}</span>
-      <span className="text-muted-foreground text-xs">{team}</span>
+      <span className="whitespace-nowrap">{t(`common.enums.userRole.${role}`)}</span>
+      <span className="text-muted-foreground text-xs">{t(`common.enums.userTeam.${team}`)}</span>
     </div>
   );
 }
 
-function StatusBadge({ status }: { status: UserRow["status"] }) {
+function StatusBadge({ status, t }: { status: UserRow["status"]; t: TFunction }) {
   const meta = statusMeta[status];
 
   return (
     <Badge className={cn("gap-1.5 border px-2 py-1 font-medium", meta.badgeClass)} variant="outline">
       <span className={cn("size-1.5 rounded-full", meta.dotClass)} />
-      {status}
+      {t(`common.enums.userStatus.${status}`)}
     </Badge>
   );
 }
@@ -116,7 +117,8 @@ function WorkspaceCell({ workspaces }: { workspaces: string[] }) {
   );
 }
 
-export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
+/** 列定义里有表头/操作项等文案要跟随语言，所以改成接收 t 的函数（用法参考 dashboard/default 的 recentCustomersColumns）。 */
+export const usersColumns = (t: TFunction): ColumnDef<DataTableFeatures, UserRow>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -130,7 +132,7 @@ export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
         >
           {(checked) => (
             <Checkbox
-              aria-label="Select all users"
+              aria-label={t("dashboard.users.table.selectAllUsers")}
               checked={checked}
               onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
             />
@@ -143,7 +145,7 @@ export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
         <Subscribe source={row.table.atoms.rowSelection} selector={(selection) => Boolean(selection?.[row.id])}>
           {(checked) => (
             <Checkbox
-              aria-label={`Select ${row.original.name}`}
+              aria-label={t("dashboard.users.table.selectUser", { name: row.original.name })}
               checked={checked}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
             />
@@ -162,7 +164,7 @@ export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
   },
   {
     accessorKey: "name",
-    header: "User",
+    header: t("dashboard.users.table.user"),
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <AvatarCell name={row.original.name} lastActive={row.original.lastActive} />
@@ -175,43 +177,43 @@ export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
   },
   {
     accessorKey: "role",
-    header: "Role / Team",
+    header: t("dashboard.users.table.roleTeam"),
     filterFn: "equalsString",
-    cell: ({ row }) => <RoleCell role={row.original.role} team={row.original.team} />,
+    cell: ({ row }) => <RoleCell role={row.original.role} team={row.original.team} t={t} />,
   },
   {
     accessorKey: "team",
-    header: "Team",
+    header: t("dashboard.users.table.team"),
     filterFn: "equalsString",
-    cell: ({ row }) => <div className="text-sm">{row.original.team}</div>,
+    cell: ({ row }) => <div className="text-sm">{t(`common.enums.userTeam.${row.original.team}`)}</div>,
   },
   {
     accessorKey: "workspace",
-    header: "Workspace",
+    header: t("dashboard.users.table.workspace"),
     filterFn: "arrIncludes",
     cell: ({ row }) => <WorkspaceCell workspaces={row.original.workspace} />,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: t("dashboard.users.table.status"),
     filterFn: "equalsString",
-    cell: ({ row }) => <StatusBadge status={row.original.status} />,
+    cell: ({ row }) => <StatusBadge status={row.original.status} t={t} />,
   },
   {
     id: "joinedDate",
     accessorFn: (row) => parse(row.joinedDate, "dd MMM yyyy, h:mm a", new Date()).getTime(),
-    header: "Joined date",
+    header: t("dashboard.users.table.joinedDate"),
     cell: ({ row }) => <div className="text-foreground text-sm">{row.original.joinedDate}</div>,
   },
   {
     id: "actions",
-    header: () => <div className="text-right">Actions</div>,
+    header: () => <div className="text-right">{t("dashboard.users.table.actions")}</div>,
     cell: ({ row }) => (
       <div className="text-right">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              aria-label={`Open actions for ${row.original.name}`}
+              aria-label={t("dashboard.users.table.openActions", { name: row.original.name })}
               className="size-8 rounded-md text-muted-foreground hover:bg-muted/50"
               size="icon-sm"
               variant="ghost"
@@ -220,12 +222,12 @@ export const usersColumns: ColumnDef<DataTableFeatures, UserRow>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>View profile</DropdownMenuItem>
-            <DropdownMenuItem>Edit user</DropdownMenuItem>
-            <DropdownMenuItem>Manage team</DropdownMenuItem>
-            <DropdownMenuItem>Resend invite</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.users.actions.viewProfile")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.users.actions.editUser")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.users.actions.manageTeam")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.users.actions.resendInvite")}</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Deactivate user</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">{t("dashboard.users.actions.deactivateUser")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

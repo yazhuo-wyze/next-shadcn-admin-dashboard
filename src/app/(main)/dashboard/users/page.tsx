@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
 
+import { getT } from "@/lib/i18n/server";
+
 import { users } from "./_components/data";
 import { Users } from "./_components/users";
 
-export const metadata: Metadata = {
-  title: "Open Source User Management Dashboard with shadcn/ui",
-  description: "Explore an open source user management dashboard for browsing, filtering, and managing user accounts.",
-  alternates: {
-    canonical: "/dashboard/users",
-  },
-};
+// 模块级的 `metadata` 常量拿不到 t（服务端 i18n 需要在请求期读语言偏好），
+// 所以改成 `generateMetadata`：页面保持服务端组件，文案跟随语言切换。
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
+
+  return {
+    title: t("dashboard.users.metadataTitle"),
+    description: t("dashboard.users.metadataDescription"),
+    alternates: {
+      canonical: "/dashboard/users",
+    },
+  };
+}
 
 export default function Page() {
   return <Users users={users} />;

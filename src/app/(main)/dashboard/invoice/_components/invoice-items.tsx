@@ -1,3 +1,5 @@
+"use client";
+
 import { RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
 import { DragDropProvider, type DragEndEvent } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
@@ -8,11 +10,14 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 import { getLineAmount, type InvoiceFormValues, type InvoiceLineItem } from "./data";
 
+// 本组件被客户端组件 `Invoice` 引用，属于客户端渲染树，因此用 `useI18n()` 取词。
 export function InvoiceItems() {
+  const { t } = useI18n();
   const { control, register } = useFormContext<InvoiceFormValues>();
   const { append, fields, move, remove } = useFieldArray({
     control,
@@ -37,20 +42,20 @@ export function InvoiceItems() {
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="font-medium tracking-tight">Invoice Items</h2>
+        <h2 className="font-medium tracking-tight">{t("dashboard.invoice.sections.invoiceItems")}</h2>
         <Button type="button" variant="ghost" size="sm" onClick={handleAddItem}>
           <Plus data-icon="inline-start" />
-          Add Item
+          {t("dashboard.invoice.actions.addItem")}
         </Button>
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="hidden items-center gap-2 px-1 font-medium text-muted-foreground text-xs md:grid md:grid-cols-[24px_minmax(0,1fr)_64px_112px_112px_32px]">
           <span />
-          <span>Description</span>
-          <span className="px-2">Units</span>
-          <span className="px-2">Unit cost</span>
-          <span className="text-right">Line Total</span>
+          <span>{t("dashboard.invoice.items.description")}</span>
+          <span className="px-2">{t("dashboard.invoice.items.units")}</span>
+          <span className="px-2">{t("dashboard.invoice.items.unitCost")}</span>
+          <span className="text-right">{t("dashboard.invoice.items.lineTotal")}</span>
           <span />
         </div>
 
@@ -86,6 +91,7 @@ function SortableInvoiceItemRow({
   register: UseFormRegister<InvoiceFormValues>;
   onRemove: () => void;
 }) {
+  const { t } = useI18n();
   const { handleRef, isDragging, ref } = useSortable({
     id,
     index,
@@ -109,31 +115,31 @@ function SortableInvoiceItemRow({
         variant="ghost"
         size="icon-sm"
         className="-ml-2 cursor-grab text-muted-foreground active:cursor-grabbing"
-        aria-label={`Reorder ${id}`}
+        aria-label={t("dashboard.invoice.items.ariaReorder", { id })}
       >
         <GripVertical />
       </Button>
       <Input
         className="min-w-0 text-sm max-md:col-span-3"
-        aria-label={`Item ${index + 1} description`}
+        aria-label={t("dashboard.invoice.items.ariaDescription", { index: index + 1 })}
         {...register(`items.${index}.description` as const)}
       />
       <Input
         type="number"
         step="1"
         className="text-sm max-md:col-start-2 max-md:row-start-2"
-        aria-label={`Item ${index + 1} quantity`}
+        aria-label={t("dashboard.invoice.items.ariaQuantity", { index: index + 1 })}
         {...register(`items.${index}.quantity` as const, { valueAsNumber: true })}
       />
       <Input
         type="number"
         step="0.01"
         className="text-sm max-md:col-start-3 max-md:row-start-2"
-        aria-label={`Item ${index + 1} unit price`}
+        aria-label={t("dashboard.invoice.items.ariaUnitPrice", { index: index + 1 })}
         {...register(`items.${index}.unitPrice` as const, { valueAsNumber: true })}
       />
       <div className="min-w-0 text-right font-medium text-sm max-md:col-span-3 max-md:col-start-2 max-md:row-start-3 max-md:flex max-md:items-center max-md:justify-between max-md:text-left">
-        <span className="hidden text-muted-foreground max-md:inline">Line total</span>
+        <span className="hidden text-muted-foreground max-md:inline">{t("dashboard.invoice.items.lineTotal")}</span>
         <span>{formatInvoiceCurrency(getLineAmount(item))}</span>
       </div>
       <Button
@@ -141,7 +147,7 @@ function SortableInvoiceItemRow({
         variant="ghost"
         size="icon-sm"
         className="max-md:col-start-4 max-md:row-start-2"
-        aria-label={`Remove item ${index + 1}`}
+        aria-label={t("dashboard.invoice.items.ariaRemove", { index: index + 1 })}
         onClick={onRemove}
       >
         <Trash2 />

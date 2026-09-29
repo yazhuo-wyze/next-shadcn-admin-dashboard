@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
 
+import { getT } from "@/lib/i18n/server";
 import { getValueFromCookie } from "@/server/server-actions";
 
 import { mails } from "./_components/data";
 import { MailComponent } from "./_components/mail";
 import { DEFAULT_MAIL_LAYOUT, MAIL_LAYOUT_COOKIE } from "./_components/mail-layout-config";
 
-export const metadata: Metadata = {
-  title: "Open Source Email Client with shadcn/ui",
-  description:
-    "Explore an open source email client with inbox navigation, message search, reading, replying, and archiving.",
-  alternates: {
-    canonical: "/mail",
-  },
-};
+// 模块级的 `metadata` 常量拿不到 t，改成 generateMetadata 让标题跟随语言切换。
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
+
+  return {
+    title: t("mail.metadataTitle"),
+    description: t("mail.metadataDescription"),
+    alternates: {
+      canonical: "/mail",
+    },
+  };
+}
 
 export default async function Page() {
   const layoutCookie = await getValueFromCookie(MAIL_LAYOUT_COOKIE);

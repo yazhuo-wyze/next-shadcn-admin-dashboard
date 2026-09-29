@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getT } from "@/lib/i18n/server";
 
 import { CardOverview } from "./_components/card-overview";
 import { CashFlowOverview } from "./_components/cash-flow-overview";
@@ -9,20 +10,22 @@ import { PrimaryAccount } from "./_components/kpis/primary-account";
 import { SavingsRate } from "./_components/kpis/savings-rate";
 import { SpendingBreakdown } from "./_components/spending-breakdown";
 
-export default function Page() {
+export default async function Page() {
+  const t = await getT();
+
   return (
     <div>
       <Tabs className="gap-4" defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="overview">{t("dashboard.legacy.finance-v1.tab.overview")}</TabsTrigger>
           <TabsTrigger disabled value="activity">
-            Activity
+            {t("dashboard.legacy.finance-v1.tab.activity")}
           </TabsTrigger>
           <TabsTrigger disabled value="insights">
-            Insights
+            {t("dashboard.legacy.finance-v1.tab.insights")}
           </TabsTrigger>
           <TabsTrigger disabled value="utilities">
-            Utilities
+            {t("dashboard.legacy.finance-v1.tab.utilities")}
           </TabsTrigger>
         </TabsList>
 

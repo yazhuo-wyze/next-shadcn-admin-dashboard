@@ -8,20 +8,22 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ChartContainer } from "@/components/ui/chart";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 import { actionItems, regionSalesData, salesPipelineChartConfig, salesPipelineChartData } from "./crm.config";
 
 export function OperationalCards() {
+  const { t } = useI18n();
   const totalSales = regionSalesData.reduce((sum, region) => sum + region.sales, 0);
   return (
     <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:shadow-xs sm:grid-cols-2 xl:grid-cols-3">
       <Card>
         <CardHeader>
-          <CardTitle>Sales Pipeline</CardTitle>
+          <CardTitle>{t("dashboard.legacy.crm-v1.ops.salesPipeline")}</CardTitle>
         </CardHeader>
         <CardContent className="size-full">
-          <ChartContainer config={salesPipelineChartConfig} className="size-full">
+          <ChartContainer config={salesPipelineChartConfig(t)} className="size-full">
             <FunnelChart margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
               <Funnel className="stroke-2 stroke-card" dataKey="value" data={salesPipelineChartData}>
                 <LabelList className="fill-foreground stroke-0" dataKey="stage" position="right" offset={10} />
@@ -31,13 +33,13 @@ export function OperationalCards() {
           </ChartContainer>
         </CardContent>
         <CardFooter>
-          <p className="text-muted-foreground text-xs">Leads increased by 18.2% since last month.</p>
+          <p className="text-muted-foreground text-xs">{t("dashboard.legacy.crm-v1.ops.leadsIncreased")}</p>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Sales by Region</CardTitle>
+          <CardTitle>{t("dashboard.legacy.crm-v1.ops.salesByRegion")}</CardTitle>
           <CardDescription className="font-medium tabular-nums">
             {formatCurrency(totalSales, { noDecimals: true })}
           </CardDescription>
@@ -72,16 +74,20 @@ export function OperationalCards() {
         </CardContent>
         <CardFooter>
           <div className="flex justify-between gap-1 text-muted-foreground text-xs">
-            <span>{regionSalesData.length} regions tracked</span>
+            <span>{t("dashboard.legacy.crm-v1.ops.regionsTracked", { count: regionSalesData.length })}</span>
             <span>•</span>
-            <span>{regionSalesData.filter((r) => r.isPositive).length} regions growing</span>
+            <span>
+              {t("dashboard.legacy.crm-v1.ops.regionsGrowing", {
+                count: regionSalesData.filter((r) => r.isPositive).length,
+              })}
+            </span>
           </div>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Action Items</CardTitle>
+          <CardTitle>{t("dashboard.legacy.crm-v1.ops.actionItems")}</CardTitle>
         </CardHeader>
         <CardContent>
           <ul className="space-y-2.5">
@@ -98,7 +104,7 @@ export function OperationalCards() {
                       item.priority === "Low" && "bg-green-500/20 text-green-500",
                     )}
                   >
-                    {item.priority}
+                    {t(`dashboard.legacy.crm-v1.priority.${item.priority}`)}
                   </span>
                 </div>
                 <div className="font-medium text-muted-foreground text-xs">{item.desc}</div>

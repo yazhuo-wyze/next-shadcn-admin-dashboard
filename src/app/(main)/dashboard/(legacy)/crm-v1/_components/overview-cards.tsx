@@ -6,6 +6,7 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, XAxis } from "recharts
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import {
   leadsChartConfig,
@@ -19,15 +20,17 @@ import {
 const lastMonth = format(subMonths(new Date(), 1), "LLLL");
 
 export function OverviewCards() {
+  const { t } = useI18n();
+
   return (
     <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:shadow-xs sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       <Card>
         <CardHeader>
-          <CardTitle>New Leads</CardTitle>
-          <CardDescription>Last Month</CardDescription>
+          <CardTitle>{t("dashboard.legacy.crm-v1.overview.newLeads")}</CardTitle>
+          <CardDescription>{t("common.time.lastMonth")}</CardDescription>
         </CardHeader>
         <CardContent className="size-full">
-          <ChartContainer className="size-full min-h-24" config={leadsChartConfig}>
+          <ChartContainer className="size-full min-h-24" config={leadsChartConfig(t)}>
             <BarChart accessibilityLayer data={leadsChartData} barSize={8}>
               <XAxis dataKey="date" tickLine={false} tickMargin={10} axisLine={false} hide />
               <ChartTooltip content={<ChartTooltipContent labelFormatter={(label) => `${lastMonth}: ${label}`} />} />
@@ -50,11 +53,11 @@ export function OverviewCards() {
 
       <Card className="overflow-hidden pb-0">
         <CardHeader>
-          <CardTitle>Proposals Sent</CardTitle>
-          <CardDescription>Last Month</CardDescription>
+          <CardTitle>{t("dashboard.legacy.crm-v1.overview.proposalsSent")}</CardTitle>
+          <CardDescription>{t("common.time.lastMonth")}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 p-0">
-          <ChartContainer className="size-full min-h-24" config={proposalsChartConfig}>
+          <ChartContainer className="size-full min-h-24" config={proposalsChartConfig(t)}>
             <AreaChart
               data={proposalsChartData}
               margin={{
@@ -88,8 +91,8 @@ export function OverviewCards() {
         </CardHeader>
         <CardContent className="flex size-full flex-col justify-between">
           <div className="space-y-1.5">
-            <CardTitle>Revenue</CardTitle>
-            <CardDescription>Last 6 Months</CardDescription>
+            <CardTitle>{t("dashboard.legacy.crm-v1.overview.revenue")}</CardTitle>
+            <CardDescription>{t("common.time.last6Months")}</CardDescription>
           </div>
           <p className="font-medium text-2xl tabular-nums">$56,050</p>
           <div className="w-fit rounded-md bg-green-500/10 px-2 py-1 font-medium text-green-500 text-xs">+22.2%</div>
@@ -104,8 +107,8 @@ export function OverviewCards() {
         </CardHeader>
         <CardContent className="flex size-full flex-col justify-between">
           <div className="space-y-1.5">
-            <CardTitle>Projects Won</CardTitle>
-            <CardDescription>Last 6 Months</CardDescription>
+            <CardTitle>{t("dashboard.legacy.crm-v1.overview.projectsWon")}</CardTitle>
+            <CardDescription>{t("common.time.last6Months")}</CardDescription>
           </div>
           <p className="font-medium text-2xl tabular-nums">136</p>
           <div className="w-fit rounded-md bg-destructive/10 px-2 py-1 font-medium text-destructive text-xs">-2.5%</div>
@@ -114,11 +117,11 @@ export function OverviewCards() {
 
       <Card className="col-span-1 xl:col-span-2">
         <CardHeader>
-          <CardTitle>Revenue Growth</CardTitle>
-          <CardDescription>Year to Date (YTD)</CardDescription>
+          <CardTitle>{t("dashboard.legacy.crm-v1.overview.revenueGrowth")}</CardTitle>
+          <CardDescription>{t("dashboard.legacy.crm-v1.overview.ytd")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={revenueChartConfig} className="h-24 w-full">
+          <ChartContainer config={revenueChartConfig(t)} className="h-24 w-full">
             <LineChart
               data={revenueChartData}
               margin={{
@@ -143,7 +146,7 @@ export function OverviewCards() {
           </ChartContainer>
         </CardContent>
         <CardFooter>
-          <p className="text-muted-foreground text-sm">+35% growth since last year</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.legacy.crm-v1.overview.growthSinceLastYear")}</p>
         </CardFooter>
       </Card>
     </div>

@@ -5,6 +5,7 @@ import { Bar, BarChart, CartesianGrid, Label, LabelList, Pie, PieChart, XAxis, Y
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import {
   leadsBySourceChartConfig,
@@ -14,16 +15,17 @@ import {
 } from "./crm.config";
 
 export function InsightCards() {
+  const { t } = useI18n();
   const totalLeads = leadsBySourceChartData.reduce((acc, curr) => acc + curr.leads, 0);
 
   return (
     <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:shadow-xs sm:grid-cols-2 xl:grid-cols-5">
       <Card className="col-span-1 xl:col-span-2">
         <CardHeader>
-          <CardTitle>Leads by Source</CardTitle>
+          <CardTitle>{t("dashboard.legacy.crm-v1.insight.leadsBySource")}</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center gap-6">
-          <ChartContainer config={leadsBySourceChartConfig} className="mx-auto aspect-square max-h-48 flex-1">
+          <ChartContainer config={leadsBySourceChartConfig(t)} className="mx-auto aspect-square max-h-48 flex-1">
             <PieChart
               className="m-0"
               margin={{
@@ -56,7 +58,7 @@ export function InsightCards() {
                             {totalLeads.toLocaleString()}
                           </tspan>
                           <tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-                            Leads
+                            {t("dashboard.legacy.crm-v1.chart.leads")}
                           </tspan>
                         </text>
                       );
@@ -75,12 +77,12 @@ export function InsightCards() {
                     className="size-2.5 rounded-full"
                     style={{
                       background:
-                        "color" in leadsBySourceChartConfig[item.source]
-                          ? leadsBySourceChartConfig[item.source].color
+                        "color" in leadsBySourceChartConfig(t)[item.source]
+                          ? leadsBySourceChartConfig(t)[item.source].color
                           : undefined,
                     }}
                   />
-                  {leadsBySourceChartConfig[item.source].label}
+                  {leadsBySourceChartConfig(t)[item.source].label}
                 </span>
                 <span className="text-xs tabular-nums">{item.leads}</span>
               </li>
@@ -89,20 +91,20 @@ export function InsightCards() {
         </CardContent>
         <CardFooter className="gap-2">
           <Button size="sm" variant="outline" className="basis-1/2">
-            View Full Report
+            {t("dashboard.legacy.crm-v1.insight.viewFullReport")}
           </Button>
           <Button size="sm" variant="outline" className="basis-1/2">
-            Download CSV
+            {t("dashboard.legacy.crm-v1.insight.downloadCsv")}
           </Button>
         </CardFooter>
       </Card>
 
       <Card className="col-span-1 xl:col-span-3">
         <CardHeader>
-          <CardTitle>Project Revenue vs. Target</CardTitle>
+          <CardTitle>{t("dashboard.legacy.crm-v1.insight.projectRevenueVsTarget")}</CardTitle>
         </CardHeader>
         <CardContent className="size-full max-h-52">
-          <ChartContainer config={projectRevenueChartConfig} className="size-full">
+          <ChartContainer config={projectRevenueChartConfig(t)} className="size-full">
             <BarChart accessibilityLayer data={projectRevenueChartData} layout="vertical">
               <CartesianGrid horizontal={false} />
               <YAxis
@@ -142,7 +144,7 @@ export function InsightCards() {
           </ChartContainer>
         </CardContent>
         <CardFooter>
-          <p className="text-muted-foreground text-xs">Average progress: 78% · 2 projects above target</p>
+          <p className="text-muted-foreground text-xs">{t("dashboard.legacy.crm-v1.insight.averageProgress")}</p>
         </CardFooter>
       </Card>
     </div>

@@ -216,7 +216,7 @@ const chartData = chartValues.map((point, index) => ({
 }));
 
 export function PerformanceOverview() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   // 图例与 tooltip 的标签要跟着语言走，所以从模块级挪进组件内
   const chartConfig = {
@@ -295,7 +295,7 @@ export function PerformanceOverview() {
               tickMargin={8}
               minTickGap={48}
               tickFormatter={(value) =>
-                parseISO(value).toLocaleDateString("en-US", {
+                parseISO(value).toLocaleDateString(locale, {
                   month: "short",
                   day: "numeric",
                 })

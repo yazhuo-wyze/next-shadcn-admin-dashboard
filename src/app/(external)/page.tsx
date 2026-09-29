@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { Separator } from "@/components/ui/separator";
+import { getT } from "@/lib/i18n/server";
 
 import { Footer } from "./_components/footer";
 import { Intro } from "./_components/intro";
@@ -11,16 +12,22 @@ import { Overview } from "./_components/overview";
 import { Showcase } from "./_components/showcase";
 import styles from "./landing.module.css";
 
-export const metadata: Metadata = {
-  title: "Studio Admin: Open Source Admin Dashboard with shadcn/ui",
-  description:
-    "A polished open source shadcn/ui admin dashboard with 25+ screens and editions for Radix UI, Base UI, React Aria, and TanStack Start.",
-  alternates: {
-    canonical: "/",
-  },
-};
+// 模块级的 `metadata` 常量拿不到 t，改成 generateMetadata 让标题跟随语言切换。
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function Home() {
+  return {
+    title: t("landing.metadataTitle"),
+    description: t("landing.metadataDescription"),
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
+
+export default async function Home() {
+  const t = await getT();
+
   // Keeps landing-page colors independent from saved dashboard theme presets.
   return (
     <main className={`${styles.landing} min-h-screen bg-background text-foreground`} data-landing-page>
@@ -29,7 +36,7 @@ export default function Home() {
           <Link
             className="font-medium text-base tracking-tight"
             href="/"
-            aria-label="Studio Admin home"
+            aria-label={t("landing.header.homeLabel")}
             prefetch={false}
           >
             Studio Admin

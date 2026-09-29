@@ -38,6 +38,8 @@ import { Separator } from "@/components/ui/separator";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { ProposalSectionsRow } from "./schema";
 
@@ -50,22 +52,12 @@ const chartData = [
   { month: "June", desktop: 214, mobile: 140 },
 ];
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--primary)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--primary)",
-  },
-} satisfies ChartConfig;
-
 type SortableRowContextValue = Pick<ReturnType<typeof useSortable>, "handleRef">;
 
 const SortableRowContext = createContext<SortableRowContextValue | null>(null);
 
 function DragHandle() {
+  const { t } = useI18n();
   const sortableRow = useContext(SortableRowContext);
 
   if (!sortableRow) {
@@ -77,13 +69,25 @@ function DragHandle() {
   return (
     <Button ref={handleRef} variant="ghost" size="icon" className="size-7 text-muted-foreground hover:bg-transparent">
       <GripVerticalIcon />
-      <span className="sr-only">Drag to reorder</span>
+      <span className="sr-only">{t("dashboard.legacy.default-v1.table.dragToReorder")}</span>
     </Button>
   );
 }
 
 function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
+  const { t } = useI18n();
   const isMobile = useIsMobile();
+
+  const chartConfig = {
+    desktop: {
+      label: t("dashboard.legacy.default-v1.chart.desktop"),
+      color: "var(--primary)",
+    },
+    mobile: {
+      label: t("dashboard.legacy.default-v1.chart.mobile"),
+      color: "var(--primary)",
+    },
+  } satisfies ChartConfig;
 
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
@@ -95,7 +99,7 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
       <DrawerContent>
         <DrawerHeader className="gap-1">
           <DrawerTitle>{item.header}</DrawerTitle>
-          <DrawerDescription>Showing total visitors for the last 6 months</DrawerDescription>
+          <DrawerDescription>{t("dashboard.legacy.default-v1.viewer.showingVisitors")}</DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
           {!isMobile && (
@@ -140,53 +144,58 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
               <Separator />
               <div className="grid gap-2">
                 <div className="flex gap-2 font-medium leading-none">
-                  Trending up by 5.2% this month <TrendingUpIcon />
+                  {t("dashboard.legacy.default-v1.viewer.trendingUp")} <TrendingUpIcon />
                 </div>
-                <div className="text-muted-foreground">
-                  Showing total visitors for the last 6 months. This is just some random text to test the layout. It
-                  spans multiple lines and should wrap around.
-                </div>
+                <div className="text-muted-foreground">{t("dashboard.legacy.default-v1.viewer.description")}</div>
               </div>
               <Separator />
             </>
           )}
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="header">Header</Label>
+              <Label htmlFor="header">{t("dashboard.legacy.default-v1.table.header")}</Label>
               <Input id="header" defaultValue={item.header} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
+                <Label htmlFor="type">{t("dashboard.legacy.default-v1.table.type")}</Label>
                 <Select defaultValue={item.type}>
                   <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
+                    <SelectValue placeholder={t("dashboard.legacy.default-v1.viewer.selectType")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="Table of Contents">Table of Contents</SelectItem>
-                      <SelectItem value="Executive Summary">Executive Summary</SelectItem>
-                      <SelectItem value="Technical Approach">Technical Approach</SelectItem>
-                      <SelectItem value="Design">Design</SelectItem>
-                      <SelectItem value="Capabilities">Capabilities</SelectItem>
-                      <SelectItem value="Focus Documents">Focus Documents</SelectItem>
-                      <SelectItem value="Narrative">Narrative</SelectItem>
-                      <SelectItem value="Cover Page">Cover Page</SelectItem>
+                      <SelectItem value="Table of Contents">
+                        {t("dashboard.legacy.default-v1.type.Table of Contents")}
+                      </SelectItem>
+                      <SelectItem value="Executive Summary">
+                        {t("dashboard.legacy.default-v1.type.Executive Summary")}
+                      </SelectItem>
+                      <SelectItem value="Technical Approach">
+                        {t("dashboard.legacy.default-v1.type.Technical Approach")}
+                      </SelectItem>
+                      <SelectItem value="Design">{t("dashboard.legacy.default-v1.type.Design")}</SelectItem>
+                      <SelectItem value="Capabilities">{t("dashboard.legacy.default-v1.type.Capabilities")}</SelectItem>
+                      <SelectItem value="Focus Documents">
+                        {t("dashboard.legacy.default-v1.type.Focus Documents")}
+                      </SelectItem>
+                      <SelectItem value="Narrative">{t("dashboard.legacy.default-v1.type.Narrative")}</SelectItem>
+                      <SelectItem value="Cover Page">{t("dashboard.legacy.default-v1.type.Cover Page")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">{t("dashboard.legacy.default-v1.table.status")}</Label>
                 <Select defaultValue={item.status}>
                   <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder={t("dashboard.legacy.default-v1.viewer.selectStatus")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="Done">Done</SelectItem>
-                      <SelectItem value="In Progress">In Progress</SelectItem>
-                      <SelectItem value="Not Started">Not Started</SelectItem>
+                      <SelectItem value="Done">{t("dashboard.legacy.default-v1.status.Done")}</SelectItem>
+                      <SelectItem value="In Progress">{t("dashboard.legacy.default-v1.status.In Progress")}</SelectItem>
+                      <SelectItem value="Not Started">{t("dashboard.legacy.default-v1.status.Not Started")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -194,19 +203,19 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="target">Target</Label>
+                <Label htmlFor="target">{t("dashboard.legacy.default-v1.table.target")}</Label>
                 <Input id="target" defaultValue={item.target} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
+                <Label htmlFor="limit">{t("dashboard.legacy.default-v1.table.limit")}</Label>
                 <Input id="limit" defaultValue={item.limit} />
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
+              <Label htmlFor="reviewer">{t("dashboard.legacy.default-v1.table.reviewer")}</Label>
               <Select defaultValue={item.reviewer}>
                 <SelectTrigger id="reviewer" className="w-full">
-                  <SelectValue placeholder="Select a reviewer" />
+                  <SelectValue placeholder={t("dashboard.legacy.default-v1.viewer.selectReviewer")} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -220,9 +229,9 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
           </form>
         </div>
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button>{t("dashboard.legacy.default-v1.viewer.submit")}</Button>
           <DrawerClose asChild>
-            <Button variant="outline">Done</Button>
+            <Button variant="outline">{t("dashboard.legacy.default-v1.viewer.done")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -230,181 +239,187 @@ function ProposalSectionDetailViewer({ item }: { item: ProposalSectionsRow }) {
   );
 }
 
-function createInlineSaveHandler(header: string) {
+function createInlineSaveHandler(header: string, t: TFunction) {
   return (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-      loading: `Saving ${header}`,
-      success: "Done",
-      error: "Error",
+      loading: t("dashboard.legacy.default-v1.table.saving", { header }),
+      success: t("dashboard.legacy.default-v1.table.saveSuccess"),
+      error: t("dashboard.legacy.default-v1.table.saveError"),
     });
   };
 }
 
-export const proposalSectionsColumns: ColumnDef<DataTableFeatures, ProposalSectionsRow>[] = [
-  {
-    id: "drag",
-    header: () => null,
-    cell: () => <DragHandle />,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Subscribe
-          source={table.atoms.rowSelection}
-          selector={() =>
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected() && "indeterminate")
-          }
-        >
-          {(checked) => (
-            <Checkbox
-              checked={checked}
-              onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-              aria-label="Select all"
-            />
-          )}
-        </Subscribe>
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Subscribe source={row.table.atoms.rowSelection} selector={(rowSelection) => Boolean(rowSelection?.[row.id])}>
-          {(checked) => (
-            <Checkbox
-              checked={checked}
-              onCheckedChange={(value) => row.toggleSelected(!!value)}
-              aria-label="Select row"
-            />
-          )}
-        </Subscribe>
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "header",
-    header: "Header",
-    cell: ({ row }) => <ProposalSectionDetailViewer item={row.original} />,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "type",
-    header: "Section Type",
-    cell: ({ row }) => (
-      <div className="w-32">
-        <Badge variant="outline" className="px-1.5 text-muted-foreground">
-          {row.original.type}
-        </Badge>
-      </div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="px-1.5 text-muted-foreground">
-        {row.original.status === "Done" ? (
-          <CircleCheckIcon className="fill-green-500 stroke-primary-foreground dark:fill-green-600" />
-        ) : (
-          <LoaderIcon />
-        )}
-        {row.original.status}
-      </Badge>
-    ),
-  },
-  {
-    accessorKey: "target",
-    header: () => <div className="w-full text-right">Target</div>,
-    cell: ({ row }) => (
-      <form onSubmit={createInlineSaveHandler(row.original.header)}>
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Target
-        </Label>
-        <Input
-          id={`${row.original.id}-target`}
-          defaultValue={row.original.target}
-          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
-        />
-      </form>
-    ),
-  },
-  {
-    accessorKey: "limit",
-    header: () => <div className="w-full text-right">Limit</div>,
-    cell: ({ row }) => (
-      <form onSubmit={createInlineSaveHandler(row.original.header)}>
-        <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-          Limit
-        </Label>
-        <Input
-          id={`${row.original.id}-limit`}
-          defaultValue={row.original.limit}
-          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
-        />
-      </form>
-    ),
-  },
-  {
-    accessorKey: "reviewer",
-    header: "Reviewer",
-    cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer";
-
-      if (isAssigned) {
-        return row.original.reviewer;
-      }
-
-      return (
-        <>
-          <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-            Reviewer
-          </Label>
-          <Select>
-            <SelectTrigger
-              id={`${row.original.id}-reviewer`}
-              className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-              size="sm"
-            >
-              <SelectValue placeholder="Assign reviewer" />
-            </SelectTrigger>
-            <SelectContent align="end">
-              <SelectGroup>
-                <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                <SelectItem value="Jamik Tashpulatov">Jamik Tashpulatov</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </>
-      );
+export function proposalSectionsColumns(t: TFunction): ColumnDef<DataTableFeatures, ProposalSectionsRow>[] {
+  return [
+    {
+      id: "drag",
+      header: () => null,
+      cell: () => <DragHandle />,
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-  {
-    id: "actions",
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex size-8 text-muted-foreground data-[state=open]:bg-muted" size="icon">
-            <EllipsisVerticalIcon />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-    enableSorting: false,
-  },
-];
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Subscribe
+            source={table.atoms.rowSelection}
+            selector={() =>
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected() && "indeterminate")
+            }
+          >
+            {(checked) => (
+              <Checkbox
+                checked={checked}
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label={t("common.table.selectAll")}
+              />
+            )}
+          </Subscribe>
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Subscribe source={row.table.atoms.rowSelection} selector={(rowSelection) => Boolean(rowSelection?.[row.id])}>
+            {(checked) => (
+              <Checkbox
+                checked={checked}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label={t("common.table.selectRow")}
+              />
+            )}
+          </Subscribe>
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "header",
+      header: t("dashboard.legacy.default-v1.table.header"),
+      cell: ({ row }) => <ProposalSectionDetailViewer item={row.original} />,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "type",
+      header: t("dashboard.legacy.default-v1.table.sectionType"),
+      cell: ({ row }) => (
+        <div className="w-32">
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
+            {t(`dashboard.legacy.default-v1.type.${row.original.type}`)}
+          </Badge>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: t("dashboard.legacy.default-v1.table.status"),
+      cell: ({ row }) => (
+        <Badge variant="outline" className="px-1.5 text-muted-foreground">
+          {row.original.status === "Done" ? (
+            <CircleCheckIcon className="fill-green-500 stroke-primary-foreground dark:fill-green-600" />
+          ) : (
+            <LoaderIcon />
+          )}
+          {t(`dashboard.legacy.default-v1.status.${row.original.status}`)}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: "target",
+      header: () => <div className="w-full text-right">{t("dashboard.legacy.default-v1.table.target")}</div>,
+      cell: ({ row }) => (
+        <form onSubmit={createInlineSaveHandler(row.original.header, t)}>
+          <Label htmlFor={`${row.original.id}-target`} className="sr-only">
+            {t("dashboard.legacy.default-v1.table.target")}
+          </Label>
+          <Input
+            id={`${row.original.id}-target`}
+            defaultValue={row.original.target}
+            className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
+          />
+        </form>
+      ),
+    },
+    {
+      accessorKey: "limit",
+      header: () => <div className="w-full text-right">{t("dashboard.legacy.default-v1.table.limit")}</div>,
+      cell: ({ row }) => (
+        <form onSubmit={createInlineSaveHandler(row.original.header, t)}>
+          <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
+            {t("dashboard.legacy.default-v1.table.limit")}
+          </Label>
+          <Input
+            id={`${row.original.id}-limit`}
+            defaultValue={row.original.limit}
+            className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:focus-visible:bg-input/30 dark:hover:bg-input/30"
+          />
+        </form>
+      ),
+    },
+    {
+      accessorKey: "reviewer",
+      header: t("dashboard.legacy.default-v1.table.reviewer"),
+      cell: ({ row }) => {
+        const isAssigned = row.original.reviewer !== "Assign reviewer";
+
+        if (isAssigned) {
+          return row.original.reviewer;
+        }
+
+        return (
+          <>
+            <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
+              {t("dashboard.legacy.default-v1.table.reviewer")}
+            </Label>
+            <Select>
+              <SelectTrigger
+                id={`${row.original.id}-reviewer`}
+                className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
+                size="sm"
+              >
+                <SelectValue placeholder={t("dashboard.legacy.default-v1.table.assignReviewer")} />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectGroup>
+                  <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
+                  <SelectItem value="Jamik Tashpulatov">Jamik Tashpulatov</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </>
+        );
+      },
+    },
+    {
+      id: "actions",
+      cell: () => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+              size="icon"
+            >
+              <EllipsisVerticalIcon />
+              <span className="sr-only">{t("shell.openMenu")}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuItem>{t("common.actions.edit")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.legacy.default-v1.table.makeCopy")}</DropdownMenuItem>
+            <DropdownMenuItem>{t("dashboard.legacy.default-v1.table.favorite")}</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive">{t("common.actions.delete")}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+      enableSorting: false,
+    },
+  ];
+}
 
 export function DraggableProposalSectionsRow({
   row,

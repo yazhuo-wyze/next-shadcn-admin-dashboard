@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { TaskPriorityFilter } from "./task-priority-filter";
 import { TaskStatusFilter } from "./task-status-filter";
@@ -24,6 +25,7 @@ interface TasksToolbarProps<TData extends RowData> {
 }
 
 export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps<TData>) {
+  const { t } = useI18n();
   const isFiltered = table.state.columnFilters.length > 0;
   const searchValue = (table.getColumn("title")?.getFilterValue() as string | undefined) ?? "";
   const hideableColumns = table
@@ -35,7 +37,7 @@ export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex flex-1 flex-wrap items-center gap-2">
         <Input
-          placeholder="Filter tasks..."
+          placeholder={t("dashboard.tasks.toolbar.filterPlaceholder")}
           value={searchValue}
           onChange={(event) => {
             table.getColumn("title")?.setFilterValue(event.target.value);
@@ -54,7 +56,7 @@ export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps
             }}
           >
             <X data-icon="inline-start" />
-            Reset
+            {t("common.actions.reset")}
           </Button>
         )}
       </div>
@@ -67,11 +69,11 @@ export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps
               className={cn("ml-auto hidden lg:flex", hiddenColumns.length > 0 && "bg-muted text-foreground")}
             >
               <Settings2 data-icon="inline-start" />
-              View
+              {t("common.actions.view")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-38">
-            <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("common.table.toggleColumns")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               {hideableColumns.map((column) => (
@@ -81,7 +83,7 @@ export function TasksToolbar<TData extends RowData>({ table }: TasksToolbarProps
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {column.id}
+                  {t(`dashboard.tasks.column.${column.id}`)}
                 </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuGroup>

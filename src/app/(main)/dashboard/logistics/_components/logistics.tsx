@@ -3,12 +3,14 @@
 import * as React from "react";
 
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { shipments } from "./shipment-data";
 import { ShipmentDetails } from "./shipment-details";
 import { ShipmentList } from "./shipment-list";
 
 export function Logistics() {
+  const { t } = useI18n();
   const [detailsOpen, setDetailsOpen] = React.useState(false);
   const [selectedShipmentId, setSelectedShipmentId] = React.useState<string | null>(shipments[0].id);
   const selectedShipment = shipments.find((shipment) => shipment.id === selectedShipmentId) ?? shipments[0];
@@ -45,8 +47,12 @@ export function Logistics() {
           className="gap-0 p-0 data-[side=right]:w-full data-[side=right]:sm:max-w-none data-[side=right]:md:w-3/4"
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>{selectedShipment ? `Shipment ${selectedShipment.id}` : "Shipment details"}</SheetTitle>
-            <SheetDescription>Selected shipment details and route map.</SheetDescription>
+            <SheetTitle>
+              {selectedShipment
+                ? t("dashboard.logistics.sheet.shipment", { id: selectedShipment.id })
+                : t("dashboard.logistics.sheet.title")}
+            </SheetTitle>
+            <SheetDescription>{t("dashboard.logistics.sheet.description")}</SheetDescription>
           </SheetHeader>
           <ShipmentDetails shipment={selectedShipment} />
         </SheetContent>

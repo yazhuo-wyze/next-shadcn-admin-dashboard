@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getT } from "@/lib/i18n/server";
 
 import { profile } from "./_components/profile-data";
 import { ProfileDocuments } from "./_components/profile-documents";
@@ -20,30 +21,39 @@ import { PersonalDetails } from "./_components/profile-personal-details";
 import { ProfileStatusSidebar } from "./_components/profile-status-sidebar";
 import { TimeOffDetails } from "./_components/profile-time-off-details";
 
-export const metadata: Metadata = {
-  title: "Open Source Employee Profile Dashboard with shadcn/ui",
-  description:
-    "Explore an open source employee profile dashboard with personal details, employment information, time off, documents, and reporting lines.",
-  alternates: {
-    canonical: "/dashboard/profile",
-  },
-};
+/**
+ * 页面标题/描述是模块级常量，拿不到 t，所以改成 generateMetadata 异步函数。
+ * alternates 与语言无关，原样保留。
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function Page() {
+  return {
+    title: t("dashboard.profile.metadataTitle"),
+    description: t("dashboard.profile.metadataDescription"),
+    alternates: {
+      canonical: "/dashboard/profile",
+    },
+  };
+}
+
+export default async function Page() {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-4 py-4" data-content-padding="false">
       <Breadcrumb className="px-4">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <span>Dashboard</span>
+            <span>{t("dashboard.profile.breadcrumb.dashboard")}</span>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <span>People</span>
+            <span>{t("dashboard.profile.breadcrumb.people")}</span>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <span>Employee directory</span>
+            <span>{t("dashboard.profile.breadcrumb.employeeDirectory")}</span>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -51,7 +61,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Profile details</BreadcrumbPage>
+            <BreadcrumbPage>{t("dashboard.profile.breadcrumb.profileDetails")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -63,12 +73,12 @@ export default function Page() {
             className="w-max min-w-full justify-start gap-4 px-4 *:data-[slot=tabs-trigger]:flex-none"
             variant="line"
           >
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="personal">Personal</TabsTrigger>
-            <TabsTrigger value="employment">Employment</TabsTrigger>
-            <TabsTrigger value="compensation">Compensation</TabsTrigger>
-            <TabsTrigger value="time-off">Time off</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="overview">{t("dashboard.profile.tab.overview")}</TabsTrigger>
+            <TabsTrigger value="personal">{t("dashboard.profile.tab.personal")}</TabsTrigger>
+            <TabsTrigger value="employment">{t("dashboard.profile.tab.employment")}</TabsTrigger>
+            <TabsTrigger value="compensation">{t("dashboard.profile.tab.compensation")}</TabsTrigger>
+            <TabsTrigger value="time-off">{t("dashboard.profile.tab.timeOff")}</TabsTrigger>
+            <TabsTrigger value="documents">{t("dashboard.profile.tab.documents")}</TabsTrigger>
           </TabsList>
         </div>
 
@@ -97,9 +107,9 @@ export default function Page() {
             <div className="flex items-start gap-3">
               <LockKeyhole aria-hidden="true" className="size-4 text-muted-foreground" />
               <div>
-                <p className="font-medium text-sm">Restricted information</p>
+                <p className="font-medium text-sm">{t("dashboard.profile.compensation.restrictedTitle")}</p>
                 <p className="mt-0.5 text-muted-foreground text-sm">
-                  Visible to people administrators and authorized finance roles.
+                  {t("dashboard.profile.compensation.restrictedDescription")}
                 </p>
               </div>
             </div>

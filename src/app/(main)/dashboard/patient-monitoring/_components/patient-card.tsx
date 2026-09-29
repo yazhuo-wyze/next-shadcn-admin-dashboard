@@ -1,6 +1,9 @@
+"use client";
+
 import { cn } from "cn";
 
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { PatientRecord } from "./data";
 import { usePatientWaveformSeries } from "./use-patient-vital-series";
@@ -14,12 +17,13 @@ interface PatientCardProps {
 }
 
 export function PatientCard({ active, acknowledged, onSelect, patient }: PatientCardProps) {
+  const { t } = useI18n();
   const hasActiveAlarm = patient.status === "alarm" && !acknowledged;
   const waveformSeries = usePatientWaveformSeries({ compact: true, kind: "ecg", patient });
 
   return (
     <button
-      aria-label={`Open ${patient.bed}, ${patient.name}`}
+      aria-label={t("dashboard.patientMonitoring.card.openPatient", { bed: patient.bed, name: patient.name })}
       aria-pressed={active}
       className={cn(
         "flex min-h-36 min-w-0 flex-col bg-card p-2 text-left text-card-foreground",
@@ -39,7 +43,7 @@ export function PatientCard({ active, acknowledged, onSelect, patient }: Patient
             className="h-auto shrink-0 rounded-none border-amber-500 text-[10px] text-amber-700 dark:border-amber-400 dark:text-amber-300"
             variant="outline"
           >
-            HR HIGH {patient.heartRate}
+            {t("dashboard.patientMonitoring.card.hrHigh", { rate: patient.heartRate })}
           </Badge>
         )}
       </div>
@@ -50,7 +54,7 @@ export function PatientCard({ active, acknowledged, onSelect, patient }: Patient
 
       <dl className="mt-auto grid grid-cols-2 divide-x divide-border tabular-nums">
         <div className="pr-2">
-          <dt className="text-lime-500 text-xs dark:text-lime-400">HR</dt>
+          <dt className="text-lime-500 text-xs dark:text-lime-400">{t("dashboard.patientMonitoring.vital.hr")}</dt>
           <dd
             className={cn(
               "text-right font-medium text-3xl text-lime-500 leading-none dark:text-lime-400",
@@ -61,7 +65,7 @@ export function PatientCard({ active, acknowledged, onSelect, patient }: Patient
           </dd>
         </div>
         <div className="pl-2">
-          <dt className="text-cyan-500 text-xs dark:text-cyan-400">SpO₂</dt>
+          <dt className="text-cyan-500 text-xs dark:text-cyan-400">{t("dashboard.patientMonitoring.vital.spo2")}</dt>
           <dd className="text-right font-medium text-3xl text-cyan-500 leading-none dark:text-cyan-400">
             {patient.spo2}
           </dd>

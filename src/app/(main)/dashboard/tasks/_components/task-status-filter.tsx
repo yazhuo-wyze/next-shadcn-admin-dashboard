@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { statuses } from "./data";
 
@@ -22,6 +23,7 @@ interface TaskStatusFilterProps<TData extends RowData> {
 }
 
 export function TaskStatusFilter<TData extends RowData>({ table }: TaskStatusFilterProps<TData>) {
+  const { t } = useI18n();
   const column = table.getColumn("status");
 
   if (!column) {
@@ -56,12 +58,12 @@ export function TaskStatusFilter<TData extends RowData>({ table }: TaskStatusFil
           className={cn("border-dashed", selectedValues.size > 0 && "border-solid bg-muted text-foreground")}
         >
           <ListFilter data-icon="inline-start" />
-          Status
+          {t("dashboard.tasks.column.status")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-50">
         <DropdownMenuGroup>
-          {statuses.map((status) => {
+          {statuses(t).map((status) => {
             const isSelected = selectedValues.has(status.value);
 
             return (
@@ -83,7 +85,7 @@ export function TaskStatusFilter<TData extends RowData>({ table }: TaskStatusFil
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={clearFilter} className="justify-center text-center">
                 <X />
-                Clear filters
+                {t("dashboard.tasks.toolbar.clearFilters")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </>

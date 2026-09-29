@@ -17,12 +17,14 @@ import { Kbd } from "@/components/ui/kbd";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { filters, type UserRow } from "./data";
 import { usersColumns } from "./users-columns";
 import { UsersTable } from "./users-table";
 
 export function Users({ users }: { users: UserRow[] }) {
+  const { t } = useI18n();
   const [rowSelection, setRowSelection] = React.useState({});
   const [sorting, setSorting] = React.useState<SortingState>([{ id: "joinedDate", desc: true }]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -38,7 +40,7 @@ export function Users({ users }: { users: UserRow[] }) {
   const table = useTable({
     features: dataTableFeatures,
     data: users,
-    columns: usersColumns,
+    columns: usersColumns(t),
     state: {
       rowSelection,
       sorting,
@@ -72,10 +74,8 @@ export function Users({ users }: { users: UserRow[] }) {
   return (
     <Card>
       <CardHeader className="border-b has-data-[slot=card-action]:grid-cols-1 md:has-data-[slot=card-action]:grid-cols-[1fr_auto]">
-        <CardTitle className="text-xl leading-none">Users</CardTitle>
-        <CardDescription className="max-w-sm leading-snug">
-          Manage your organization members and their access.
-        </CardDescription>
+        <CardTitle className="text-xl leading-none">{t("dashboard.users.title")}</CardTitle>
+        <CardDescription className="max-w-sm leading-snug">{t("dashboard.users.description")}</CardDescription>
         <CardAction className="col-start-1 row-start-auto flex w-full flex-wrap justify-start gap-2 justify-self-stretch md:col-start-2 md:row-span-2 md:row-start-1 md:w-auto md:flex-nowrap md:justify-end md:justify-self-end">
           <InputGroup className="h-7 w-full md:w-64">
             <InputGroupAddon align="inline-start">
@@ -83,7 +83,7 @@ export function Users({ users }: { users: UserRow[] }) {
             </InputGroupAddon>
             <InputGroupInput
               className="h-7"
-              placeholder="Search users..."
+              placeholder={t("dashboard.users.searchPlaceholder")}
               value={searchQuery}
               onChange={(event) => {
                 table.getColumn("search")?.setFilterValue(event.target.value || undefined);
@@ -95,16 +95,16 @@ export function Users({ users }: { users: UserRow[] }) {
             </InputGroupAddon>
           </InputGroup>
           <Button variant="outline" size="sm">
-            <SlidersHorizontal /> Hide
+            <SlidersHorizontal /> {t("dashboard.users.actions.hide")}
           </Button>
           <Button variant="outline" size="sm">
-            <Cog /> Customize
+            <Cog /> {t("dashboard.users.actions.customize")}
           </Button>
           <Button variant="outline" size="sm">
-            <Download /> Export
+            <Download /> {t("common.actions.export")}
           </Button>
           <Button size="sm">
-            <Plus /> Add User
+            <Plus /> {t("dashboard.users.actions.addUser")}
           </Button>
         </CardAction>
       </CardHeader>
@@ -113,14 +113,14 @@ export function Users({ users }: { users: UserRow[] }) {
           <div className="flex flex-wrap items-center gap-3">
             <Select value={roleFilter} onValueChange={(value) => setColumnSelectFilter("role", value)}>
               <SelectTrigger size="sm">
-                <span className="text-muted-foreground">Role:</span>
+                <span className="text-muted-foreground">{t("dashboard.users.filter.role")}</span>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent position="popper" align="start">
                 <SelectGroup>
                   {filters.role.map((option) => (
                     <SelectItem key={option} value={option}>
-                      {option}
+                      {option === "All" ? t("common.options.all") : t(`common.enums.userRole.${option}`)}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -129,14 +129,14 @@ export function Users({ users }: { users: UserRow[] }) {
 
             <Select value={teamFilter} onValueChange={(value) => setColumnSelectFilter("team", value)}>
               <SelectTrigger size="sm">
-                <span className="text-muted-foreground">Team:</span>
+                <span className="text-muted-foreground">{t("dashboard.users.filter.team")}</span>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent position="popper" align="start">
                 <SelectGroup>
                   {filters.team.map((option) => (
                     <SelectItem key={option} value={option}>
-                      {option}
+                      {option === "All" ? t("common.options.all") : t(`common.enums.userTeam.${option}`)}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -145,14 +145,14 @@ export function Users({ users }: { users: UserRow[] }) {
 
             <Select value={statusFilter} onValueChange={(value) => setColumnSelectFilter("status", value)}>
               <SelectTrigger size="sm">
-                <span className="text-muted-foreground">Status:</span>
+                <span className="text-muted-foreground">{t("dashboard.users.filter.status")}</span>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent position="popper" align="start">
                 <SelectGroup>
                   {filters.status.map((option) => (
                     <SelectItem key={option} value={option}>
-                      {option}
+                      {option === "All" ? t("common.options.all") : t(`common.enums.userStatus.${option}`)}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -162,14 +162,14 @@ export function Users({ users }: { users: UserRow[] }) {
 
           <Select value={workspaceFilter} onValueChange={(value) => setColumnSelectFilter("workspace", value)}>
             <SelectTrigger size="sm">
-              <span className="text-muted-foreground">Workspace:</span>
+              <span className="text-muted-foreground">{t("dashboard.users.filter.workspace")}</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent position="popper" align="end">
               <SelectGroup>
                 {filters.workspace.map((option) => (
                   <SelectItem key={option} value={option}>
-                    {option}
+                    {option === "All" ? t("common.options.all") : t(`common.enums.workspace.${option}`)}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -178,14 +178,16 @@ export function Users({ users }: { users: UserRow[] }) {
         </div>
 
         <div className="flex items-center justify-between gap-3 px-4">
-          <div className="text-muted-foreground text-sm tabular-nums">{selectedCount} selected</div>
+          <div className="text-muted-foreground text-sm tabular-nums">
+            {t("dashboard.users.table.selectedCount", { count: selectedCount })}
+          </div>
 
           <Tabs defaultValue="list">
             <TabsList>
-              <TabsTrigger value="list" aria-label="List view">
+              <TabsTrigger value="list" aria-label={t("dashboard.users.view.list")}>
                 <Rows3 />
               </TabsTrigger>
-              <TabsTrigger value="grid" aria-label="Grid view">
+              <TabsTrigger value="grid" aria-label={t("dashboard.users.view.grid")}>
                 <Grid />
               </TabsTrigger>
             </TabsList>

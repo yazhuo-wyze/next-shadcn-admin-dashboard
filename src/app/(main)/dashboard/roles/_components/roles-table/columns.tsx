@@ -13,10 +13,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
 
 import type { Role } from "./data";
 
-export const rolesColumns: ColumnDef<DataTableFeatures, Role>[] = [
+/**
+ * 列定义改成接收 `t` 的函数：表头是界面标签需要跟随语言，而模块级常量拿不到 `t`。
+ * role / group / accessLevel / status / permissionSets 单元格展示的是数据原值
+ * （与分组、筛选逻辑共用），保持英文不动，只在渲染处用 `common.enums.<维度>.<英文值>` 词条。
+ */
+export const rolesColumns = (t: TFunction): ColumnDef<DataTableFeatures, Role>[] => [
   {
     id: "group",
     accessorKey: "group",
@@ -32,39 +38,39 @@ export const rolesColumns: ColumnDef<DataTableFeatures, Role>[] = [
   {
     id: "role",
     accessorKey: "role",
-    header: "Role",
+    header: t("dashboard.roles.table.role"),
     size: 180,
     minSize: 180,
-    cell: ({ row }) => <span className="font-medium text-sm">{row.original.role}</span>,
+    cell: ({ row }) => <span className="font-medium text-sm">{t(`common.enums.role.${row.original.role}`)}</span>,
   },
   {
     id: "accessLevel",
     accessorKey: "accessLevel",
-    header: "Access level",
+    header: t("dashboard.roles.table.accessLevel"),
     size: 120,
     cell: ({ row }) => (
       <Badge className="rounded-sm" variant="outline">
-        {row.original.accessLevel}
+        {t(`common.enums.accessLevel.${row.original.accessLevel}`)}
       </Badge>
     ),
   },
   {
     id: "users",
     accessorKey: "users",
-    header: "Users",
+    header: t("dashboard.roles.table.users"),
     size: 70,
     cell: ({ row }) => <span className="text-sm">{row.original.users}</span>,
   },
   {
     id: "permissionSets",
     accessorFn: (row) => row.permissionSets.join(" "),
-    header: "Permission sets",
+    header: t("dashboard.roles.table.permissionSets"),
     size: 310,
     cell: ({ row }) => (
       <div className="flex flex-wrap items-center justify-start gap-2">
         {row.original.permissionSets.slice(0, 3).map((set) => (
           <Badge className="rounded-sm" variant="outline" key={set}>
-            {set}
+            {t(`common.enums.permissionSet.${set}`)}
           </Badge>
         ))}
         {row.original.permissionSets.length > 3 ? (
@@ -76,14 +82,14 @@ export const rolesColumns: ColumnDef<DataTableFeatures, Role>[] = [
   {
     id: "lastReview",
     accessorKey: "lastReview",
-    header: "Last review",
+    header: t("dashboard.roles.table.lastReview"),
     size: 120,
     cell: ({ row }) => <span className="text-sm">{row.original.lastReview}</span>,
   },
   {
     id: "owner",
     accessorKey: "owner",
-    header: "Owner",
+    header: t("dashboard.roles.table.owner"),
     size: 110,
     filterFn: "equalsString",
     cell: ({ row }) => <span className="text-sm">{row.original.owner}</span>,
@@ -91,12 +97,12 @@ export const rolesColumns: ColumnDef<DataTableFeatures, Role>[] = [
   {
     id: "status",
     accessorKey: "status",
-    header: "Status",
+    header: t("dashboard.roles.table.status"),
     size: 130,
     filterFn: "equalsString",
     cell: ({ row }) => (
       <Badge className="rounded-sm" variant="outline">
-        {row.original.status}
+        {t(`common.enums.roleStatus.${row.original.status}`)}
       </Badge>
     ),
   },
@@ -117,20 +123,20 @@ export const rolesColumns: ColumnDef<DataTableFeatures, Role>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-48" align="end">
             <DropdownMenuGroup>
-              {needsReview ? <DropdownMenuItem>Review changes</DropdownMenuItem> : null}
-              <DropdownMenuItem>View details</DropdownMenuItem>
-              <DropdownMenuItem disabled={isSystemRole}>Edit role</DropdownMenuItem>
-              <DropdownMenuItem disabled={isSystemRole}>Duplicate role</DropdownMenuItem>
+              {needsReview ? <DropdownMenuItem>{t("dashboard.roles.actions.reviewChanges")}</DropdownMenuItem> : null}
+              <DropdownMenuItem>{t("dashboard.roles.actions.viewDetails")}</DropdownMenuItem>
+              <DropdownMenuItem disabled={isSystemRole}>{t("dashboard.roles.actions.editRole")}</DropdownMenuItem>
+              <DropdownMenuItem disabled={isSystemRole}>{t("dashboard.roles.actions.duplicateRole")}</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>Review permissions</DropdownMenuItem>
-              <DropdownMenuItem>Manage members</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.roles.actions.reviewPermissions")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.roles.actions.manageMembers")}</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem disabled={isSystemRole} variant="destructive">
-                Archive role
+                {t("dashboard.roles.actions.archiveRole")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

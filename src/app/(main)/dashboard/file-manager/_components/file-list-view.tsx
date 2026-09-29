@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { type FileManagerFile, fileIcons } from "./data";
 import { FileActions } from "./file-actions";
@@ -18,6 +19,7 @@ interface FileListViewProps {
 }
 
 export function FileListView({ files }: FileListViewProps) {
+  const { t } = useI18n();
   const [listFiles, setListFiles] = useState(files);
 
   function toggleStar(fileId: string) {
@@ -28,12 +30,12 @@ export function FileListView({ files }: FileListViewProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="pl-0">Name</TableHead>
-          <TableHead className="hidden md:table-cell">Owner</TableHead>
-          <TableHead className="hidden lg:table-cell">Modified</TableHead>
-          <TableHead className="hidden sm:table-cell">Size</TableHead>
+          <TableHead className="pl-0">{t("dashboard.fileManager.field.name")}</TableHead>
+          <TableHead className="hidden md:table-cell">{t("dashboard.fileManager.field.owner")}</TableHead>
+          <TableHead className="hidden lg:table-cell">{t("dashboard.fileManager.field.modified")}</TableHead>
+          <TableHead className="hidden sm:table-cell">{t("dashboard.fileManager.field.size")}</TableHead>
           <TableHead className="w-20">
-            <span className="sr-only">Actions</span>
+            <span className="sr-only">{t("dashboard.fileManager.field.actions")}</span>
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -51,7 +53,7 @@ export function FileListView({ files }: FileListViewProps) {
                   </Button>
                   {file.shared && (
                     <Badge variant="outline" className="hidden xl:inline-flex">
-                      Shared
+                      {t("dashboard.fileManager.shared")}
                     </Badge>
                   )}
                 </div>
@@ -71,7 +73,11 @@ export function FileListView({ files }: FileListViewProps) {
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={file.starred ? `Unstar ${file.name}` : `Star ${file.name}`}
+                    aria-label={
+                      file.starred
+                        ? t("dashboard.fileManager.card.unstar", { name: file.name })
+                        : t("dashboard.fileManager.card.star", { name: file.name })
+                    }
                     onClick={() => toggleStar(file.id)}
                   >
                     <Star className={cn(file.starred && "fill-current")} />

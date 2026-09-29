@@ -7,59 +7,53 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const performanceHighlights = [
   {
     className: "G11A",
     start: 1.25,
     duration: 1.45,
-    subject: "Pure Math",
+    subject: "纯数学",
     score: 84,
     students: [
-      { initials: "OD", name: "Olivia Davis", achievement: "Top Performer", score: 96 },
-      { initials: "EM", name: "Ethan Miller", achievement: "Problem-Solving Excellence", score: 91 },
-      { initials: "SW", name: "Sophia Wilson", achievement: "Most Improved", score: 88 },
+      { initials: "OD", name: "Olivia Davis", achievement: "最佳表现", score: 96 },
+      { initials: "EM", name: "Ethan Miller", achievement: "解题能力优异", score: 91 },
+      { initials: "SW", name: "Sophia Wilson", achievement: "进步最大", score: 88 },
     ],
   },
   {
     className: "G11B",
     start: 0.72,
     duration: 1.75,
-    subject: "Literature",
+    subject: "文学",
     score: 78,
-    students: [{ initials: "IA", name: "Isabella Anderson", achievement: "Critical Analysis Award", score: 93 }],
+    students: [{ initials: "IA", name: "Isabella Anderson", achievement: "批判性分析奖", score: 93 }],
   },
   {
     className: "G11C",
     start: 1.35,
     duration: 1.9,
-    subject: "Physics",
+    subject: "物理",
     score: 80,
     students: [
-      { initials: "AB", name: "Alexander Brown", achievement: "Top Performer", score: 95 },
-      { initials: "MG", name: "Mia Garcia", achievement: "Laboratory Excellence", score: 92 },
-      { initials: "NM", name: "Noah Martinez", achievement: "Most Improved", score: 87 },
+      { initials: "AB", name: "Alexander Brown", achievement: "最佳表现", score: 95 },
+      { initials: "MG", name: "Mia Garcia", achievement: "实验表现优异", score: 92 },
+      { initials: "NM", name: "Noah Martinez", achievement: "进步最大", score: 87 },
     ],
   },
   {
     className: "G11D",
     start: 2.22,
     duration: 1.66,
-    subject: "History",
+    subject: "历史",
     score: 73,
     students: [
-      { initials: "ET", name: "Emma Taylor", achievement: "Research Excellence", score: 90 },
-      { initials: "WJ", name: "William Johnson", achievement: "Consistent Performer", score: 86 },
+      { initials: "ET", name: "Emma Taylor", achievement: "研究能力优异", score: 90 },
+      { initials: "WJ", name: "William Johnson", achievement: "表现稳定", score: 86 },
     ],
   },
 ];
-
-const chartConfig = {
-  duration: {
-    label: "Score",
-    color: "var(--chart-3)",
-  },
-} satisfies ChartConfig;
 
 type PerformanceHighlight = (typeof performanceHighlights)[number];
 
@@ -164,12 +158,30 @@ function PerformanceHighlightBar({
 }
 
 export function PerformanceHighlights() {
+  const { t } = useI18n();
+
+  // chartConfig 的 label 要跟随语言，所以放进组件内部用 t() 填充。
+  const chartConfig = {
+    duration: {
+      label: t("dashboard.academy.performanceHighlights.chart.score"),
+      color: "var(--chart-3)",
+    },
+  } satisfies ChartConfig;
+
+  const weekdayLabels = [
+    t("dashboard.academy.performanceHighlights.weekday.mon"),
+    t("dashboard.academy.performanceHighlights.weekday.tue"),
+    t("dashboard.academy.performanceHighlights.weekday.wed"),
+    t("dashboard.academy.performanceHighlights.weekday.thu"),
+    t("dashboard.academy.performanceHighlights.weekday.fri"),
+  ];
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-sm">Performance Highlights</CardTitle>
+        <CardTitle className="text-sm">{t("dashboard.academy.performanceHighlights.title")}</CardTitle>
         <CardAction className="flex items-center gap-1 text-muted-foreground text-xs">
-          View Insights <ArrowRight className="size-4" />
+          {t("dashboard.academy.performanceHighlights.viewInsights")} <ArrowRight className="size-4" />
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -184,7 +196,7 @@ export function PerformanceHighlights() {
             <XAxis
               axisLine={false}
               domain={[0, 4]}
-              tickFormatter={(value) => ["Mon", "Tue", "Wed", "Thu", "Fri"][Number(value)] ?? ""}
+              tickFormatter={(value) => weekdayLabels[Number(value)] ?? ""}
               tickLine={false}
               tickMargin={10}
               ticks={[0, 1, 2, 3, 4]}

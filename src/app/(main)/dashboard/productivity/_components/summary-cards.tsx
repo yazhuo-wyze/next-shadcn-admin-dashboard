@@ -1,17 +1,38 @@
 import { ArrowRight, Clock3, Focus, TrendingUp } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { getT } from "@/lib/i18n/server";
 
-const summaryCards = [
-  { title: "Today", value: "4", description: "tasks scheduled", icon: Clock3 },
-  { title: "This Week", value: "68%", description: "progress", icon: TrendingUp },
-  { title: "Focus", value: "Deep Work", description: "2 hours remaining", icon: Focus },
-] as const;
+/** 卡片数据是模块级常量、拿不到 t，所以改成接收 t 的函数。 */
+const summaryCards = (t: TFunction) =>
+  [
+    {
+      title: t("common.time.today"),
+      value: "4",
+      description: t("dashboard.productivity.summary.tasksScheduled"),
+      icon: Clock3,
+    },
+    {
+      title: t("common.time.thisWeek"),
+      value: "68%",
+      description: t("dashboard.productivity.summary.progress"),
+      icon: TrendingUp,
+    },
+    {
+      title: t("dashboard.productivity.summary.focus"),
+      value: t("dashboard.productivity.summary.focusValue"),
+      description: t("dashboard.productivity.summary.focusRemaining", { hours: 2 }),
+      icon: Focus,
+    },
+  ] as const;
 
-export function SummaryCards() {
+export async function SummaryCards() {
+  const t = await getT();
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {summaryCards.map((item) => (
+      {summaryCards(t).map((item) => (
         <Card key={item.title} className="shadow-xs">
           <CardHeader>
             <CardTitle>

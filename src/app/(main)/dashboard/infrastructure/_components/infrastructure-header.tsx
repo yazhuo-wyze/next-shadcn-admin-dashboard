@@ -4,23 +4,26 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
+import { getT } from "@/lib/i18n/server";
 
-export function InfrastructureHeader() {
+export async function InfrastructureHeader() {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 flex-col gap-1">
             <h1 className="font-medium text-2xl leading-tight tracking-tight sm:text-3xl sm:leading-none">
-              Infrastructure Overview
+              {t("dashboard.infrastructure.header.title")}
             </h1>
-            <p className="text-muted-foreground text-sm">
-              Monitor environments, server health, uptime, and resource usage across every project.
-            </p>
+            <p className="text-muted-foreground text-sm">{t("dashboard.infrastructure.header.description")}</p>
           </div>
 
           <div className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-end">
-            <span className="whitespace-nowrap text-muted-foreground text-sm">Last updated: 30s ago</span>
+            <span className="whitespace-nowrap text-muted-foreground text-sm">
+              {t("dashboard.infrastructure.header.lastUpdated")}
+            </span>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="icon-sm">
                 <RefreshCw />
@@ -33,19 +36,20 @@ export function InfrastructureHeader() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant="outline" className="h-auto gap-1 rounded-sm px-1.5 py-0.5">
-            <Container />6 Projects
+            <Container />
+            {t("dashboard.infrastructure.header.projects", { count: 6 })}
           </Badge>
           <Badge variant="outline" className="h-auto gap-1 rounded-sm px-1.5 py-0.5">
             <Box />
-            16 Environments
+            {t("dashboard.infrastructure.header.environments", { count: 16 })}
           </Badge>
           <Badge variant="outline" className="h-auto gap-1 rounded-sm px-1.5 py-0.5">
             <Server />
-            36 Servers
+            {t("dashboard.infrastructure.header.servers", { count: 36 })}
           </Badge>
           <Badge variant="outline" className="h-auto gap-1 rounded-sm px-1.5 py-0.5">
             <span className="size-2 rounded-full bg-green-600 dark:bg-green-500" />
-            99.93% Global Uptime
+            {t("dashboard.infrastructure.header.globalUptime", { uptime: "99.93%" })}
           </Badge>
         </div>
       </div>
@@ -55,7 +59,7 @@ export function InfrastructureHeader() {
           <InputGroupAddon>
             <Search />
           </InputGroupAddon>
-          <InputGroupInput placeholder="Search by name or domain..." />
+          <InputGroupInput placeholder={t("dashboard.infrastructure.header.searchPlaceholder")} />
           <InputGroupAddon align="inline-end">
             <Kbd>⌘ K</Kbd>
           </InputGroupAddon>
@@ -64,27 +68,27 @@ export function InfrastructureHeader() {
         <div className="flex flex-wrap gap-2">
           <Button variant="outline">
             <PlusCircle data-icon="inline-start" />
-            Organization
+            {t("dashboard.infrastructure.header.organization")}
           </Button>
           <Button variant="outline">
             <PlusCircle data-icon="inline-start" />
-            Stack
+            {t("dashboard.infrastructure.header.stack")}
           </Button>
           <Button variant="outline">
             <PlusCircle data-icon="inline-start" />
-            Cloud provider
+            {t("dashboard.infrastructure.header.cloudProvider")}
           </Button>
           <Button variant="outline">
             <PlusCircle data-icon="inline-start" />
-            Project type
+            {t("dashboard.infrastructure.header.projectType")}
           </Button>
           <Button variant="outline">
             <PlusCircle data-icon="inline-start" />
-            Environment
+            {t("dashboard.infrastructure.header.environment")}
           </Button>
           <Button variant="outline">
             <Filter data-icon="inline-start" />
-            Filters
+            {t("dashboard.infrastructure.header.filters")}
           </Button>
         </div>
       </div>

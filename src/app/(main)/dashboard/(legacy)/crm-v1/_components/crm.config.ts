@@ -1,4 +1,5 @@
 import type { ChartConfig } from "@/components/ui/chart";
+import type { TFunction } from "@/lib/i18n/dictionary";
 
 export const leadsChartData = [
   { date: "1-5", newLeads: 120, disqualified: 40 },
@@ -9,19 +10,20 @@ export const leadsChartData = [
   { date: "26-30", newLeads: 110, disqualified: 60 },
 ];
 
-export const leadsChartConfig = {
-  newLeads: {
-    label: "New Leads",
-    color: "var(--chart-1)",
-  },
-  disqualified: {
-    label: "Disqualified",
-    color: "var(--chart-3)",
-  },
-  background: {
-    color: "var(--primary)",
-  },
-} as ChartConfig;
+export const leadsChartConfig = (t: TFunction) =>
+  ({
+    newLeads: {
+      label: t("dashboard.legacy.crm-v1.chart.newLeads"),
+      color: "var(--chart-1)",
+    },
+    disqualified: {
+      label: t("dashboard.legacy.crm-v1.chart.disqualified"),
+      color: "var(--chart-3)",
+    },
+    background: {
+      color: "var(--primary)",
+    },
+  }) as ChartConfig;
 
 export const proposalsChartData = [
   { date: "1-5", proposalsSent: 9 },
@@ -32,12 +34,13 @@ export const proposalsChartData = [
   { date: "26-30", proposalsSent: 14 },
 ];
 
-export const proposalsChartConfig = {
-  proposalsSent: {
-    label: "Proposals Sent",
-    color: "var(--chart-1)",
-  },
-} as ChartConfig;
+export const proposalsChartConfig = (t: TFunction) =>
+  ({
+    proposalsSent: {
+      label: t("dashboard.legacy.crm-v1.chart.proposalsSent"),
+      color: "var(--chart-1)",
+    },
+  }) as ChartConfig;
 
 export const revenueChartData = [
   { month: "Jul 2024", revenue: 6700 },
@@ -54,12 +57,13 @@ export const revenueChartData = [
   { month: "Jun 2025", revenue: 9500 },
 ];
 
-export const revenueChartConfig = {
-  revenue: {
-    label: "Revenue",
-    color: "var(--chart-1)",
-  },
-} as ChartConfig;
+export const revenueChartConfig = (t: TFunction) =>
+  ({
+    revenue: {
+      label: t("dashboard.legacy.crm-v1.chart.revenue"),
+      color: "var(--chart-1)",
+    },
+  }) as ChartConfig;
 
 export const leadsBySourceChartData = [
   { source: "website", leads: 170, fill: "var(--color-website)" },
@@ -69,107 +73,110 @@ export const leadsBySourceChartData = [
   { source: "other", leads: 48, fill: "var(--color-other)" },
 ];
 
-export const leadsBySourceChartConfig = {
-  leads: {
-    label: "Leads",
-  },
-  website: {
-    label: "Website",
-    color: "var(--chart-1)",
-  },
-  referral: {
-    label: "Referral",
-    color: "var(--chart-2)",
-  },
-  social: {
-    label: "Social Media",
-    color: "var(--chart-3)",
-  },
-  cold: {
-    label: "Cold Outreach",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
-} as ChartConfig;
+export const leadsBySourceChartConfig = (t: TFunction) =>
+  ({
+    leads: {
+      label: t("dashboard.legacy.crm-v1.chart.leads"),
+    },
+    website: {
+      label: t("dashboard.legacy.crm-v1.source.website"),
+      color: "var(--chart-1)",
+    },
+    referral: {
+      label: t("dashboard.legacy.crm-v1.source.referral"),
+      color: "var(--chart-2)",
+    },
+    social: {
+      label: t("dashboard.legacy.crm-v1.source.social"),
+      color: "var(--chart-3)",
+    },
+    cold: {
+      label: t("dashboard.legacy.crm-v1.source.cold"),
+      color: "var(--chart-4)",
+    },
+    other: {
+      label: t("dashboard.legacy.crm-v1.source.other"),
+      color: "var(--chart-5)",
+    },
+  }) as ChartConfig;
 
 export const projectRevenueChartData = [
-  { name: "MVP Development", actual: 82000, target: 90000 },
-  { name: "Consultation", actual: 48000, target: 65000 },
-  { name: "Framer Sites", actual: 34000, target: 45000 },
-  { name: "DevOps Support", actual: 77000, target: 90000 },
-  { name: "LLM Training", actual: 68000, target: 80000 },
-  { name: "Product Launch", actual: 52000, target: 70000 },
+  { name: "MVP 开发", actual: 82000, target: 90000 },
+  { name: "咨询服务", actual: 48000, target: 65000 },
+  { name: "Framer 建站", actual: 34000, target: 45000 },
+  { name: "DevOps 支持", actual: 77000, target: 90000 },
+  { name: "大模型训练", actual: 68000, target: 80000 },
+  { name: "产品发布", actual: 52000, target: 70000 },
 ].map((row) => ({
   ...row,
   remaining: Math.max(0, row.target - row.actual),
 }));
 
-export const projectRevenueChartConfig = {
-  actual: {
-    label: "Actual",
-    color: "var(--chart-1)",
-  },
-  remaining: {
-    label: "Remaining",
-    color: "var(--chart-2)",
-  },
-  label: {
-    color: "var(--primary-foreground)",
-  },
-} as ChartConfig;
+export const projectRevenueChartConfig = (t: TFunction) =>
+  ({
+    actual: {
+      label: t("dashboard.legacy.crm-v1.chart.actual"),
+      color: "var(--chart-1)",
+    },
+    remaining: {
+      label: t("dashboard.legacy.crm-v1.chart.remaining"),
+      color: "var(--chart-2)",
+    },
+    label: {
+      color: "var(--primary-foreground)",
+    },
+  }) as ChartConfig;
 
 export const salesPipelineChartData = [
-  { stage: "Leads", value: 680, fill: "var(--chart-1)" },
-  { stage: "Qualified", value: 480, fill: "var(--chart-2)" },
-  { stage: "Proposal Sent", value: 210, fill: "var(--chart-3)" },
-  { stage: "Negotiation", value: 120, fill: "var(--chart-4)" },
-  { stage: "Won", value: 45, fill: "var(--chart-5)" },
+  { stage: "线索", value: 680, fill: "var(--chart-1)" },
+  { stage: "已合格", value: 480, fill: "var(--chart-2)" },
+  { stage: "已提案", value: 210, fill: "var(--chart-3)" },
+  { stage: "商务谈判", value: 120, fill: "var(--chart-4)" },
+  { stage: "已赢单", value: 45, fill: "var(--chart-5)" },
 ];
 
-export const salesPipelineChartConfig = {
-  value: {
-    label: "Leads",
-    color: "var(--chart-1)",
-  },
-  stage: {
-    label: "Stage",
-  },
-} as ChartConfig;
+export const salesPipelineChartConfig = (t: TFunction) =>
+  ({
+    value: {
+      label: t("dashboard.legacy.crm-v1.chart.leads"),
+      color: "var(--chart-1)",
+    },
+    stage: {
+      label: t("dashboard.legacy.crm-v1.chart.stage"),
+    },
+  }) as ChartConfig;
 
 export const regionSalesData = [
   {
-    region: "North America",
+    region: "北美",
     sales: 37800,
     percentage: 31,
     growth: "-3.2%",
     isPositive: false,
   },
   {
-    region: "Europe",
+    region: "欧洲",
     sales: 40100,
     percentage: 34,
     growth: "+9.4%",
     isPositive: true,
   },
   {
-    region: "Asia Pacific",
+    region: "亚太",
     sales: 30950,
     percentage: 26,
     growth: "+12.8%",
     isPositive: true,
   },
   {
-    region: "Latin America",
+    region: "拉丁美洲",
     sales: 12200,
     percentage: 7,
     growth: "-1.7%",
     isPositive: false,
   },
   {
-    region: "Middle East & Africa",
+    region: "中东与非洲",
     sales: 2450,
     percentage: 2,
     growth: "+6.0%",
@@ -180,27 +187,27 @@ export const regionSalesData = [
 export const actionItems = [
   {
     id: 1,
-    title: "Send kickoff docs",
-    desc: "Send onboarding documents and timeline",
-    due: "Due today",
+    title: "发送启动文档",
+    desc: "发送入职资料与时间安排",
+    due: "今天到期",
     priority: "High",
     priorityColor: "bg-red-100 text-red-700",
     checked: false,
   },
   {
     id: 2,
-    title: "Demo call for SaaS MVP",
-    desc: "Book Zoom call with client",
-    due: "Due tomorrow",
+    title: "SaaS MVP 演示电话",
+    desc: "与客户预约 Zoom 会议",
+    due: "明天到期",
     priority: "Medium",
     priorityColor: "bg-yellow-100 text-yellow-700",
     checked: true,
   },
   {
     id: 3,
-    title: "Update case study",
-    desc: "Add latest LLM project",
-    due: "Due this week",
+    title: "更新案例研究",
+    desc: "补充最新的大模型项目",
+    due: "本周到期",
     priority: "Low",
     priorityColor: "bg-green-100 text-green-700",
     checked: false,
@@ -214,7 +221,7 @@ export const recentLeadsData = [
     company: "Vercel",
     status: "Qualified",
     source: "Website",
-    lastActivity: "30m ago",
+    lastActivity: "30 分钟前",
   },
   {
     id: "L-1018",
@@ -222,7 +229,7 @@ export const recentLeadsData = [
     company: "Mail0",
     status: "Qualified",
     source: "Website",
-    lastActivity: "35m ago",
+    lastActivity: "35 分钟前",
   },
   {
     id: "L-1005",
@@ -230,7 +237,7 @@ export const recentLeadsData = [
     company: "Tweakcn",
     status: "Negotiation",
     source: "Website",
-    lastActivity: "1h ago",
+    lastActivity: "1 小时前",
   },
   {
     id: "L-1001",
@@ -238,7 +245,7 @@ export const recentLeadsData = [
     company: "Shadcn/ui",
     status: "Qualified",
     source: "Website",
-    lastActivity: "2h ago",
+    lastActivity: "2 小时前",
   },
   {
     id: "L-1003",
@@ -246,7 +253,7 @@ export const recentLeadsData = [
     company: "OpenAI",
     status: "Proposal Sent",
     source: "Social Media",
-    lastActivity: "4h ago",
+    lastActivity: "4 小时前",
   },
   {
     id: "L-1008",
@@ -254,7 +261,7 @@ export const recentLeadsData = [
     company: "Lexington Themes",
     status: "Contacted",
     source: "Social Media",
-    lastActivity: "5h ago",
+    lastActivity: "5 小时前",
   },
   {
     id: "L-1016",
@@ -262,7 +269,7 @@ export const recentLeadsData = [
     company: "Animate UI",
     status: "Proposal Sent",
     source: "Referral",
-    lastActivity: "7h ago",
+    lastActivity: "7 小时前",
   },
   {
     id: "L-1007",
@@ -270,7 +277,7 @@ export const recentLeadsData = [
     company: "Weblabs Studio",
     status: "Won",
     source: "Website",
-    lastActivity: "6h ago",
+    lastActivity: "6 小时前",
   },
   {
     id: "L-1011",
@@ -278,7 +285,7 @@ export const recentLeadsData = [
     company: "Medusa",
     status: "Proposal Sent",
     source: "Referral",
-    lastActivity: "10h ago",
+    lastActivity: "10 小时前",
   },
   {
     id: "L-1014",
@@ -286,7 +293,7 @@ export const recentLeadsData = [
     company: "Astro",
     status: "Contacted",
     source: "Social Media",
-    lastActivity: "12h ago",
+    lastActivity: "12 小时前",
   },
   {
     id: "L-1010",
@@ -294,7 +301,7 @@ export const recentLeadsData = [
     company: "Cal.com",
     status: "New",
     source: "Other",
-    lastActivity: "8h ago",
+    lastActivity: "8 小时前",
   },
   {
     id: "L-1002",
@@ -302,7 +309,7 @@ export const recentLeadsData = [
     company: "BE",
     status: "Contacted",
     source: "Referral",
-    lastActivity: "1d ago",
+    lastActivity: "1 天前",
   },
   {
     id: "L-1015",
@@ -310,7 +317,7 @@ export const recentLeadsData = [
     company: "Shadcn UI Kit ",
     status: "Negotiation",
     source: "Other",
-    lastActivity: "2d ago",
+    lastActivity: "2 天前",
   },
   {
     id: "L-1006",
@@ -318,7 +325,7 @@ export const recentLeadsData = [
     company: "React Bits",
     status: "Qualified",
     source: "Referral",
-    lastActivity: "2d ago",
+    lastActivity: "2 天前",
   },
   {
     id: "L-1004",
@@ -326,6 +333,6 @@ export const recentLeadsData = [
     company: "Align UI",
     status: "New",
     source: "Cold Outreach",
-    lastActivity: "3d ago",
+    lastActivity: "3 天前",
   },
 ];

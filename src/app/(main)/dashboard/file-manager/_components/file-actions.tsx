@@ -1,3 +1,5 @@
+"use client";
+
 import { Download, MoreVertical, Share2, Star, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { FileManagerFile } from "./data";
 
@@ -18,10 +21,16 @@ interface FileActionsProps {
 }
 
 export function FileActions({ file, onToggleStar }: FileActionsProps) {
+  const { t } = useI18n();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${file.name}`}>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("dashboard.fileManager.actions.forItem", { name: file.name })}
+        >
           <MoreVertical />
         </Button>
       </DropdownMenuTrigger>
@@ -29,22 +38,24 @@ export function FileActions({ file, onToggleStar }: FileActionsProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem onSelect={onToggleStar}>
             <Star />
-            {file.starred ? "Remove from starred" : "Add to starred"}
+            {file.starred
+              ? t("dashboard.fileManager.actions.removeFromStarred")
+              : t("dashboard.fileManager.actions.addToStarred")}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Download />
-            Download
+            {t("dashboard.fileManager.actions.download")}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Share2 />
-            Copy share link
+            {t("dashboard.fileManager.actions.copyShareLink")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive">
             <Trash2 />
-            Move to trash
+            {t("dashboard.fileManager.actions.moveToTrash")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

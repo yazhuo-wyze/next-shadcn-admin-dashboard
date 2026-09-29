@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import { format, parseISO } from "date-fns";
@@ -9,27 +11,34 @@ import { Calendar } from "@/components/ui/calendar";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { InvoiceFormValues } from "./data";
 
-const dateFields: Array<{
+/** 标签是界面文案，需要跟随语言，所以改成接收 `t` 的函数。 */
+const dateFields = (
+  t: TFunction,
+): Array<{
   id: string;
   label: string;
   name: "issuedDate" | "paymentDueDate";
-}> = [
+}> => [
   {
     id: "issued-date",
-    label: "Issued Date",
+    label: t("dashboard.invoice.fields.issuedDate"),
     name: "issuedDate",
   },
   {
     id: "payment-due-date",
-    label: "Due Date",
+    label: t("dashboard.invoice.fields.paymentDueDate"),
     name: "paymentDueDate",
   },
 ];
 
+// 本组件被客户端组件 `Invoice` 引用，属于客户端渲染树，因此用 `useI18n()` 取词。
 export function InvoiceDetails() {
+  const { t } = useI18n();
   const { control, register } = useFormContext<InvoiceFormValues>();
 
   return (
@@ -37,7 +46,7 @@ export function InvoiceDetails() {
       <FieldGroup>
         <Field className="gap-1">
           <FieldLabel className="text-xs" htmlFor="reference-number">
-            Reference Number
+            {t("dashboard.invoice.fields.referenceNumber")}
           </FieldLabel>
           <InputGroup>
             <InputGroupInput id="reference-number" {...register("referenceNumber")} />
@@ -48,7 +57,7 @@ export function InvoiceDetails() {
         </Field>
 
         <div className="grid gap-5 md:grid-cols-2">
-          {dateFields.map((dateField) => (
+          {dateFields(t).map((dateField) => (
             <Controller
               key={dateField.name}
               control={control}
@@ -70,6 +79,7 @@ export function InvoiceDetails() {
 }
 
 function DatePicker({ id, value, onChange }: { id: string; value: string; onChange: (value: string) => void }) {
+  const { t } = useI18n();
   const [open, setOpen] = React.useState(false);
   const date = parseDateValue(value);
 
@@ -82,7 +92,7 @@ function DatePicker({ id, value, onChange }: { id: string; value: string; onChan
           data-empty={!date}
           className="w-full justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
         >
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? format(date, "PPP") : <span>{t("dashboard.invoice.placeholders.pickDate")}</span>}
           <CalendarIcon className="text-muted-foreground" />
         </Button>
       </PopoverTrigger>

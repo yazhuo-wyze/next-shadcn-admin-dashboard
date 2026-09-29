@@ -8,8 +8,8 @@ export function QuoteCard() {
           <Quote className="size-6" />
         </div>
         <div className="flex flex-col gap-1">
-          <p className="text-xl leading-none tracking-tight">Small, consistent actions lead to big results.</p>
-          <p className="text-muted-foreground">Keep showing up. You&apos;ve got this.</p>
+          <p className="text-xl leading-none tracking-tight">微小的持续行动，终会带来巨大的成果。</p>
+          <p className="text-muted-foreground">继续坚持，你可以的。</p>
         </div>
       </div>
     </section>

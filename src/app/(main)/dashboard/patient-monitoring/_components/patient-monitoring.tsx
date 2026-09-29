@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { PatientRecord } from "./data";
 import { PatientCard } from "./patient-card";
@@ -20,6 +21,7 @@ interface PatientMonitoringProps {
 }
 
 export function PatientMonitoring({ patients }: PatientMonitoringProps) {
+  const { t } = useI18n();
   const [selectedPatientId, setSelectedPatientId] = useState("cardiac-04");
   const [acknowledgedPatientIds, setAcknowledgedPatientIds] = useState<string[]>([]);
   const selectedPatient = patients.find((patient) => patient.id === selectedPatientId) ?? patients[0];
@@ -53,7 +55,8 @@ export function PatientMonitoring({ patients }: PatientMonitoringProps) {
             <span className="text-lg">{selectedPatient.name}</span>
           </div>
           <div className="text-muted-foreground text-sm">
-            {selectedPatient.age} {selectedPatient.sex} · {selectedPatient.diagnosis}
+            {/* sex 是数据里的英文枚举值，显示文案走 common.enums.sex.* */}
+            {selectedPatient.age} {t(`common.enums.sex.${selectedPatient.sex}`)} · {selectedPatient.diagnosis}
           </div>
         </div>
         <Separator />
@@ -71,7 +74,7 @@ export function PatientMonitoring({ patients }: PatientMonitoringProps) {
             <AlertTitle>{selectedPatient.alarm}</AlertTitle>
             {selectedPatient.alarmDuration && (
               <AlertDescription className={cn(hasActiveAlarm && "text-amber-950")}>
-                Active for {selectedPatient.alarmDuration}
+                {t("dashboard.patientMonitoring.alarm.activeFor", { duration: selectedPatient.alarmDuration })}
               </AlertDescription>
             )}
             <AlertAction className="top-1/2 -translate-y-1/2">
@@ -82,7 +85,9 @@ export function PatientMonitoring({ patients }: PatientMonitoringProps) {
                 size="sm"
                 variant="secondary"
               >
-                {acknowledged ? "Acknowledged" : "Acknowledge"}
+                {acknowledged
+                  ? t("dashboard.patientMonitoring.alarm.acknowledged")
+                  : t("dashboard.patientMonitoring.alarm.acknowledge")}
               </Button>
             </AlertAction>
           </Alert>
@@ -95,24 +100,24 @@ export function PatientMonitoring({ patients }: PatientMonitoringProps) {
             className="w-full justify-start gap-0 border-b p-0 *:h-full *:max-w-32 *:rounded-none *:border-0 *:border-border *:border-r *:after:-bottom-px!"
             variant="line"
           >
-            <TabsTrigger value="real-time">Real time</TabsTrigger>
-            <TabsTrigger value="events">Event review</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="disclosure">Full disclosure</TabsTrigger>
+            <TabsTrigger value="real-time">{t("dashboard.patientMonitoring.tabs.realTime")}</TabsTrigger>
+            <TabsTrigger value="events">{t("dashboard.patientMonitoring.tabs.events")}</TabsTrigger>
+            <TabsTrigger value="trends">{t("dashboard.patientMonitoring.trends.title")}</TabsTrigger>
+            <TabsTrigger value="disclosure">{t("dashboard.patientMonitoring.tabs.fullDisclosure")}</TabsTrigger>
           </TabsList>
 
           <TabsContent
             className="m-0 flex flex-col items-center justify-center gap-1 px-4 text-center"
             value="real-time"
           >
-            <p className="font-medium text-sm">Live monitoring is active</p>
-            <p className="text-muted-foreground text-xs">Waveforms and vital signs update continuously above.</p>
+            <p className="font-medium text-sm">{t("dashboard.patientMonitoring.realtime.title")}</p>
+            <p className="text-muted-foreground text-xs">{t("dashboard.patientMonitoring.realtime.description")}</p>
           </TabsContent>
           <TabsContent className="m-0" value="events">
             <div className="min-h-44">
               <div className="grid grid-cols-[4rem_1fr] bg-muted/40 px-4 py-2 font-medium text-muted-foreground text-xs">
-                <span>Time</span>
-                <span>Event</span>
+                <span>{t("dashboard.patientMonitoring.events.time")}</span>
+                <span>{t("dashboard.patientMonitoring.events.event")}</span>
               </div>
               <Separator />
               {selectedPatient.recentEvents.map((event, index) => (
@@ -133,10 +138,8 @@ export function PatientMonitoring({ patients }: PatientMonitoringProps) {
             className="m-0 flex flex-col items-center justify-center gap-1 px-4 text-center"
             value="disclosure"
           >
-            <p className="font-medium text-sm">Full disclosure recording is active</p>
-            <p className="text-muted-foreground text-xs">
-              Continuous waveform history is available for the last 24 hours.
-            </p>
+            <p className="font-medium text-sm">{t("dashboard.patientMonitoring.disclosure.title")}</p>
+            <p className="text-muted-foreground text-xs">{t("dashboard.patientMonitoring.disclosure.description")}</p>
           </TabsContent>
         </Tabs>
       </div>

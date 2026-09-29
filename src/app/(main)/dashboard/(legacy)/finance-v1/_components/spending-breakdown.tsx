@@ -1,53 +1,28 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
+/** 分类名是界面标签，交给词条；金额保持原样。 */
 const expenses = [
-  {
-    key: "housing",
-    label: "Housing",
-    amount: 1650,
-  },
-  {
-    key: "utilities",
-    label: "Utilities",
-    amount: 420,
-  },
-  {
-    key: "groceries",
-    label: "Groceries",
-    amount: 560,
-  },
-  {
-    key: "transportation",
-    label: "Transport",
-    amount: 740,
-  },
-  {
-    key: "subscriptions",
-    label: "Subscriptions",
-    amount: 260,
-  },
-  {
-    key: "healthcare",
-    label: "Healthcare",
-    amount: 390,
-  },
-  {
-    key: "other",
-    label: "Other",
-    amount: 980,
-  },
+  { key: "housing", amount: 1650 },
+  { key: "utilities", amount: 420 },
+  { key: "groceries", amount: 560 },
+  { key: "transportation", amount: 740 },
+  { key: "subscriptions", amount: 260 },
+  { key: "healthcare", amount: 390 },
+  { key: "other", amount: 980 },
 ];
 
 export function SpendingBreakdown() {
+  const { t } = useI18n();
   const total = expenses.reduce((sum, item) => sum + item.amount, 0);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Spending Breakdown</CardTitle>
-        <CardDescription>Expense distribution by category.</CardDescription>
+        <CardTitle>{t("dashboard.legacy.finance-v1.spending.title")}</CardTitle>
+        <CardDescription>{t("dashboard.legacy.finance-v1.spending.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1">
@@ -65,7 +40,7 @@ export function SpendingBreakdown() {
                     width: `${width}%`,
                     background: `color-mix(in oklch, var(--primary) ${alpha * 100}%, transparent)`,
                   }}
-                  title={`${item.label}: ${formatCurrency(item.amount)}`}
+                  title={`${t(`dashboard.legacy.finance-v1.spending.category.${item.key}`)}: ${formatCurrency(item.amount)}`}
                 />
               );
             })}
@@ -86,7 +61,9 @@ export function SpendingBreakdown() {
                       background: `color-mix(in oklch, var(--primary) ${alpha * 100}%, transparent)`,
                     }}
                   />
-                  <span className="text-muted-foreground text-sm">{item.label}</span>
+                  <span className="text-muted-foreground text-sm">
+                    {t(`dashboard.legacy.finance-v1.spending.category.${item.key}`)}
+                  </span>
                 </div>
 
                 <span className="font-medium text-sm tabular-nums">{pct}%</span>

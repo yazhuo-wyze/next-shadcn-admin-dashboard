@@ -17,67 +17,89 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 type RiskView = "risk-view" | "momentum" | "quality";
 type FilterToggleKey = "enterpriseOnly" | "stalledOnly" | "overdueOnly" | "includeRenewals";
 
-const FILTER_OPTIONS: Array<{ key: FilterToggleKey; label: string; summaryLabel: string }> = [
-  { key: "enterpriseOnly", label: "Enterprise only", summaryLabel: "Enterprise" },
-  { key: "stalledOnly", label: "Stalled deals (>14 days)", summaryLabel: "Stalled" },
-  { key: "overdueOnly", label: "Closing date exceeded", summaryLabel: "Overdue" },
-  { key: "includeRenewals", label: "Include renewals", summaryLabel: "Renewals" },
+const FILTER_OPTIONS = (t: TFunction): Array<{ key: FilterToggleKey; label: string; summaryLabel: string }> => [
+  {
+    key: "enterpriseOnly",
+    label: t("dashboard.legacy.analytics-v1.filter.enterpriseOnly"),
+    summaryLabel: t("dashboard.legacy.analytics-v1.filter.enterprise"),
+  },
+  {
+    key: "stalledOnly",
+    label: t("dashboard.legacy.analytics-v1.filter.stalledOnly"),
+    summaryLabel: t("dashboard.legacy.analytics-v1.filter.stalled"),
+  },
+  {
+    key: "overdueOnly",
+    label: t("dashboard.legacy.analytics-v1.filter.overdueOnly"),
+    summaryLabel: t("dashboard.legacy.analytics-v1.filter.overdue"),
+  },
+  {
+    key: "includeRenewals",
+    label: t("dashboard.legacy.analytics-v1.filter.includeRenewals"),
+    summaryLabel: t("dashboard.legacy.analytics-v1.filter.renewals"),
+  },
 ];
 
-const riskViews: Array<{
+const riskViews = (
+  t: TFunction,
+): Array<{
   value: RiskView;
   label: string;
   description: string;
-}> = [
+}> => [
   {
     value: "risk-view",
-    label: "Risk view",
-    description: "Early warnings",
+    label: t("dashboard.legacy.analytics-v1.riskView.riskView"),
+    description: t("dashboard.legacy.analytics-v1.riskView.earlyWarnings"),
   },
   {
     value: "momentum",
-    label: "Momentum",
-    description: "Trend direction",
+    label: t("dashboard.legacy.analytics-v1.riskView.momentum"),
+    description: t("dashboard.legacy.analytics-v1.riskView.trendDirection"),
   },
   {
     value: "quality",
-    label: "Quality",
-    description: "Pipeline hygiene",
+    label: t("dashboard.legacy.analytics-v1.riskView.quality"),
+    description: t("dashboard.legacy.analytics-v1.riskView.pipelineHygiene"),
   },
 ];
 
-const RISK_SUMMARY_METRICS = [
-  {
-    key: "stalled",
-    label: "Stalled Deals",
-    value: "8",
-    comparatorLabel: "vs previous period",
-  },
-  {
-    key: "risk",
-    label: "Revenue at Risk",
-    value: "$1,151,000",
-    comparatorLabel: "vs previous period",
-  },
-  {
-    key: "win-rate",
-    label: "Win Rate Trend",
-    value: "+8.3pp",
-    comparatorLabel: "vs previous period",
-  },
-  {
-    key: "cycle",
-    label: "Sales Cycle Drift",
-    value: "+2.3 days",
-    comparatorLabel: "vs previous period",
-  },
-] as const;
+const RISK_SUMMARY_METRICS = (t: TFunction) =>
+  [
+    {
+      key: "stalled",
+      label: t("dashboard.legacy.analytics-v1.summary.stalledDeals"),
+      value: "8",
+      comparatorLabel: t("dashboard.legacy.analytics-v1.summary.vsPreviousPeriod"),
+    },
+    {
+      key: "risk",
+      label: t("dashboard.legacy.analytics-v1.summary.revenueAtRisk"),
+      value: "$1,151,000",
+      comparatorLabel: t("dashboard.legacy.analytics-v1.summary.vsPreviousPeriod"),
+    },
+    {
+      key: "win-rate",
+      label: t("dashboard.legacy.analytics-v1.summary.winRateTrend"),
+      value: "+8.3pp",
+      comparatorLabel: t("dashboard.legacy.analytics-v1.summary.vsPreviousPeriod"),
+    },
+    {
+      key: "cycle",
+      label: t("dashboard.legacy.analytics-v1.summary.salesCycleDrift"),
+      value: "+2.3 days",
+      comparatorLabel: t("dashboard.legacy.analytics-v1.summary.vsPreviousPeriod"),
+    },
+  ] as const;
 
 export function AnalyticsOverview() {
+  const { t } = useI18n();
   const [dateRange, setDateRange] = React.useState<{ from: Date; to: Date }>(() => {
     const to = startOfDay(new Date());
     return { from: subDays(to, 29), to };
@@ -106,20 +128,20 @@ export function AnalyticsOverview() {
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          <RiskViewSelect />
-          <FiltersPopover selectedFilters={selectedFilters} onToggle={handleFilterToggle} />
+          <RiskViewSelect t={t} />
+          <FiltersPopover t={t} selectedFilters={selectedFilters} onToggle={handleFilterToggle} />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <DateRangePicker value={dateRange} onChange={handleDateRangeChange} />
           <Button variant="secondary">
             <Download />
-            Export
+            {t("common.actions.export")}
           </Button>
         </div>
       </div>
 
-      <SummaryRow revenueSeries={revenueSeries} />
+      <SummaryRow t={t} revenueSeries={revenueSeries} />
     </div>
   );
 }
@@ -141,10 +163,10 @@ function buildRevenueChartData(from: Date, to: Date) {
   });
 }
 
-function SummaryRow({ revenueSeries }: { revenueSeries: Array<{ day: string; revenue: number }> }) {
+function SummaryRow({ t, revenueSeries }: { t: TFunction; revenueSeries: Array<{ day: string; revenue: number }> }) {
   const revenueChartConfig = {
     revenue: {
-      label: "Revenue",
+      label: t("dashboard.legacy.analytics-v1.overview.revenue"),
       color: "var(--chart-1)",
     },
   } satisfies ChartConfig;
@@ -159,7 +181,9 @@ function SummaryRow({ revenueSeries }: { revenueSeries: Array<{ day: string; rev
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
       <div className="min-w-0 space-y-2">
         <div>
-          <div className="font-medium text-muted-foreground text-sm">Revenue</div>
+          <div className="font-medium text-muted-foreground text-sm">
+            {t("dashboard.legacy.analytics-v1.overview.revenue")}
+          </div>
           <div className="font-semibold text-3xl tabular-nums tracking-tight sm:text-4xl">$1,248,000</div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -168,9 +192,9 @@ function SummaryRow({ revenueSeries }: { revenueSeries: Array<{ day: string; rev
         </div>
 
         <div className="flex flex-wrap items-center gap-2 text-muted-foreground text-sm">
-          <span>Previous $1,141,000</span>
+          <span>{t("dashboard.legacy.analytics-v1.overview.previous", { value: "$1,141,000" })}</span>
           <Badge variant="outline" className="font-medium text-xs">
-            Risk Ladder 30
+            {t("dashboard.legacy.analytics-v1.overview.riskLadder")}
           </Badge>
         </div>
         <div>
@@ -188,17 +212,19 @@ function SummaryRow({ revenueSeries }: { revenueSeries: Array<{ day: string; rev
               />
             </ComposedChart>
           </ChartContainer>
-          <span className="text-muted-foreground text-xs">Selected range</span>
+          <span className="text-muted-foreground text-xs">
+            {t("dashboard.legacy.analytics-v1.overview.selectedRange")}
+          </span>
         </div>
       </div>
 
       <Card className="min-w-0 py-4 shadow-xs xl:col-span-2">
         <CardHeader className="px-4">
-          <CardTitle>Risk summary</CardTitle>
-          <CardDescription>Core risk signals vs previous period</CardDescription>
+          <CardTitle>{t("dashboard.legacy.analytics-v1.overview.riskSummary")}</CardTitle>
+          <CardDescription>{t("dashboard.legacy.analytics-v1.overview.coreRiskSignals")}</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-0 xl:divide-x xl:[&>div:first-child]:pl-0 xl:[&>div:last-child]:pr-0 xl:[&>div]:px-5">
-          {RISK_SUMMARY_METRICS.map((item) => (
+          {RISK_SUMMARY_METRICS(t).map((item) => (
             <div key={item.key} className="min-w-0 space-y-1">
               <div className="text-muted-foreground text-sm">{item.label}</div>
               <div className="font-semibold text-2xl tabular-nums leading-tight">{item.value}</div>
@@ -211,7 +237,7 @@ function SummaryRow({ revenueSeries }: { revenueSeries: Array<{ day: string; rev
   );
 }
 
-function RiskViewSelect() {
+function RiskViewSelect({ t }: { t: TFunction }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("risk-view");
   const listId = React.useId();
@@ -233,7 +259,7 @@ function RiskViewSelect() {
                 boxShadow: "0 0 8px color-mix(in oklab, var(--primary) 50%, transparent)",
               }}
             />
-            {riskViews.find((view) => view.value === value)?.label}
+            {riskViews(t).find((view) => view.value === value)?.label}
           </div>
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -242,7 +268,7 @@ function RiskViewSelect() {
         <Command>
           <CommandList id={listId}>
             <CommandGroup>
-              {riskViews.map((view) => (
+              {riskViews(t).map((view) => (
                 <CommandItem
                   key={view.value}
                   value={view.value}
@@ -267,9 +293,11 @@ function RiskViewSelect() {
 }
 
 function FiltersPopover({
+  t,
   selectedFilters,
   onToggle,
 }: {
+  t: TFunction;
   selectedFilters: FilterToggleKey[];
   onToggle: (key: FilterToggleKey, checked: boolean) => void;
 }) {
@@ -281,7 +309,7 @@ function FiltersPopover({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" aria-expanded={open}>
-            Filters
+            {t("dashboard.legacy.analytics-v1.overview.filters")}
             <Badge className="tabular-nums" variant="secondary">
               {activeCount}
             </Badge>
@@ -290,13 +318,13 @@ function FiltersPopover({
         <PopoverContent align="start" className="w-72">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-sm">Filters</h3>
+              <h3 className="font-semibold text-sm">{t("dashboard.legacy.analytics-v1.overview.filters")}</h3>
               <Badge variant="outline" className="font-medium text-xs tabular-nums">
-                Risk Ladder 30
+                {t("dashboard.legacy.analytics-v1.overview.riskLadder")}
               </Badge>
             </div>
             <div className="space-y-3">
-              {FILTER_OPTIONS.map((item) => (
+              {FILTER_OPTIONS(t).map((item) => (
                 <FilterToggle
                   key={item.key}
                   id={item.key}
@@ -311,7 +339,8 @@ function FiltersPopover({
       </Popover>
 
       <span className="text-muted-foreground text-sm">
-        Showing: <span className="font-medium">{summarizeFilterState(selectedFilters)}</span>
+        {t("dashboard.legacy.analytics-v1.overview.showing")}{" "}
+        <span className="font-medium">{summarizeFilterState(t, selectedFilters)}</span>
       </span>
     </div>
   );
@@ -338,11 +367,12 @@ function FilterToggle({
   );
 }
 
-function summarizeFilterState(selectedFilters: FilterToggleKey[]) {
+function summarizeFilterState(t: TFunction, selectedFilters: FilterToggleKey[]) {
   if (selectedFilters.length === 0) {
-    return "All deals";
+    return t("dashboard.legacy.analytics-v1.overview.allDeals");
   }
-  return FILTER_OPTIONS.filter((item) => selectedFilters.includes(item.key))
+  return FILTER_OPTIONS(t)
+    .filter((item) => selectedFilters.includes(item.key))
     .map((item) => item.summaryLabel)
     .join(" · ");
 }

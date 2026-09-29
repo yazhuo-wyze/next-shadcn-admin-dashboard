@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { Mail } from "./data";
 import { MailList } from "./mail-list";
@@ -16,6 +17,7 @@ interface MailInboxProps {
 }
 
 export function MailInbox({ mails, onSelectMail }: MailInboxProps) {
+  const { t } = useI18n();
   const pinnedMails = mails.filter((mail) => mail.isPinned);
   const unpinnedMails = mails.filter((mail) => !mail.isPinned);
 
@@ -25,7 +27,7 @@ export function MailInbox({ mails, onSelectMail }: MailInboxProps) {
         <div className="flex items-center">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 ml-1 h-4 data-vertical:self-center" />
-          <h1 className="font-medium text-xl leading-none">Inbox</h1>
+          <h1 className="font-medium text-xl leading-none">{t("mail.inbox.title")}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon-sm">
@@ -46,7 +48,7 @@ export function MailInbox({ mails, onSelectMail }: MailInboxProps) {
 
       <div className="px-2">
         <InputGroup className="h-7 w-full rounded-md">
-          <InputGroupInput className="h-7" placeholder="Search..." />
+          <InputGroupInput className="h-7" placeholder={t("mail.inbox.searchPlaceholder")} />
           <InputGroupAddon>
             <Search />
           </InputGroupAddon>
@@ -58,12 +60,12 @@ export function MailInbox({ mails, onSelectMail }: MailInboxProps) {
           groups={[
             {
               id: "pinned",
-              title: "Pinned",
+              title: t("mail.group.pinned"),
               items: pinnedMails,
             },
             {
               id: "inbox",
-              title: "Inbox",
+              title: t("mail.group.inbox"),
               items: unpinnedMails,
             },
           ]}

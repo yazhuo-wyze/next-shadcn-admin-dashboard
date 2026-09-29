@@ -32,20 +32,23 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { recentLeadsColumns } from "./columns";
 import type { RecentLeadRow } from "./schema";
 
-const COLUMN_LABELS: Record<string, string> = {
-  id: "Ref",
-  name: "Name",
-  company: "Company",
-  status: "Status",
-  source: "Source",
-  lastActivity: "Last Activity",
-};
+const COLUMN_LABELS = (t: TFunction): Record<string, string> => ({
+  id: t("dashboard.legacy.crm-v1.table.ref"),
+  name: t("dashboard.legacy.crm-v1.table.name"),
+  company: t("dashboard.legacy.crm-v1.table.company"),
+  status: t("dashboard.legacy.crm-v1.table.status"),
+  source: t("dashboard.legacy.crm-v1.table.source"),
+  lastActivity: t("dashboard.legacy.crm-v1.table.lastActivity"),
+});
 
 export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
+  const { t } = useI18n();
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -57,7 +60,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
   const table = useTable({
     features: dataTableFeatures,
     data,
-    columns: recentLeadsColumns,
+    columns: recentLeadsColumns(t),
     state: {
       rowSelection,
       columnVisibility,
@@ -75,20 +78,20 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Leads</CardTitle>
-        <CardDescription>Track and manage your latest leads and their status.</CardDescription>
+        <CardTitle>{t("dashboard.legacy.crm-v1.table.title")}</CardTitle>
+        <CardDescription>{t("dashboard.legacy.crm-v1.table.description")}</CardDescription>
         <CardAction>
           <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Settings2 data-icon="inline-start" />
-                  View
+                  {t("dashboard.legacy.crm-v1.table.view")}
                   <ChevronDownIcon data-icon="inline-end" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-36">
-                <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+                <DropdownMenuLabel>{t("common.table.toggleColumns")}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   {table
@@ -100,7 +103,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
                         checked={column.getIsVisible()}
                         onCheckedChange={(value) => column.toggleVisibility(!!value)}
                       >
-                        {COLUMN_LABELS[column.id] ?? column.id}
+                        {COLUMN_LABELS(t)[column.id] ?? column.id}
                       </DropdownMenuCheckboxItem>
                     ))}
                 </DropdownMenuGroup>
@@ -108,7 +111,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
             </DropdownMenu>
             <Button variant="outline" size="sm">
               <Download data-icon="inline-start" />
-              <span className="hidden lg:inline">Export</span>
+              <span className="hidden lg:inline">{t("common.actions.export")}</span>
             </Button>
           </div>
         </CardAction>
@@ -141,7 +144,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={table.getVisibleLeafColumns().length} className="h-24 text-center">
-                    No results.
+                    {t("common.states.noResults")}
                   </TableCell>
                 </TableRow>
               )}
@@ -150,13 +153,15 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
         </div>
         <div className="flex items-center justify-between gap-4">
           <div className="hidden flex-1 text-muted-foreground text-sm lg:flex">
-            {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-            selected.
+            {t("dashboard.legacy.crm-v1.table.rowsSelected", {
+              selected: table.getFilteredSelectedRowModel().rows.length,
+              total: table.getFilteredRowModel().rows.length,
+            })}
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
               <Label htmlFor="recent-leads-rows-per-page" className="font-medium text-sm">
-                Rows per page
+                {t("common.table.rowsPerPage")}
               </Label>
               <Select
                 value={`${table.state.pagination.pageSize}`}
@@ -188,7 +193,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to first page</span>
+                <span className="sr-only">{t("common.table.goToFirstPage")}</span>
                 <ChevronsLeftIcon />
               </Button>
               <Button
@@ -198,7 +203,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                <span className="sr-only">Go to previous page</span>
+                <span className="sr-only">{t("common.table.goToPreviousPage")}</span>
                 <ChevronLeftIcon />
               </Button>
               <Button
@@ -208,7 +213,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to next page</span>
+                <span className="sr-only">{t("common.table.goToNextPage")}</span>
                 <ChevronRightIcon />
               </Button>
               <Button
@@ -218,7 +223,7 @@ export function RecentLeadsTable({ data }: { data: RecentLeadRow[] }) {
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
-                <span className="sr-only">Go to last page</span>
+                <span className="sr-only">{t("common.table.goToLastPage")}</span>
                 <ChevronsRightIcon />
               </Button>
             </div>

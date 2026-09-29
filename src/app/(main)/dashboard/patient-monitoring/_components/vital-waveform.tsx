@@ -1,7 +1,10 @@
+"use client";
+
 import { cn } from "cn";
 import { CartesianGrid, Line, LineChart, YAxis } from "recharts";
 
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { getVerticalGridCoordinates } from "./chart-grid";
 
@@ -20,13 +23,6 @@ interface VitalWaveformProps {
   showGrid: boolean;
 }
 
-const waveformChartConfig = {
-  signal: {
-    label: "Signal",
-    color: "currentColor",
-  },
-} satisfies ChartConfig;
-
 const waveformClasses: Record<WaveformKind, string> = {
   arterial: "text-red-500 dark:text-red-400",
   ecg: "text-lime-500 dark:text-lime-400",
@@ -35,7 +31,16 @@ const waveformClasses: Record<WaveformKind, string> = {
 };
 
 export function VitalWaveform({ ariaLabel, compact = false, data, domain, kind, showGrid }: VitalWaveformProps) {
+  const { t } = useI18n();
   const horizontalCenter = (domain[0] + domain[1]) / 2;
+
+  // chartConfig 的 label 会随语言变化，所以放进组件内部用 t() 填。
+  const waveformChartConfig = {
+    signal: {
+      label: t("dashboard.patientMonitoring.chart.signal"),
+      color: "currentColor",
+    },
+  } satisfies ChartConfig;
 
   return (
     <ChartContainer

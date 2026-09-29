@@ -1,7 +1,10 @@
+"use client";
+
 import { cn } from "cn";
 import { CartesianGrid, Line, LineChart, YAxis } from "recharts";
 
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { getInnerVerticalGridCoordinates } from "./chart-grid";
 import type { PatientRecord } from "./data";
@@ -19,13 +22,6 @@ interface VitalTrendChartProps {
   ticks: number[];
 }
 
-const trendChartConfig = {
-  value: {
-    label: "Value",
-    color: "currentColor",
-  },
-} satisfies ChartConfig;
-
 const trendClasses: Record<TrendKind, string> = {
   "heart-rate": "text-lime-500 dark:text-lime-400",
   map: "text-red-500 dark:text-red-400",
@@ -33,6 +29,16 @@ const trendClasses: Record<TrendKind, string> = {
 };
 
 function VitalTrendChart({ ariaLabel, data, domain, kind, ticks }: VitalTrendChartProps) {
+  const { t } = useI18n();
+
+  // chartConfig 的 label 会随语言变化，所以放进组件内部用 t() 填。
+  const trendChartConfig = {
+    value: {
+      label: t("dashboard.patientMonitoring.chart.value"),
+      color: "currentColor",
+    },
+  } satisfies ChartConfig;
+
   return (
     <ChartContainer
       aria-label={ariaLabel}
@@ -110,12 +116,32 @@ function TrendStrip({
 }
 
 export function PatientTrends({ patient }: PatientTrendsProps) {
+  const { t } = useI18n();
+
   return (
     <div className="grid h-full min-h-36 xl:grid-cols-[minmax(0,1fr)_13.5rem]">
       <div className="min-w-0 border-border xl:border-r">
-        <TrendStrip kind="heart-rate" label="HR" patient={patient} unit="bpm" value={patient.heartRate} />
-        <TrendStrip kind="spo2" label="SpO₂" patient={patient} unit="%" value={patient.spo2} />
-        <TrendStrip kind="map" label="MAP" patient={patient} unit="mmHg" value={patient.arterialMap} />
+        <TrendStrip
+          kind="heart-rate"
+          label={t("dashboard.patientMonitoring.vital.hr")}
+          patient={patient}
+          unit="bpm"
+          value={patient.heartRate}
+        />
+        <TrendStrip
+          kind="spo2"
+          label={t("dashboard.patientMonitoring.vital.spo2")}
+          patient={patient}
+          unit="%"
+          value={patient.spo2}
+        />
+        <TrendStrip
+          kind="map"
+          label={t("dashboard.patientMonitoring.vital.map")}
+          patient={patient}
+          unit="mmHg"
+          value={patient.arterialMap}
+        />
         <div className="grid grid-cols-[4rem_2rem_minmax(0,1fr)_2.5rem] gap-1 py-0.5">
           <div className="col-span-2" />
           <div className="flex justify-between text-[10px] text-muted-foreground tabular-nums">
@@ -128,7 +154,7 @@ export function PatientTrends({ patient }: PatientTrendsProps) {
         </div>
       </div>
       <div className="px-3 py-2">
-        <div className="mb-2 font-medium text-xs">Recent events</div>
+        <div className="mb-2 font-medium text-xs">{t("dashboard.patientMonitoring.trends.recentEvents")}</div>
         <div className="flex flex-col gap-2">
           {patient.recentEvents.map((event) => (
             <div className="grid grid-cols-[3rem_1fr] text-[11px]" key={`${event.time}-${event.label}`}>

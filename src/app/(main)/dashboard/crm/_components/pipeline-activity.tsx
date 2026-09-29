@@ -10,8 +10,11 @@ import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const pipelineChartValues = [34, 38, 31, 47, 42, 51, 44, 40, 58, 46, 43, 49] as const;
 
-const axisMonthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
-const tooltipMonthFormatter = new Intl.DateTimeFormat("en-US", { month: "short", year: "2-digit" });
+// 月份格式跟随当前语言，因此不能在模块级构造（模块级拿不到 locale）。
+const formatAxisMonth = (value: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(value));
+const formatTooltipMonth = (value: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, { month: "short", year: "2-digit" }).format(new Date(value));
 
 function getRollingMonthData(values: readonly number[]) {
   return values.map((qualified, index) => {
@@ -26,7 +29,7 @@ function getRollingMonthData(values: readonly number[]) {
 }
 
 export function PipelineActivity() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   // chartConfig 的 label 会显示在图例/提示里，必须跟随语言，所以从模块级挪进组件用 t 填充。
   const pipelineChartConfig = {
@@ -91,14 +94,14 @@ export function PipelineActivity() {
                   tickLine={false}
                   tickMargin={10}
                   axisLine={false}
-                  tickFormatter={(value) => axisMonthFormatter.format(new Date(String(value)))}
+                  tickFormatter={(value) => formatAxisMonth(String(value), locale)}
                 />
                 <YAxis hide />
                 <ChartTooltip
                   content={
                     <ChartTooltipContent
                       hideIndicator
-                      labelFormatter={(value) => tooltipMonthFormatter.format(new Date(String(value)))}
+                      labelFormatter={(value) => formatTooltipMonth(String(value), locale)}
                     />
                   }
                 />

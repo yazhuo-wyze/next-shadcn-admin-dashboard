@@ -9,6 +9,7 @@ import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } f
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -104,23 +105,24 @@ const chartData = [
   { date: "2024-06-30", desktop: 446, mobile: 400 },
 ];
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig;
-
 export function ChartAreaInteractive() {
+  const { t, locale } = useI18n();
   const isMobile = useIsMobile();
   const [timeRange, setTimeRange] = React.useState("90d");
+
+  const chartConfig = {
+    visitors: {
+      label: t("dashboard.legacy.default-v1.chart.visitors"),
+    },
+    desktop: {
+      label: t("dashboard.legacy.default-v1.chart.desktop"),
+      color: "var(--chart-1)",
+    },
+    mobile: {
+      label: t("dashboard.legacy.default-v1.chart.mobile"),
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig;
 
   React.useEffect(() => {
     if (isMobile) {
@@ -145,10 +147,10 @@ export function ChartAreaInteractive() {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Visitors</CardTitle>
+        <CardTitle>{t("dashboard.legacy.default-v1.chart.title")}</CardTitle>
         <CardDescription>
-          <span className="@[540px]/card:block hidden">Total for the last 3 months</span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
+          <span className="@[540px]/card:block hidden">{t("dashboard.legacy.default-v1.chart.totalLast3Months")}</span>
+          <span className="@[540px]/card:hidden">{t("common.time.last3Months")}</span>
         </CardDescription>
         <CardAction>
           <ToggleGroup
@@ -158,28 +160,28 @@ export function ChartAreaInteractive() {
             variant="outline"
             className="@[767px]/card:flex hidden *:data-[slot=toggle-group-item]:px-4!"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d">{t("common.time.last3Months")}</ToggleGroupItem>
+            <ToggleGroupItem value="30d">{t("common.time.last30Days")}</ToggleGroupItem>
+            <ToggleGroupItem value="7d">{t("common.time.last7Days")}</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
               className="flex @[767px]/card:hidden w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
               size="sm"
-              aria-label="Select a value"
+              aria-label={t("dashboard.legacy.default-v1.chart.selectValue")}
             >
-              <SelectValue placeholder="Last 3 months" />
+              <SelectValue placeholder={t("common.time.last3Months")} />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectGroup>
                 <SelectItem value="90d" className="rounded-lg">
-                  Last 3 months
+                  {t("common.time.last3Months")}
                 </SelectItem>
                 <SelectItem value="30d" className="rounded-lg">
-                  Last 30 days
+                  {t("common.time.last30Days")}
                 </SelectItem>
                 <SelectItem value="7d" className="rounded-lg">
-                  Last 7 days
+                  {t("common.time.last7Days")}
                 </SelectItem>
               </SelectGroup>
             </SelectContent>
@@ -208,7 +210,7 @@ export function ChartAreaInteractive() {
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
+                return date.toLocaleDateString(locale, {
                   month: "short",
                   day: "numeric",
                 });
@@ -220,7 +222,7 @@ export function ChartAreaInteractive() {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(value).toLocaleDateString(locale, {
                       month: "short",
                       day: "numeric",
                     });

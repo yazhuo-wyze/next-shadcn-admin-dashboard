@@ -6,6 +6,8 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { Shipment } from "./shipment-data";
 
@@ -36,6 +38,7 @@ type ShipmentCardProps = {
   active?: boolean;
   onSelectShipment: (shipmentId: Shipment["id"]) => void;
   shipment: Shipment;
+  t: TFunction;
 };
 
 type ShipmentListProps = {
@@ -44,7 +47,7 @@ type ShipmentListProps = {
   shipments: Shipment[];
 };
 
-function ShipmentCard({ shipment, active, onSelectShipment }: ShipmentCardProps) {
+function ShipmentCard({ shipment, active, onSelectShipment, t }: ShipmentCardProps) {
   const angle = (shipment.progress / 100) * 360;
   const Icon = modeIcons[shipment.mode];
 
@@ -74,7 +77,7 @@ function ShipmentCard({ shipment, active, onSelectShipment }: ShipmentCardProps)
               <div className="size-1 rounded-full bg-current" />
             </div>
           </div>
-          <div className="text-muted-foreground text-xs">{shipment.status}</div>
+          <div className="text-muted-foreground text-xs">{t(`common.enums.shipmentStatus.${shipment.status}`)}</div>
         </div>
       </div>
 
@@ -112,11 +115,11 @@ function ShipmentCard({ shipment, active, onSelectShipment }: ShipmentCardProps)
 
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-muted-foreground text-xs leading-none">Cargo</div>
+          <div className="text-muted-foreground text-xs leading-none">{t("dashboard.logistics.card.cargo")}</div>
           <div className="truncate text-sm tracking-tight">{shipment.cargo}</div>
         </div>
         <div className="text-right">
-          <div className="text-muted-foreground text-xs leading-none">ETA</div>
+          <div className="text-muted-foreground text-xs leading-none">{t("dashboard.logistics.card.eta")}</div>
           <div className="text-sm tabular-nums tracking-tight">
             {shipment.eta}
             {shipment.etaMeta && (
@@ -130,10 +133,12 @@ function ShipmentCard({ shipment, active, onSelectShipment }: ShipmentCardProps)
 }
 
 export function ShipmentList({ shipments, selectedShipmentId, onSelectShipment }: ShipmentListProps) {
+  const { t } = useI18n();
+
   return (
     <Card className="h-full rounded-none ring-0">
       <CardHeader>
-        <CardTitle className="font-normal text-xl">Shipments</CardTitle>
+        <CardTitle className="font-normal text-xl">{t("dashboard.logistics.list.title")}</CardTitle>
         <CardAction>
           <Button size="icon-sm" variant="ghost">
             <SlidersHorizontal />
@@ -144,23 +149,27 @@ export function ShipmentList({ shipments, selectedShipmentId, onSelectShipment }
         <Tabs defaultValue="all">
           <TabsList className="w-full border-b px-4" variant="line">
             <TabsTrigger className="text-xs" value="all">
-              All (156)
+              {t("dashboard.logistics.list.tabAll", { count: 156 })}
             </TabsTrigger>
             <TabsTrigger className="text-xs" value="in-transit">
-              In Transit (32)
+              {t("dashboard.logistics.list.tabInTransit", { count: 32 })}
             </TabsTrigger>
             <TabsTrigger className="text-xs" value="delivered">
-              Delivered (98)
+              {t("dashboard.logistics.list.tabDelivered", { count: 98 })}
             </TabsTrigger>
             <TabsTrigger className="text-xs" value="delayed">
-              Delayed (9)
+              {t("dashboard.logistics.list.tabDelayed", { count: 9 })}
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
         <div className="px-4">
           <InputGroup className="h-8">
-            <InputGroupInput className="h-8" aria-label="Search shipments" placeholder="Search shipments..." />
+            <InputGroupInput
+              className="h-8"
+              aria-label={t("dashboard.logistics.list.searchShipments")}
+              placeholder={t("dashboard.logistics.list.searchPlaceholder")}
+            />
             <InputGroupAddon>
               <Search />
             </InputGroupAddon>
@@ -175,6 +184,7 @@ export function ShipmentList({ shipments, selectedShipmentId, onSelectShipment }
                 key={shipment.id}
                 shipment={shipment}
                 onSelectShipment={onSelectShipment}
+                t={t}
               />
             ))}
           </div>

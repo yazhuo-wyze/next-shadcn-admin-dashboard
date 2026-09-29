@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
 
 import { labels, priorities, statuses, type Task } from "./data";
 
@@ -45,35 +46,36 @@ function SortIcon({ sortDirection }: { sortDirection: false | "asc" | "desc" }) 
   return <ArrowUpDown data-icon="inline-end" />;
 }
 
-function TitleColumnHeader({ column }: { column: Column<DataTableFeatures, Task, unknown> }) {
+function TitleColumnHeader({ column, t }: { column: Column<DataTableFeatures, Task, unknown>; t: TFunction }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="-ml-3 text-muted-foreground data-[state=open]:bg-accent">
-          Title
+          {t("dashboard.tasks.column.title")}
           <SortIcon sortDirection={column.getIsSorted()} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem onSelect={() => column.toggleSorting(false)}>
           <ArrowUp />
-          Asc
+          {t("dashboard.tasks.sort.asc")}
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => column.toggleSorting(true)}>
           <ArrowDown />
-          Desc
+          {t("dashboard.tasks.sort.desc")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => column.clearSorting()}>
           <RotateCcw />
-          Reset
+          {t("common.actions.reset")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
-export const columns: ColumnDef<DataTableFeatures, Task>[] = [
+/** 列定义里有多处文案要跟随语言，所以改成接收 t 的函数（用法参考 dashboard/default 的 recentCustomersColumns）。 */
+export const columns = (t: TFunction): ColumnDef<DataTableFeatures, Task>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -88,7 +90,7 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
           <Checkbox
             checked={checked}
             onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Select all"
+            aria-label={t("common.table.selectAll")}
             className="translate-y-0.5"
           />
         )}
@@ -100,7 +102,7 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
           <Checkbox
             checked={checked}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
+            aria-label={t("common.table.selectRow")}
             className="translate-y-0.5"
           />
         )}
@@ -111,16 +113,16 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
   },
   {
     accessorKey: "id",
-    header: "Task",
+    header: t("dashboard.tasks.column.task"),
     cell: ({ row }) => <div className="w-20 font-mono text-muted-foreground text-sm">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "title",
-    header: ({ column }) => <TitleColumnHeader column={column} />,
+    header: ({ column }) => <TitleColumnHeader column={column} t={t} />,
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label);
+      const label = labels(t).find((label) => label.value === row.original.label);
 
       return (
         <div className="flex min-w-0 items-center gap-2">
@@ -136,9 +138,9 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: t("dashboard.tasks.column.status"),
     cell: ({ row }) => {
-      const status = statuses.find((status) => status.value === row.getValue("status"));
+      const status = statuses(t).find((status) => status.value === row.getValue("status"));
 
       if (!status) {
         return null;
@@ -157,9 +159,9 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
   },
   {
     accessorKey: "priority",
-    header: "Priority",
+    header: t("dashboard.tasks.column.priority"),
     cell: ({ row }) => {
-      const priority = priorities.find((priority) => priority.value === row.getValue("priority"));
+      const priority = priorities(t).find((priority) => priority.value === row.getValue("priority"));
 
       if (!priority) {
         return null;
@@ -187,19 +189,19 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon-sm" className="text-muted-foreground data-[state=open]:bg-muted">
                 <MoreHorizontal />
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only">{t("common.actions.moreActions")}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Make a copy</DropdownMenuItem>
-              <DropdownMenuItem>Favorite</DropdownMenuItem>
+              <DropdownMenuItem>{t("common.actions.edit")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.tasks.actions.makeACopy")}</DropdownMenuItem>
+              <DropdownMenuItem>{t("dashboard.tasks.actions.favorite")}</DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+                <DropdownMenuSubTrigger>{t("dashboard.tasks.actions.labels")}</DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   <DropdownMenuRadioGroup value={task.label}>
-                    {labels.map((label) => (
+                    {labels(t).map((label) => (
                       <DropdownMenuRadioItem key={label.value} value={label.value}>
                         {label.label}
                       </DropdownMenuRadioItem>
@@ -209,7 +211,7 @@ export const columns: ColumnDef<DataTableFeatures, Task>[] = [
               </DropdownMenuSub>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                Delete
+                {t("common.actions.delete")}
                 <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuContent>

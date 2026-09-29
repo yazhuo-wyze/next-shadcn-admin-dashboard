@@ -51,18 +51,15 @@ const chartData = [
 
 const weekdayTicks = Array.from({ length: 7 }, (_, index) => weekStart + (index + 0.5) * DAY_MS);
 
-const weekdayFormatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: "UTC",
-  weekday: "long",
-});
-
-const formatWeekday = (value: number) => weekdayFormatter.format(new Date(value));
+// 星期名称跟随当前语言，因此不能在模块级构造 formatter（模块级拿不到 locale）。
+const formatWeekday = (value: number, locale: string) =>
+  new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "long" }).format(new Date(value));
 
 const chartDomain = [weekStart, weekStart + 7 * DAY_MS];
 const formatTooltipCurrency = (value: number | string) => formatCurrency(Number(value), { noDecimals: true });
 
 export function TransactionsOverviewCard() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   const chartConfig = {
     expense: {
@@ -104,7 +101,7 @@ export function TransactionsOverviewCard() {
               dataKey="timestamp"
               domain={chartDomain}
               scale="time"
-              tickFormatter={formatWeekday}
+              tickFormatter={(value) => formatWeekday(value, locale)}
               tickLine={false}
               tickMargin={10}
               ticks={weekdayTicks}

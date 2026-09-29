@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { getT } from "@/lib/i18n/server";
+
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -7,11 +9,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
+export default async function Page() {
+  const t = await getT();
+
   return (
     <div className="flex h-full flex-col items-center justify-center space-y-2 text-center">
-      <h1 className="font-semibold text-2xl">Page not found.</h1>
-      <p className="text-muted-foreground">This page is under development and will be available in future updates.</p>
+      <h1 className="font-semibold text-2xl">{t("dashboard.comingSoon.title")}</h1>
+      <p className="text-muted-foreground">{t("dashboard.comingSoon.description")}</p>
     </div>
   );
 }

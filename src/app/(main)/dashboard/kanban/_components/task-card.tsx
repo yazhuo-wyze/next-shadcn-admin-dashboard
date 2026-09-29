@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { getInitials } from "@/lib/utils";
 
 import { tagTones } from "./data";
@@ -58,6 +59,7 @@ export function TaskCard({
   columnId?: ColumnId;
   isOverlay?: boolean;
 }) {
+  const { t } = useI18n();
   const isDone = columnId === "shipped";
   const showBuildingDetails = columnId === "building" && typeof task.progress === "number";
   const owner = task.owner;
@@ -81,7 +83,7 @@ export function TaskCard({
             )}
           >
             <PriorityIcon data-icon="inline-start" />
-            {task.priority}
+            {t(`common.enums.taskPriority.${task.priority}`)}
           </Badge>
         </div>
         <p className="line-clamp-2 text-muted-foreground text-sm leading-5">{task.description}</p>
@@ -108,14 +110,14 @@ export function TaskCard({
         <div className="flex flex-col gap-3">
           <div className="space-y-1.5">
             <div className="flex items-center justify-between text-muted-foreground text-xs">
-              <span className="leading-none">Progress</span>
+              <span className="leading-none">{t("dashboard.kanban.card.progress")}</span>
               <span className="tabular-nums leading-none">{task.progress}%</span>
             </div>
             <Progress value={task.progress} />
           </div>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-muted-foreground text-sm">Owner</span>
+              <span className="text-muted-foreground text-sm">{t("dashboard.kanban.card.owner")}</span>
               <div className="flex items-center gap-1.5">
                 <span className="truncate text-muted-foreground text-sm">{owner.name}</span>
                 <Avatar className={cn("size-5 after:rounded-sm", owner.tone)}>
@@ -125,7 +127,7 @@ export function TaskCard({
             </div>
 
             <div className="flex items-center justify-between gap-3">
-              <span className="text-muted-foreground text-sm">Due date</span>
+              <span className="text-muted-foreground text-sm">{t("dashboard.kanban.card.dueDate")}</span>
               <span className="flex items-center gap-1.5 text-muted-foreground">
                 <span className="truncate text-sm">{task.dueDate}</span>
                 <CalendarDays className="size-3" />
@@ -133,12 +135,12 @@ export function TaskCard({
             </div>
 
             <div className="flex items-center justify-between gap-3">
-              <span className="text-muted-foreground text-sm">Team</span>
+              <span className="text-muted-foreground text-sm">{t("dashboard.kanban.card.team")}</span>
               <Badge
                 variant="secondary"
                 className={cn("rounded-md border-transparent px-2 font-medium", tagTones[task.team])}
               >
-                {task.team}
+                {t(`common.enums.taskTeam.${task.team}`)}
               </Badge>
             </div>
           </div>
@@ -151,7 +153,7 @@ export function TaskCard({
         {isDone ? (
           <div className="flex items-center gap-1 font-medium text-green-700 text-sm dark:text-green-600">
             <BadgeCheck className="size-4" />
-            Done
+            {t("dashboard.kanban.card.done")}
           </div>
         ) : null}
 

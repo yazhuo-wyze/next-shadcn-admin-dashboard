@@ -7,8 +7,9 @@ import { Star } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
-import { type FileManagerFile, fileIcons, fileKindLabels } from "./data";
+import { type FileManagerFile, fileIcons } from "./data";
 import { FileActions } from "./file-actions";
 
 interface FileGridViewProps {
@@ -16,6 +17,7 @@ interface FileGridViewProps {
 }
 
 export function FileGridView({ files }: FileGridViewProps) {
+  const { t } = useI18n();
   const [gridFiles, setGridFiles] = useState(files);
 
   function toggleStar(fileId: string) {
@@ -39,13 +41,18 @@ export function FileGridView({ files }: FileGridViewProps) {
                     "absolute top-2 right-2 opacity-0 focus-visible:opacity-100 group-hover/file:opacity-100",
                     file.starred && "opacity-100",
                   )}
-                  aria-label={file.starred ? `Unstar ${file.name}` : `Star ${file.name}`}
+                  aria-label={
+                    file.starred
+                      ? t("dashboard.fileManager.card.unstar", { name: file.name })
+                      : t("dashboard.fileManager.card.star", { name: file.name })
+                  }
                   onClick={() => toggleStar(file.id)}
                 >
                   <Star className={cn(file.starred && "fill-current")} />
                 </Button>
                 <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 text-muted-foreground text-xs">
-                  <span>{fileKindLabels[file.kind]}</span>
+                  {/* kind 是数据里的英文枚举值，只把显示文案本地化 */}
+                  <span>{t(`common.enums.fileKind.${file.kind}`)}</span>
                   <span>{file.size}</span>
                 </div>
               </div>
@@ -53,7 +60,7 @@ export function FileGridView({ files }: FileGridViewProps) {
             <CardHeader>
               <CardTitle className="truncate">{file.name}</CardTitle>
               <CardDescription className="truncate">
-                Modified {file.modifiedAt} by {file.owner}
+                {t("dashboard.fileManager.card.modifiedBy", { modifiedAt: file.modifiedAt, owner: file.owner })}
               </CardDescription>
               <CardAction>
                 <FileActions file={file} onToggleStar={() => toggleStar(file.id)} />

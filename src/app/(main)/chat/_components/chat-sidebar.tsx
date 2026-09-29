@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { getInitials } from "@/lib/utils";
 
 import { channelItems, currentUser, navItems, viewItems } from "./data";
@@ -38,6 +39,7 @@ const channelBrandIcons = {
 } as const;
 
 export function ChatSidebar() {
+  const { t } = useI18n();
   const { state } = useSidebar();
   const _isCollapsed = state === "collapsed";
 
@@ -53,7 +55,7 @@ export function ChatSidebar() {
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton className="[&_svg]:size-3.5" size="sm" isActive={item.isActive} tooltip={item.title}>
                   <item.icon />
-                  <span className="font-medium">{item.title}</span>
+                  <span className="font-medium">{t(`chat.nav.${item.id}`)}</span>
                 </SidebarMenuButton>
                 {item.label && <SidebarMenuBadge className="font-medium">{item.label}</SidebarMenuBadge>}
               </SidebarMenuItem>
@@ -62,7 +64,7 @@ export function ChatSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="font-normal">Channels</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-normal">{t("chat.sidebar.channels")}</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {channelItems.map((item) => (
               <SidebarMenuItem key={item.id}>
@@ -72,7 +74,7 @@ export function ChatSidebar() {
                   ) : (
                     <item.icon />
                   )}
-                  <span className="font-medium">{item.title}</span>
+                  <span className="font-medium">{t(`chat.nav.${item.id}`)}</span>
                 </SidebarMenuButton>
                 {item.label && <SidebarMenuBadge className="font-medium">{item.label}</SidebarMenuBadge>}
               </SidebarMenuItem>
@@ -81,13 +83,13 @@ export function ChatSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="font-normal">Views</SidebarGroupLabel>
+          <SidebarGroupLabel className="font-normal">{t("chat.sidebar.views")}</SidebarGroupLabel>
           <SidebarMenu className="gap-1">
             {viewItems.map((item) => (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton className="[&_svg]:size-3.5" size="sm" isActive={item.isActive} tooltip={item.title}>
                   <item.icon />
-                  <span className="font-medium">{item.title}</span>
+                  <span className="font-medium">{t(`chat.nav.${item.id}`)}</span>
                 </SidebarMenuButton>
                 {item.label && <SidebarMenuBadge className="font-medium">{item.label}</SidebarMenuBadge>}
               </SidebarMenuItem>
@@ -132,17 +134,17 @@ export function ChatSidebar() {
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <UserRound />
-                    Account
+                    {t("shell.account")}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Settings />
-                    Settings
+                    {t("shell.settings")}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <LogOut />
-                  Log out
+                  {t("shell.logout")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -16,6 +16,7 @@ import {
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { Role } from "./data";
 
@@ -40,6 +41,7 @@ function groupRowsByRoleGroup(rows: RoleTableRow[]) {
 }
 
 export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Role> }) {
+  const { t } = useI18n();
   const { pageIndex, pageSize } = table.state.pagination;
   const pageRows = table.getRowModel().rows;
   const filteredRows = table.getFilteredRowModel().rows;
@@ -86,7 +88,7 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
           ) : (
             <TableRow>
               <TableCell colSpan={colCount} className="h-24 text-center text-muted-foreground">
-                No results.
+                {t("common.states.noResults")}
               </TableCell>
             </TableRow>
           )}
@@ -95,7 +97,11 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
 
       <div className="flex items-center border-border/70 border-t p-4">
         <div className="text-muted-foreground text-sm">
-          Showing {start} to {end} of {filteredRows.length} roles
+          {t("dashboard.roles.table.showingRange", {
+            start,
+            end,
+            total: filteredRows.length,
+          })}
         </div>
 
         <div className="mx-auto">
@@ -142,7 +148,7 @@ export function RolesTable({ table }: { table: ReactTable<DataTableFeatures, Rol
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-sm">Rows per page</span>
+          <span className="text-muted-foreground text-sm">{t("common.table.rowsPerPage")}</span>
           <Select
             value={`${pageSize}`}
             onValueChange={(v) => {
@@ -175,13 +181,15 @@ function TableBodyGroup({
   totalCount: number;
   colCount: number;
 }) {
+  const { t } = useI18n();
+
   return (
     <>
       <TableRow className="h-10 bg-muted">
         <TableCell className="px-4 text-foreground/60 text-sm" colSpan={colCount}>
-          {group.label}{" "}
+          {t(`common.enums.roleGroup.${group.label}`)}{" "}
           <Badge variant="outline" className="ml-2 rounded-sm bg-transparent text-muted-foreground text-xs">
-            {group.rows.length} of {totalCount}
+            {t("dashboard.roles.table.groupCount", { count: group.rows.length, total: totalCount })}
           </Badge>
         </TableCell>
       </TableRow>

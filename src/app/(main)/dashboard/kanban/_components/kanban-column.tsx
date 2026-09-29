@@ -7,6 +7,7 @@ import { cn } from "cn";
 import { GripVertical, MoreVertical, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { SortableTaskCard } from "./sortable-task-card";
 import type { Column, Task } from "./types";
@@ -18,6 +19,9 @@ interface KanbanColumnProps {
 }
 
 export function KanbanColumn({ column, index, tasks }: KanbanColumnProps) {
+  const { t } = useI18n();
+  // 列标题跟随语言：数据里的 `id` 参与拖拽分组逻辑，显示文案走 dashboard.kanban.column.<id>
+  const columnTitle = t(`dashboard.kanban.column.${column.id}`);
   const columnSortable = useSortable({
     id: `column:${column.id}`,
     index,
@@ -51,21 +55,29 @@ export function KanbanColumn({ column, index, tasks }: KanbanColumnProps) {
               variant="ghost"
               size="icon-xs"
               className="-ml-2 cursor-grab text-foreground/70 active:cursor-grabbing"
-              aria-label={`Drag ${column.title} column`}
+              aria-label={t("dashboard.kanban.column.dragColumn", { column: columnTitle })}
             >
               <GripVertical />
             </Button>
-            <h2 className="truncate font-medium text-base leading-none">{column.title}</h2>
+            <h2 className="truncate font-medium text-base leading-none">{columnTitle}</h2>
           </div>
           <p className="text-muted-foreground text-sm tabular-nums leading-none">
-            {tasks.length} {tasks.length === 1 ? "task" : "tasks"}
+            {t("dashboard.kanban.column.taskCount", { count: tasks.length })}
           </p>
         </div>
         <div className="-mr-2 flex items-center gap-0.5 text-muted-foreground">
-          <Button variant="ghost" size="icon-sm" aria-label={`Add task to ${column.title}`}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("dashboard.kanban.column.addTask", { column: columnTitle })}
+          >
             <Plus />
           </Button>
-          <Button variant="ghost" size="icon-sm" aria-label={`${column.title} column actions`}>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("dashboard.kanban.column.columnActions", { column: columnTitle })}
+          >
             <MoreVertical />
           </Button>
         </div>

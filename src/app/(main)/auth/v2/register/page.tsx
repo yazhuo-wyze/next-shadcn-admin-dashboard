@@ -4,31 +4,40 @@ import { Globe } from "lucide-react";
 import type { Metadata } from "next";
 
 import { APP_CONFIG } from "@/config/app-config";
+import { getT } from "@/lib/i18n/server";
 
 import { RegisterForm } from "../../_components/register-form";
 import { GoogleButton } from "../../_components/social-auth/google-button";
 
-export const metadata: Metadata = {
-  title: "Open Source Branded Registration Page with shadcn/ui",
-  description:
-    "Explore an open source branded registration page with a two-column layout, social sign-up, and account details.",
-  alternates: {
-    canonical: "/auth/v2/register",
-  },
-};
+// 模块级的 `metadata` 常量拿不到 t，改成 generateMetadata 让标题跟随语言切换。
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function RegisterV2() {
+  return {
+    title: t("auth.v2.register.metadataTitle"),
+    description: t("auth.v2.register.metadataDescription"),
+    alternates: {
+      canonical: "/auth/v2/register",
+    },
+  };
+}
+
+export default async function RegisterV2() {
+  const t = await getT();
+
   return (
     <>
       <div className="mx-auto flex w-full flex-col justify-center space-y-8 sm:w-[350px]">
         <div className="space-y-2 text-center">
-          <h1 className="font-medium text-3xl">Create your account</h1>
-          <p className="text-muted-foreground text-sm">Please enter your details to register.</p>
+          <h1 className="font-medium text-3xl">{t("auth.v2.register.title")}</h1>
+          <p className="text-muted-foreground text-sm">{t("auth.v2.register.subtitle")}</p>
         </div>
         <div className="space-y-4">
           <GoogleButton className="w-full" />
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-border after:border-t">
-            <span className="relative z-10 bg-background px-2 text-muted-foreground">Or continue with</span>
+            <span className="relative z-10 bg-background px-2 text-muted-foreground">
+              {t("auth.social.orContinueWith")}
+            </span>
           </div>
           <RegisterForm />
         </div>
@@ -36,9 +45,9 @@ export default function RegisterV2() {
 
       <div className="absolute top-5 flex w-full justify-end px-10">
         <div className="text-muted-foreground text-sm">
-          Already have an account?{" "}
+          {t("auth.register.hasAccount")}{" "}
           <Link prefetch={false} className="text-foreground" href="login">
-            Login
+            {t("auth.login.submit")}
           </Link>
         </div>
       </div>

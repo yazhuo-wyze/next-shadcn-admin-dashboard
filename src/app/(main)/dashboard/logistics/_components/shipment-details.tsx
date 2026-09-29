@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { Shipment } from "./shipment-data";
 import { ShipmentRouteMap } from "./shipment-route-map";
@@ -41,49 +43,49 @@ type ShipmentDetailsProps = {
   shipment: Shipment | null;
 };
 
-function getContactLabel(mode: Shipment["mode"]) {
+function getContactLabel(mode: Shipment["mode"], t: TFunction) {
   if (mode === "land") {
-    return "Call Driver";
+    return t("dashboard.logistics.details.callDriver");
   }
 
   if (mode === "air") {
-    return "Call Airline Support";
+    return t("dashboard.logistics.details.callAirlineSupport");
   }
 
-  return "Call Captain";
+  return t("dashboard.logistics.details.callCaptain");
 }
 
-function getTransportNumberLabel(mode: Shipment["mode"]) {
+function getTransportNumberLabel(mode: Shipment["mode"], t: TFunction) {
   if (mode === "land") {
-    return "Vehicle number";
+    return t("dashboard.logistics.details.vehicleNumber");
   }
 
   if (mode === "air") {
-    return "Flight number";
+    return t("dashboard.logistics.details.flightNumber");
   }
 
-  return "Vessel number";
+  return t("dashboard.logistics.details.vesselNumber");
 }
 
-function EmptyShipmentOverview() {
+function EmptyShipmentOverview({ t }: { t: TFunction }) {
   return (
     <div className="grid min-h-48 place-items-center rounded-lg border border-dashed text-muted-foreground text-sm">
-      Select a shipment to view details.
+      {t("dashboard.logistics.details.selectShipment")}
     </div>
   );
 }
 
-function ShipmentOverview({ shipment }: { shipment: Shipment }) {
+function ShipmentOverview({ shipment, t }: { shipment: Shipment; t: TFunction }) {
   const ContactIcon = modeIcons[shipment.mode];
-  const contactLabel = getContactLabel(shipment.mode);
-  const transportNumberLabel = getTransportNumberLabel(shipment.mode);
+  const contactLabel = getContactLabel(shipment.mode, t);
+  const transportNumberLabel = getTransportNumberLabel(shipment.mode, t);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div className="flex items-center gap-2">
           <h1 className="font-medium text-lg tabular-nums tracking-tight sm:text-xl">#{shipment.id}</h1>
-          <Button variant="ghost" size="icon-sm" aria-label="Copy shipment ID">
+          <Button variant="ghost" size="icon-sm" aria-label={t("dashboard.logistics.details.copyShipmentId")}>
             <Copy />
           </Button>
         </div>
@@ -91,13 +93,15 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
         <div className="flex items-center gap-2 text-xs sm:text-sm">
           <Badge variant="outline" className={cn("gap-1.5", statusBadgeClasses[shipment.status])}>
             <span className={cn("size-1.5 rounded-full bg-current", progressRingClasses[shipment.status])} />
-            {shipment.status}
+            {t(`common.enums.shipmentStatus.${shipment.status}`)}
           </Badge>
           <span className="text-muted-foreground">·</span>
-          <span className="text-foreground tabular-nums">{shipment.progress}% complete</span>
+          <span className="text-foreground tabular-nums">
+            {t("dashboard.logistics.details.progressComplete", { progress: shipment.progress })}
+          </span>
           <span className="text-muted-foreground">·</span>
           <span className="text-foreground tabular-nums">
-            ETA: {shipment.eta} {shipment.etaMeta}
+            {t("dashboard.logistics.details.eta", { eta: shipment.eta, meta: shipment.etaMeta })}
           </span>
         </div>
       </div>
@@ -122,7 +126,7 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
         <div className="flex flex-col items-end gap-1">
           <Badge variant="secondary">
             <Star />
-            {shipment.customer.tier}
+            {t(`common.enums.customerTier.${shipment.customer.tier}`)}
           </Badge>
           <div className="text-muted-foreground text-xs leading-none">{shipment.customer.tierLabel}</div>
         </div>
@@ -132,7 +136,7 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
 
       <div className="flex flex-col gap-8">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="font-medium">Cargo details</h2>
+          <h2 className="font-medium">{t("dashboard.logistics.details.cargoDetails")}</h2>
 
           <Button variant="outline" size="sm">
             <ContactIcon data-icon="inline-start" />
@@ -142,19 +146,25 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-5 md:grid-cols-[1.35fr_1fr_1.1fr_1.15fr_1fr]">
           <div className="col-span-2 flex flex-col gap-1 md:col-span-1 md:gap-2">
-            <div className="text-muted-foreground text-xs leading-none md:invisible md:text-sm">Cargo</div>
+            <div className="text-muted-foreground text-xs leading-none md:invisible md:text-sm">
+              {t("dashboard.logistics.card.cargo")}
+            </div>
             <div className="whitespace-nowrap text-sm leading-none">{shipment.cargo}</div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="text-muted-foreground text-xs leading-none md:text-sm">Total weight</div>
+            <div className="text-muted-foreground text-xs leading-none md:text-sm">
+              {t("dashboard.logistics.details.totalWeight")}
+            </div>
             <div className="text-sm leading-none">{shipment.weight}</div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <div className="text-muted-foreground text-xs leading-none md:text-sm">Transport mode</div>
+            <div className="text-muted-foreground text-xs leading-none md:text-sm">
+              {t("dashboard.logistics.details.transportMode")}
+            </div>
             <div className="text-sm capitalize leading-none">
-              {shipment.mode} · {shipment.routeType}
+              {t(`common.enums.transportMode.${shipment.mode}`)} · {t(`common.enums.routeType.${shipment.routeType}`)}
             </div>
           </div>
 
@@ -164,8 +174,12 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
           </div>
 
           <div className="flex flex-col gap-2 md:text-right">
-            <div className="text-muted-foreground text-xs leading-none md:text-sm">Status</div>
-            <div className="text-sm leading-none">{shipment.progress}% complete</div>
+            <div className="text-muted-foreground text-xs leading-none md:text-sm">
+              {t("dashboard.logistics.details.status")}
+            </div>
+            <div className="text-sm leading-none">
+              {t("dashboard.logistics.details.progressComplete", { progress: shipment.progress })}
+            </div>
           </div>
         </div>
       </div>
@@ -201,6 +215,8 @@ function ShipmentOverview({ shipment }: { shipment: Shipment }) {
 }
 
 export function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
+  const { t } = useI18n();
+
   if (!shipment) {
     return (
       <div className="grid h-full min-h-0 grid-rows-[320px_1fr] overflow-hidden lg:grid-rows-[420px_1fr]">
@@ -208,7 +224,7 @@ export function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
           <ShipmentRouteMap shipment={null} />
         </div>
         <div className="min-h-0 overflow-hidden p-4">
-          <EmptyShipmentOverview />
+          <EmptyShipmentOverview t={t} />
         </div>
       </div>
     );
@@ -227,42 +243,42 @@ export function ShipmentDetails({ shipment }: ShipmentDetailsProps) {
               variant="line"
             >
               <TabsTrigger className="flex-none" value="overview">
-                Overview
+                {t("dashboard.logistics.tabs.overview")}
               </TabsTrigger>
               <TabsTrigger className="flex-none" value="route">
-                Route
+                {t("dashboard.logistics.tabs.route")}
               </TabsTrigger>
               <TabsTrigger className="flex-none" value="cargo">
-                Cargo
+                {t("dashboard.logistics.tabs.cargo")}
               </TabsTrigger>
               <TabsTrigger className="flex-none" value="documents">
-                Documents
+                {t("dashboard.logistics.tabs.documents")}
               </TabsTrigger>
               <TabsTrigger className="flex-none" value="activity">
-                Activity
+                {t("dashboard.logistics.tabs.activity")}
               </TabsTrigger>
             </TabsList>
             <TabsContent className="min-h-0 overflow-auto p-4" value="overview">
-              <ShipmentOverview shipment={shipment} />
+              <ShipmentOverview shipment={shipment} t={t} />
             </TabsContent>
             <TabsContent className="p-4" value="route">
               <div className="grid h-full place-items-center rounded-md border border-dashed text-muted-foreground text-sm">
-                Route view coming soon.
+                {t("dashboard.logistics.tabs.routeComingSoon")}
               </div>
             </TabsContent>
             <TabsContent className="p-4" value="cargo">
               <div className="grid h-full place-items-center rounded-md border border-dashed text-muted-foreground text-sm">
-                Cargo view coming soon.
+                {t("dashboard.logistics.tabs.cargoComingSoon")}
               </div>
             </TabsContent>
             <TabsContent className="p-4" value="documents">
               <div className="grid h-full place-items-center rounded-md border border-dashed text-muted-foreground text-sm">
-                Documents view coming soon.
+                {t("dashboard.logistics.tabs.documentsComingSoon")}
               </div>
             </TabsContent>
             <TabsContent className="p-4" value="activity">
               <div className="grid h-full place-items-center rounded-md border border-dashed text-muted-foreground text-sm">
-                Activity view coming soon.
+                {t("dashboard.logistics.tabs.activityComingSoon")}
               </div>
             </TabsContent>
           </Tabs>

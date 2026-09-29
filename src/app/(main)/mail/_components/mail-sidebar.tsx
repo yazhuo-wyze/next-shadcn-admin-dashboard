@@ -32,11 +32,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { getInitials } from "@/lib/utils";
 
 import { accounts, type MailNavItem, mailNavigation } from "./data";
 
 export function MailSidebar() {
+  const { t } = useI18n();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const [selectedAccount, setSelectedAccount] = React.useState(accounts[0]);
@@ -52,7 +55,7 @@ export function MailSidebar() {
                   variant="ghost"
                   size="icon-sm"
                   className={accountTriggerClassName}
-                  aria-label={`Open ${selectedAccount.label} menu`}
+                  aria-label={t("mail.sidebar.openAccountMenu", { account: selectedAccount.label })}
                 >
                   <AccountMarker account={selectedAccount} isSelected />
                 </Button>
@@ -84,7 +87,7 @@ export function MailSidebar() {
                     key={account.id}
                     className={accountTriggerClassName}
                     value={String(account.id)}
-                    aria-label={`Select ${account.label}`}
+                    aria-label={t("mail.sidebar.selectAccount", { account: account.label })}
                   >
                     <AccountMarker account={account} />
                   </ToggleGroupItem>
@@ -93,7 +96,7 @@ export function MailSidebar() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-sm" aria-label="Open account menu">
+                  <Button variant="ghost" size="icon-sm" aria-label={t("mail.sidebar.openAccountMenuButton")}>
                     <EllipsisVertical />
                   </Button>
                 </DropdownMenuTrigger>
@@ -112,32 +115,32 @@ export function MailSidebar() {
 
         <Button size={isCollapsed ? "icon-sm" : "sm"} variant="outline" className="group-data-[state=expanded]:w-full">
           <PenLine data-icon="inline-start" />
-          <span className="group-data-[state=collapsed]:hidden">New email</span>
+          <span className="group-data-[state=collapsed]:hidden">{t("mail.sidebar.newEmail")}</span>
         </Button>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu className="gap-1">{mailNavigation.navMain.map(renderNavItem)}</SidebarMenu>
+          <SidebarMenu className="gap-1">{mailNavigation.navMain.map((nav) => renderNavItem(nav, t))}</SidebarMenu>
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel className="font-normal">Folders</SidebarGroupLabel>
-          <SidebarMenu className="gap-1">{mailNavigation.folders.map(renderNavItem)}</SidebarMenu>
+          <SidebarGroupLabel className="font-normal">{t("mail.sidebar.folders")}</SidebarGroupLabel>
+          <SidebarMenu className="gap-1">{mailNavigation.folders.map((nav) => renderNavItem(nav, t))}</SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="gap-1">{mailNavigation.navFooter.map(renderNavItem)}</SidebarMenu>
+        <SidebarMenu className="gap-1">{mailNavigation.navFooter.map((nav) => renderNavItem(nav, t))}</SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
 }
 
-function renderNavItem(nav: MailNavItem) {
+function renderNavItem(nav: MailNavItem, t: TFunction) {
   return (
     <SidebarMenuItem key={nav.id}>
       <SidebarMenuButton className="[&_svg]:size-3.5" size="sm" isActive={nav.isActive} tooltip={nav.title}>
         <nav.icon />
-        <span className="font-medium">{nav.title}</span>
+        <span className="font-medium">{t(`mail.nav.${nav.id}`)}</span>
       </SidebarMenuButton>
       {nav.label && <SidebarMenuBadge className="font-medium">{nav.label}</SidebarMenuBadge>}
     </SidebarMenuItem>
@@ -180,11 +183,13 @@ function AccountMenuContent({
   onSelectAccount: (account: Account) => void;
   showAccounts?: boolean;
 } & Pick<React.ComponentProps<typeof DropdownMenuContent>, "align" | "side">) {
+  const { t } = useI18n();
+
   return (
     <DropdownMenuContent className="w-56" {...props}>
       {showAccounts && (
         <>
-          <DropdownMenuLabel>Accounts</DropdownMenuLabel>
+          <DropdownMenuLabel>{t("mail.sidebar.accounts")}</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuRadioGroup
               value={String(selectedAccountId)}
@@ -212,22 +217,22 @@ function AccountMenuContent({
       <DropdownMenuGroup>
         <DropdownMenuItem>
           <UserPlus />
-          Add account
+          {t("mail.sidebar.addAccount")}
         </DropdownMenuItem>
         <DropdownMenuItem>
           <UsersRound />
-          Manage accounts
+          {t("mail.sidebar.manageAccounts")}
         </DropdownMenuItem>
         <DropdownMenuItem>
           <Settings2 />
-          Account settings
+          {t("mail.sidebar.accountSettings")}
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem>
           <LogOut />
-          Sign out
+          {t("mail.sidebar.signOut")}
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>

@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { type DataTableFeatures, dataTableFeatures } from "@/lib/data-table-features";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 type LedgerPriority = "Escalate" | "Coach" | "Reforecast" | null;
@@ -34,12 +36,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Oscorp Labs",
     dealId: "OPP-489",
     stage: "Legal",
-    blocker: "Close date overdue by 35 days",
+    blocker: "关闭日期已逾期 35 天",
     owner: "Leila Zhang",
     idleDays: 36,
-    closeVariance: "35d overdue",
+    closeVariance: "逾期 35 天",
     priority: "Escalate",
-    nextAction: "Join next customer call and reset close plan.",
+    nextAction: "参加下一次客户电话会议并重设成交计划。",
     riskScore: 81,
   },
   {
@@ -47,12 +49,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Hooli AI",
     dealId: "OPP-475",
     stage: "Qualification",
-    blocker: "Close date overdue by 28 days",
+    blocker: "关闭日期已逾期 28 天",
     owner: "Omar Ali",
     idleDays: 33,
-    closeVariance: "28d overdue",
+    closeVariance: "逾期 28 天",
     priority: "Coach",
-    nextAction: "Review deal strategy and unblock stage exit.",
+    nextAction: "复盘商机策略并打通阶段出口。",
     riskScore: 76,
   },
   {
@@ -60,12 +62,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Globex Systems",
     dealId: "OPP-447",
     stage: "Qualification",
-    blocker: "Close date overdue by 37 days",
+    blocker: "关闭日期已逾期 37 天",
     owner: "Sofia Bautista",
     idleDays: 34,
-    closeVariance: "37d overdue",
+    closeVariance: "逾期 37 天",
     priority: "Coach",
-    nextAction: "Review deal strategy and unblock stage exit.",
+    nextAction: "复盘商机策略并打通阶段出口。",
     riskScore: 75,
   },
   {
@@ -73,12 +75,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Umbrella Corp",
     dealId: "OPP-459",
     stage: "Legal",
-    blocker: "Close date overdue by 24 days",
+    blocker: "关闭日期已逾期 24 天",
     owner: "Leila Zhang",
     idleDays: 29,
-    closeVariance: "24d overdue",
+    closeVariance: "逾期 24 天",
     priority: "Coach",
-    nextAction: "Review deal strategy and unblock stage exit.",
+    nextAction: "复盘商机策略并打通阶段出口。",
     riskScore: 72,
   },
   {
@@ -86,12 +88,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Acme Industries",
     dealId: "OPP-421",
     stage: "Negotiation",
-    blocker: "Close date overdue by 32 days",
+    blocker: "关闭日期已逾期 32 天",
     owner: "Leila Zhang",
     idleDays: 31,
-    closeVariance: "32d overdue",
+    closeVariance: "逾期 32 天",
     priority: "Coach",
-    nextAction: "Review deal strategy and unblock stage exit.",
+    nextAction: "复盘商机策略并打通阶段出口。",
     riskScore: 69,
   },
   {
@@ -99,12 +101,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Wayne Devices",
     dealId: "OPP-471",
     stage: "Proposal",
-    blocker: "Close date overdue by 22 days",
+    blocker: "关闭日期已逾期 22 天",
     owner: "Sofia Bautista",
     idleDays: 32,
-    closeVariance: "22d overdue",
+    closeVariance: "逾期 22 天",
     priority: "Reforecast",
-    nextAction: "Adjust forecast category and expected close.",
+    nextAction: "调整预测分类与预计成交时间。",
     riskScore: 56,
   },
   {
@@ -112,12 +114,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Aperture Health",
     dealId: "OPP-497",
     stage: "Proposal",
-    blocker: "Close date overdue by 20 days",
+    blocker: "关闭日期已逾期 20 天",
     owner: "Omar Ali",
     idleDays: 30,
-    closeVariance: "20d overdue",
+    closeVariance: "逾期 20 天",
     priority: "Reforecast",
-    nextAction: "Adjust forecast category and expected close.",
+    nextAction: "调整预测分类与预计成交时间。",
     riskScore: 50,
   },
   {
@@ -125,12 +127,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Northwind Labs",
     dealId: "OPP-438",
     stage: "Proposal",
-    blocker: "Close date overdue by 14 days",
+    blocker: "关闭日期已逾期 14 天",
     owner: "Julian Singh",
     idleDays: 23,
-    closeVariance: "14d overdue",
+    closeVariance: "逾期 14 天",
     priority: null,
-    nextAction: "No immediate intervention required.",
+    nextAction: "无需立即干预。",
     riskScore: 42,
   },
   {
@@ -138,12 +140,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Stark Logistics",
     dealId: "OPP-463",
     stage: "Negotiation",
-    blocker: "Close date overdue by 10 days",
+    blocker: "关闭日期已逾期 10 天",
     owner: "Julian Singh",
     idleDays: 21,
-    closeVariance: "10d overdue",
+    closeVariance: "逾期 10 天",
     priority: null,
-    nextAction: "No immediate intervention required.",
+    nextAction: "无需立即干预。",
     riskScore: 39,
   },
   {
@@ -151,12 +153,12 @@ const LEDGER_ROWS: LedgerRow[] = [
     account: "Soylent Foods",
     dealId: "OPP-482",
     stage: "Negotiation",
-    blocker: "Close date overdue by 5 days",
+    blocker: "关闭日期已逾期 5 天",
     owner: "Julian Singh",
     idleDays: 24,
-    closeVariance: "5d overdue",
+    closeVariance: "逾期 5 天",
     priority: null,
-    nextAction: "No immediate intervention required.",
+    nextAction: "无需立即干预。",
     riskScore: 31,
   },
 ];
@@ -167,47 +169,47 @@ const priorityTone: Record<Exclude<LedgerPriority, null>, string> = {
   Reforecast: "border-amber-500/35 bg-amber-500/10 text-amber-700",
 };
 
-const ledgerColumns: ColumnDef<DataTableFeatures, LedgerRow>[] = [
+const ledgerColumns = (t: TFunction): ColumnDef<DataTableFeatures, LedgerRow>[] => [
   {
     accessorKey: "account",
-    header: "Account",
+    header: t("dashboard.legacy.analytics-v1.ledger.account"),
     cell: ({ row }) => (
       <div className="flex flex-col gap-1">
         <p className="font-medium text-sm">{row.original.account}</p>
         <p className="text-muted-foreground text-xs">
-          {row.original.dealId} · {row.original.stage}
+          {row.original.dealId} · {t(`dashboard.legacy.analytics-v1.stage.${row.original.stage}`)}
         </p>
       </div>
     ),
   },
   {
     accessorKey: "blocker",
-    header: "Blocker",
+    header: t("dashboard.legacy.analytics-v1.ledger.blocker"),
     cell: ({ row }) => <div className="max-w-44 whitespace-normal text-xs">{row.original.blocker}</div>,
   },
   {
     accessorKey: "owner",
-    header: "Owner",
+    header: t("dashboard.legacy.analytics-v1.ledger.owner"),
     cell: ({ row }) => <span className="text-xs">{row.original.owner}</span>,
   },
   {
     accessorKey: "idleDays",
-    header: "Idle (days)",
+    header: t("dashboard.legacy.analytics-v1.ledger.idleDays"),
     cell: ({ row }) => <span className="text-xs tabular-nums">{row.original.idleDays}d</span>,
   },
   {
     accessorKey: "closeVariance",
-    header: "Close variance",
+    header: t("dashboard.legacy.analytics-v1.ledger.closeVariance"),
     cell: ({ row }) => <span className="text-xs tabular-nums">{row.original.closeVariance}</span>,
   },
   {
     accessorKey: "nextAction",
-    header: "Next action",
+    header: t("dashboard.legacy.analytics-v1.ledger.nextAction"),
     cell: ({ row }) => (
       <div className="flex max-w-64 flex-col gap-1 whitespace-normal">
         {row.original.priority ? (
           <Badge variant="outline" className={cn("text-[10px] uppercase", priorityTone[row.original.priority])}>
-            {row.original.priority}
+            {t(`dashboard.legacy.analytics-v1.priority.${row.original.priority}`)}
           </Badge>
         ) : null}
         <p className="text-xs">{row.original.nextAction}</p>
@@ -224,7 +226,7 @@ const ledgerColumns: ColumnDef<DataTableFeatures, LedgerRow>[] = [
           className="-mr-2 h-8 px-2 text-xs"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Risk Ladder
+          {t("dashboard.legacy.analytics-v1.ledger.riskLadder")}
         </Button>
       </div>
     ),
@@ -248,12 +250,13 @@ const ledgerColumns: ColumnDef<DataTableFeatures, LedgerRow>[] = [
 ];
 
 export function ActionsRiskLedger() {
+  const { t } = useI18n();
   const [sorting, setSorting] = React.useState<SortingState>([{ id: "riskScore", desc: true }]);
 
   const table = useTable({
     features: dataTableFeatures,
     data: LEDGER_ROWS,
-    columns: ledgerColumns,
+    columns: ledgerColumns(t),
     getRowId: (row) => String(row.id),
     state: { sorting },
     onSortingChange: setSorting,
@@ -262,24 +265,36 @@ export function ActionsRiskLedger() {
   return (
     <Card className="min-w-0 shadow-xs">
       <CardHeader>
-        <CardTitle>Revenue Risk Ledger</CardTitle>
-        <CardDescription>Accounts under pressure with blocker, next action, and owner responsibility.</CardDescription>
+        <CardTitle>{t("dashboard.legacy.analytics-v1.ledger.title")}</CardTitle>
+        <CardDescription>{t("dashboard.legacy.analytics-v1.ledger.description")}</CardDescription>
         <CardAction>
           <Badge variant="outline" className="font-medium tabular-nums">
-            {LEDGER_ROWS.length} Accounts
+            {t("dashboard.legacy.analytics-v1.ledger.accountsCount", { count: LEDGER_ROWS.length })}
           </Badge>
         </CardAction>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <div className="grid gap-3 rounded-lg border bg-muted/20 p-3 text-sm sm:grid-cols-4 sm:divide-x sm:divide-border/60">
-          <LedgerStat label="Critical accounts" value="1" detail="Risk Ladder >= 80 (current window)" />
-          <LedgerStat label="Escalations due" value="1" detail="Next 7 days" />
-          <LedgerStat label="Median inactivity" value="31d" detail="Current filter window" />
           <LedgerStat
-            label="Overdue revenue"
+            label={t("dashboard.legacy.analytics-v1.ledger.criticalAccounts")}
+            value="1"
+            detail={t("dashboard.legacy.analytics-v1.ledger.riskLadderWindow")}
+          />
+          <LedgerStat
+            label={t("dashboard.legacy.analytics-v1.ledger.escalationsDue")}
+            value="1"
+            detail={t("dashboard.legacy.analytics-v1.ledger.next7Days")}
+          />
+          <LedgerStat
+            label={t("dashboard.legacy.analytics-v1.ledger.medianInactivity")}
+            value="31d"
+            detail={t("dashboard.legacy.analytics-v1.ledger.currentFilterWindow")}
+          />
+          <LedgerStat
+            label={t("dashboard.legacy.analytics-v1.ledger.overdueRevenue")}
             value={formatCurrency(1084000, { noDecimals: true })}
-            detail="Close date already exceeded"
+            detail={t("dashboard.legacy.analytics-v1.ledger.closeDateExceeded")}
           />
         </div>
 

@@ -7,6 +7,7 @@ import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 const chartData = [
@@ -24,36 +25,37 @@ const chartData = [
   { month: "Dec", income: 4700, expenses: -3400 },
 ];
 
-const chartConfig = {
-  income: {
-    label: "Income",
-    color: "var(--chart-1)",
-  },
-  expenses: {
-    label: "Expenses",
-    color: "var(--chart-2)",
-  },
-} as ChartConfig;
-
 export function CashFlowOverview() {
+  const { t } = useI18n();
+  const chartConfig = {
+    income: {
+      label: t("dashboard.legacy.finance-v1.cashflow.income"),
+      color: "var(--chart-1)",
+    },
+    expenses: {
+      label: t("dashboard.legacy.finance-v1.cashflow.expenses"),
+      color: "var(--chart-2)",
+    },
+  } as ChartConfig;
   const totalIncome = chartData.reduce((acc, item) => acc + item.income, 0);
   const totalExpenses = chartData.reduce((acc, item) => acc + Math.abs(item.expenses), 0);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Cash Flow Overview</CardTitle>
-        <CardDescription>Monthly income and expenses with net cash impact.</CardDescription>
+        <CardTitle>{t("dashboard.legacy.finance-v1.cashflow.title")}</CardTitle>
+        <CardDescription>{t("dashboard.legacy.finance-v1.cashflow.description")}</CardDescription>
         <CardAction>
           <Select defaultValue="this-year">
             <SelectTrigger size="sm" className="w-37">
-              <SelectValue placeholder="Select period" />
+              <SelectValue placeholder={t("dashboard.legacy.finance-v1.cashflow.selectPeriod")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="this-month">This Month</SelectItem>
-                <SelectItem value="last-6-months">Last 6 Months</SelectItem>
-                <SelectItem value="ytd">Year to Date</SelectItem>
-                <SelectItem value="this-year">This Year</SelectItem>
+                <SelectItem value="this-month">{t("common.time.thisMonth")}</SelectItem>
+                <SelectItem value="last-6-months">{t("common.time.last6Months")}</SelectItem>
+                <SelectItem value="ytd">{t("common.time.yearToDate")}</SelectItem>
+                <SelectItem value="this-year">{t("dashboard.legacy.finance-v1.cashflow.thisYear")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -67,7 +69,9 @@ export function CashFlowOverview() {
               <ArrowDownLeft className="size-6 stroke-background" />
             </div>
             <div>
-              <p className="text-muted-foreground text-xs uppercase">Income</p>
+              <p className="text-muted-foreground text-xs uppercase">
+                {t("dashboard.legacy.finance-v1.cashflow.income")}
+              </p>
               <p className="font-medium tabular-nums">{formatCurrency(totalIncome, { noDecimals: true })}</p>
             </div>
           </div>
@@ -77,7 +81,9 @@ export function CashFlowOverview() {
               <ArrowUpRight className="size-6 stroke-background" />
             </div>
             <div>
-              <p className="text-muted-foreground text-xs uppercase">Expenses</p>
+              <p className="text-muted-foreground text-xs uppercase">
+                {t("dashboard.legacy.finance-v1.cashflow.expenses")}
+              </p>
               <p className="font-medium tabular-nums">{formatCurrency(totalExpenses, { noDecimals: true })}</p>
             </div>
           </div>

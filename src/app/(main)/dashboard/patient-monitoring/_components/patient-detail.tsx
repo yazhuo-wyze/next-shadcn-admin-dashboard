@@ -1,4 +1,8 @@
+"use client";
+
 import { cn } from "cn";
+
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { PatientRecord } from "./data";
 import { type EcgLead, usePatientWaveformSeries } from "./use-patient-vital-series";
@@ -70,53 +74,83 @@ function NumericVital({
 }
 
 export function PatientDetail({ hasActiveAlarm, patient }: PatientDetailProps) {
+  const { t } = useI18n();
+
   return (
     <div className="grid min-w-0 xl:grid-cols-[minmax(0,1fr)_15.5rem]">
       <div className="min-w-0 border-border after:hidden xl:grid xl:grid-rows-6 xl:border-r xl:after:block xl:after:border-border xl:after:border-b">
-        <TraceRow calibration="25 mm/s · 10 mm/mV" kind="ecg" label="ECG II" lead="II" patient={patient} />
-        <TraceRow calibration="25 mm/s · 10 mm/mV" kind="ecg" label="ECG V5" lead="V5" patient={patient} />
-        <TraceRow kind="pleth" label="Pleth" patient={patient} />
-        <TraceRow calibration="10 mm/mV" kind="respiration" label="Resp" patient={patient} />
-        <TraceRow calibration="mmHg" kind="arterial" label="ART" patient={patient} />
+        <TraceRow
+          calibration="25 mm/s · 10 mm/mV"
+          kind="ecg"
+          label={t("dashboard.patientMonitoring.waveform.ecg", { lead: "II" })}
+          lead="II"
+          patient={patient}
+        />
+        <TraceRow
+          calibration="25 mm/s · 10 mm/mV"
+          kind="ecg"
+          label={t("dashboard.patientMonitoring.waveform.ecg", { lead: "V5" })}
+          lead="V5"
+          patient={patient}
+        />
+        <TraceRow kind="pleth" label={t("dashboard.patientMonitoring.waveform.pleth")} patient={patient} />
+        <TraceRow
+          calibration="10 mm/mV"
+          kind="respiration"
+          label={t("dashboard.patientMonitoring.waveform.respiration")}
+          patient={patient}
+        />
+        <TraceRow
+          calibration="mmHg"
+          kind="arterial"
+          label={t("dashboard.patientMonitoring.waveform.arterial")}
+          patient={patient}
+        />
       </div>
 
       <dl className="xl:grid xl:grid-rows-6">
         <NumericVital
           color={hasActiveAlarm ? "text-amber-500 dark:text-amber-400" : "text-lime-500 dark:text-lime-400"}
-          label="HR"
+          label={t("dashboard.patientMonitoring.vital.hr")}
           limits="50–100"
           unit="bpm"
           value={patient.heartRate}
         />
         <NumericVital
           color="text-cyan-500 dark:text-cyan-400"
-          label="SpO₂"
+          label={t("dashboard.patientMonitoring.vital.spo2")}
           limits="92–100"
           unit="%"
           value={patient.spo2}
         />
         <NumericVital
           color="text-amber-500 dark:text-amber-400"
-          label="RR"
+          label={t("dashboard.patientMonitoring.vital.rr")}
           limits="8–30"
           unit="/min"
           value={patient.respirationRate}
         />
         <NumericVital
           color="text-foreground"
-          label="NIBP"
+          label={t("dashboard.patientMonitoring.vital.nibp")}
           limits="90–160"
           unit={`(${patient.map})`}
           value={patient.nibp}
         />
         <NumericVital
           color="text-red-500 dark:text-red-400"
-          label="ART"
+          label={t("dashboard.patientMonitoring.vital.art")}
           limits="80–140"
           unit={`(${patient.arterialMap})`}
           value={patient.arterialPressure}
         />
-        <NumericVital color="text-foreground" label="Temp" limits="36.0–38.0" unit="°C" value={patient.temperature} />
+        <NumericVital
+          color="text-foreground"
+          label={t("dashboard.patientMonitoring.vital.temp")}
+          limits="36.0–38.0"
+          unit="°C"
+          value={patient.temperature}
+        />
       </dl>
     </div>
   );

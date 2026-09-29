@@ -6,63 +6,68 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { getT } from "@/lib/i18n/server";
 
 const today = new Date();
 
-const projects = [
-  {
-    title: "Q2 Roadmap",
-    status: "In Progress",
-    description: "Ship better, ship smarter.",
-    progress: 68,
-    due: `Due ${format(addDays(today, 9), "MMM d")}`,
-    icon: Orbit,
-  },
-  {
-    title: "Website Redesign",
-    status: "Planning",
-    description: "Clean, modern, and fast.",
-    progress: 42,
-    due: `Due ${format(addDays(today, 21), "MMM d")}`,
-    icon: Globe,
-  },
-  {
-    title: "Onboarding",
-    status: "Planning",
-    description: "Trim first-run steps.",
-    progress: 31,
-    due: `Due ${format(addDays(today, 18), "MMM d")}`,
-    icon: ClipboardCheck,
-  },
-] as const;
+/** 项目数据是模块级常量、拿不到 t，所以改成接收 t 的函数。 */
+const projects = (t: TFunction) =>
+  [
+    {
+      title: "Q2 路线图",
+      status: t("dashboard.productivity.projects.status.inProgress"),
+      description: "做得更好，交付更快。",
+      progress: 68,
+      due: t("dashboard.productivity.projects.due", { date: format(addDays(today, 9), "MMM d") }),
+      icon: Orbit,
+    },
+    {
+      title: "网站改版",
+      status: t("dashboard.productivity.projects.status.planning"),
+      description: "清爽、现代、够快。",
+      progress: 42,
+      due: t("dashboard.productivity.projects.due", { date: format(addDays(today, 21), "MMM d") }),
+      icon: Globe,
+    },
+    {
+      title: "新用户引导",
+      status: t("dashboard.productivity.projects.status.planning"),
+      description: "精简首次使用步骤。",
+      progress: 31,
+      due: t("dashboard.productivity.projects.due", { date: format(addDays(today, 18), "MMM d") }),
+      icon: ClipboardCheck,
+    },
+  ] as const;
 
-export function ProjectsSection() {
+export async function ProjectsSection() {
+  const t = await getT();
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-xl tracking-tight">Projects</h2>
+        <h2 className="text-xl tracking-tight">{t("dashboard.productivity.projects.title")}</h2>
         <div className="flex items-center gap-2">
           <Select defaultValue="active">
             <SelectTrigger className="w-28">
-              <SelectValue placeholder="Active" />
+              <SelectValue placeholder={t("dashboard.productivity.projects.filter.active")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="planning">Planning</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="active">{t("dashboard.productivity.projects.filter.active")}</SelectItem>
+                <SelectItem value="planning">{t("dashboard.productivity.projects.filter.planning")}</SelectItem>
+                <SelectItem value="completed">{t("dashboard.productivity.projects.filter.completed")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           <Button variant="outline">
             <Plus data-icon="inline-start" />
-            New
+            {t("dashboard.productivity.projects.new")}
           </Button>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        {projects.map((project) => (
+        {projects(t).map((project) => (
           <Card key={project.title} className="shadow-xs">
             <CardHeader>
               <CardTitle>

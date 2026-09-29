@@ -3,30 +3,35 @@ import { BookOpen, FileText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TFunction } from "@/lib/i18n/dictionary";
+import { getT } from "@/lib/i18n/server";
 
 const today = new Date();
 
-function formatNoteDate(date: Date) {
-  if (isToday(date)) return "Today";
-  if (isYesterday(date)) return "Yesterday";
+/** 相对日期的两档文案要跟随语言，所以改成接收 t。 */
+function formatNoteDate(t: TFunction, date: Date) {
+  if (isToday(date)) return t("common.time.today");
+  if (isYesterday(date)) return t("common.time.yesterday");
   return format(date, "MMM d");
 }
 
-const recentNotes = [
-  { title: "Design principles that scale", date: formatNoteDate(today), icon: FileText },
-  { title: `Content ideas – ${format(today, "MMMM")}`, date: formatNoteDate(subDays(today, 1)), icon: FileText },
-  { title: "Lessons from the week", date: formatNoteDate(subDays(today, 4)), icon: FileText },
-  { title: "Books I’m Reading", date: formatNoteDate(subDays(today, 5)), icon: BookOpen },
-] as const;
+export async function RecentNotesCard() {
+  const t = await getT();
 
-export function RecentNotesCard() {
+  const recentNotes = [
+    { title: "可复用的设计原则", date: formatNoteDate(t, today), icon: FileText },
+    { title: `内容灵感 – ${format(today, "MMMM")}`, date: formatNoteDate(t, subDays(today, 1)), icon: FileText },
+    { title: "本周复盘", date: formatNoteDate(t, subDays(today, 4)), icon: FileText },
+    { title: "我正在读的书", date: formatNoteDate(t, subDays(today, 5)), icon: BookOpen },
+  ] as const;
+
   return (
     <Card className="shadow-xs">
       <CardHeader>
-        <CardTitle>Recent Notes</CardTitle>
+        <CardTitle>{t("dashboard.productivity.notes.title")}</CardTitle>
         <CardAction>
           <Button variant="ghost" size="sm" className="text-muted-foreground">
-            View all
+            {t("dashboard.productivity.viewAll")}
           </Button>
         </CardAction>
       </CardHeader>

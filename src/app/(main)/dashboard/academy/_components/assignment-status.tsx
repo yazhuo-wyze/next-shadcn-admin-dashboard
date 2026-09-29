@@ -12,6 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const chartData = [
   { className: "G11A", submitted: 14, pending: 18, overdue: 2 },
@@ -33,24 +34,6 @@ function OverdueLegendIcon() {
   return <span className="block size-2 rounded-[2px] bg-destructive" />;
 }
 
-const chartConfig = {
-  submitted: {
-    label: "Submitted",
-    color: "var(--chart-3)",
-    icon: SubmittedLegendIcon,
-  },
-  pending: {
-    label: "Pending",
-    color: "var(--chart-2)",
-    icon: PendingLegendIcon,
-  },
-  overdue: {
-    label: "Overdue",
-    color: "var(--destructive)",
-    icon: OverdueLegendIcon,
-  },
-} satisfies ChartConfig;
-
 function AssignmentDotPattern({ color, id }: { color: string; id: string }) {
   return (
     <pattern id={id} width="6" height="6" patternUnits="userSpaceOnUse">
@@ -62,12 +45,33 @@ function AssignmentDotPattern({ color, id }: { color: string; id: string }) {
 }
 
 export function AssignmentStatus() {
+  const { t } = useI18n();
+
+  // chartConfig 的 label 要跟随语言，所以放进组件内部用 t() 填充。
+  const chartConfig = {
+    submitted: {
+      label: t("dashboard.academy.assignmentStatus.chart.submitted"),
+      color: "var(--chart-3)",
+      icon: SubmittedLegendIcon,
+    },
+    pending: {
+      label: t("dashboard.academy.assignmentStatus.chart.pending"),
+      color: "var(--chart-2)",
+      icon: PendingLegendIcon,
+    },
+    overdue: {
+      label: t("dashboard.academy.assignmentStatus.chart.overdue"),
+      color: "var(--destructive)",
+      icon: OverdueLegendIcon,
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="text-sm">Assignment Status</CardTitle>
+        <CardTitle className="text-sm">{t("dashboard.academy.assignmentStatus.title")}</CardTitle>
         <CardAction className="flex items-center gap-1 text-muted-foreground text-xs">
-          View Report <ArrowRight className="size-4" />
+          {t("dashboard.academy.assignmentStatus.viewReport")} <ArrowRight className="size-4" />
         </CardAction>
       </CardHeader>
       <CardContent>

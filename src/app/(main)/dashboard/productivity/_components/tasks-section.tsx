@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 type Task = {
   title: string;
@@ -17,36 +18,37 @@ type Task = {
 };
 
 const tasks: Task[] = [
-  { title: "Finalize Q2 roadmap", tag: "Work", time: "10:00 AM", checked: false },
-  { title: "Review design system updates", tag: "Design", time: "11:30 AM", checked: true },
-  { title: "Reply to important emails", tag: "Admin", time: "2:00 PM", checked: false },
-  { title: "Plan creator content for this week", tag: "Content", time: "4:30 PM", checked: false },
-  { title: "Prepare weekly team sync notes", tag: "Planning", time: "6:00 PM", checked: false },
+  { title: "敲定 Q2 路线图", tag: "工作", time: "10:00 AM", checked: false },
+  { title: "复查设计系统改动", tag: "设计", time: "11:30 AM", checked: true },
+  { title: "回复重要邮件", tag: "行政", time: "2:00 PM", checked: false },
+  { title: "规划本周内容选题", tag: "内容", time: "4:30 PM", checked: false },
+  { title: "准备团队周会纪要", tag: "规划", time: "6:00 PM", checked: false },
 ];
 
 export function TasksSection() {
+  const { t } = useI18n();
   const [items, setItems] = React.useState(tasks);
 
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-xl tracking-tight">Tasks</h2>
+        <h2 className="text-xl tracking-tight">{t("dashboard.productivity.tasks.title")}</h2>
         <div className="flex items-center gap-2">
           <Select defaultValue="today">
             <SelectTrigger className="w-30">
-              <SelectValue placeholder="Today" />
+              <SelectValue placeholder={t("common.time.today")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                <SelectItem value="this-week">This Week</SelectItem>
+                <SelectItem value="today">{t("common.time.today")}</SelectItem>
+                <SelectItem value="tomorrow">{t("dashboard.productivity.tasks.filter.tomorrow")}</SelectItem>
+                <SelectItem value="this-week">{t("common.time.thisWeek")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
           <Button>
             <Plus data-icon="inline-start" />
-            New Task
+            {t("dashboard.productivity.tasks.newTask")}
           </Button>
         </div>
       </div>

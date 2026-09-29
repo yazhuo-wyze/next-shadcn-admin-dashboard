@@ -29,7 +29,7 @@ export interface InfrastructureGroup {
 
 export const infrastructureGroups: InfrastructureGroup[] = [
   {
-    name: "Admin Console",
+    name: "管理后台",
     organization: "Weblabs Studio",
     rows: [
       {
@@ -42,15 +42,15 @@ export const infrastructureGroups: InfrastructureGroup[] = [
         status: "Unhealthy",
         latency: "86ms",
         uptime: "8d 23h",
-        server: "Hetzner Cloud",
+        server: "Hetzner 云",
         countryCode: "DE",
-        plan: "CX33, Falkenstein",
+        plan: "CX33，法尔肯施泰因",
         resources: { cpu: 60, ram: 73, disk: 41 },
       },
     ],
   },
   {
-    name: "Analytics",
+    name: "数据分析",
     organization: "Aiy Cap",
     rows: [
       {
@@ -65,7 +65,7 @@ export const infrastructureGroups: InfrastructureGroup[] = [
         uptime: "9d 23h",
         server: "AWS",
         countryCode: "NL",
-        plan: "eu-west-1, Amsterdam",
+        plan: "eu-west-1，阿姆斯特丹",
         resources: { cpu: 49, ram: 42, disk: 44 },
       },
       {
@@ -80,13 +80,13 @@ export const infrastructureGroups: InfrastructureGroup[] = [
         uptime: "9d 23h",
         server: "Azure",
         countryCode: "EE",
-        plan: "North Europe, Tallinn",
+        plan: "北欧，塔林",
         resources: { cpu: 37, ram: 46, disk: 64 },
       },
     ],
   },
   {
-    name: "Kanban",
+    name: "看板",
     organization: "Storeframe",
     rows: [
       {
@@ -99,15 +99,15 @@ export const infrastructureGroups: InfrastructureGroup[] = [
         status: "Online",
         latency: "25ms",
         uptime: "10d 23h",
-        server: "Bare Metal / Custom",
+        server: "裸金属 / 定制",
         countryCode: "DE",
-        plan: "EX101, Falkenstein",
+        plan: "EX101，法尔肯施泰因",
         resources: { cpu: 1, ram: 21, disk: 4 },
       },
     ],
   },
   {
-    name: "Inbox",
+    name: "收件箱",
     organization: "Acme Corp",
     rows: [],
   },

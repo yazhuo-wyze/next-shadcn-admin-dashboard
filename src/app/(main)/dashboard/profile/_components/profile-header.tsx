@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getT } from "@/lib/i18n/server";
 
 import type { ProfileRecord } from "./profile-data";
 
@@ -18,12 +19,14 @@ interface ProfileHeaderProps {
   profile: ProfileRecord;
 }
 
-export function ProfileHeader({ profile }: ProfileHeaderProps) {
+export async function ProfileHeader({ profile }: ProfileHeaderProps) {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-5 px-4 lg:flex-row lg:items-end lg:justify-between">
       <div className="flex min-w-0 items-center gap-4">
         <div className="grid size-18 shrink-0 place-items-center sm:size-23">
-          <span className="sr-only">Profile 92% complete</span>
+          <span className="sr-only">{t("dashboard.profile.header.profileComplete", { percent: 92 })}</span>
           <svg aria-hidden="true" className="col-start-1 row-start-1 size-full -rotate-90" viewBox="0 0 100 100">
             <circle
               className="fill-none stroke-green-500 dark:stroke-green-600"
@@ -56,11 +59,11 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
               className="rounded-sm border-amber-600/20 bg-amber-500/10 text-amber-700 dark:text-amber-300"
               variant="secondary"
             >
-              92% Complete
+              {t("dashboard.profile.header.complete", { percent: 92 })}
             </Badge>
             <Badge className="rounded-sm bg-green-600 text-white" variant="default">
               <BadgeCheck data-icon="inline-start" />
-              Verified
+              {t("dashboard.profile.header.verified")}
             </Badge>
             <Badge className="rounded-sm" variant="outline">
               {profile.employmentType}
@@ -79,16 +82,16 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
         <Button size="sm" asChild variant="outline">
           <a href={`mailto:${profile.workEmail}`}>
             <Mail data-icon="inline-start" />
-            Email
+            {t("dashboard.profile.header.email")}
           </a>
         </Button>
         <Button size="sm">
           <Pencil data-icon="inline-start" />
-          Edit profile
+          {t("dashboard.profile.header.editProfile")}
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button aria-label="More profile actions" size="icon-sm" variant="outline">
+            <Button aria-label={t("dashboard.profile.header.moreActions")} size="icon-sm" variant="outline">
               <Ellipsis />
             </Button>
           </DropdownMenuTrigger>
@@ -96,14 +99,14 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Eye />
-                View as employee
+                {t("dashboard.profile.header.viewAsEmployee")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem variant="destructive">
                 <UserRoundX />
-                Deactivate profile
+                {t("dashboard.profile.header.deactivateProfile")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

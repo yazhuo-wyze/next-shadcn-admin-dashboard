@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { useI18n } from "@/lib/i18n/i18n-provider";
+
 import type { CardiacRhythm, PatientRecord } from "./data";
 import {
   COMPACT_WAVEFORM_TICK_INTERVAL_MS,
@@ -45,6 +47,13 @@ interface PatientWaveformSeriesOptions {
 
 const SAMPLE_STEP_SECONDS = 0.025;
 const TREND_POINT_COUNT = 90;
+
+/** 趋势维度（枚举值）对应的生命体征词条后缀，供 aria-label 复用同一份显示文案。 */
+const TREND_VITAL_KEYS = {
+  "heart-rate": "hr",
+  map: "map",
+  spo2: "spo2",
+} satisfies Record<TrendKind, string>;
 
 const heartRateVariations: Record<CardiacRhythm, number> = {
   "atrial-fibrillation": 4.5,
@@ -167,12 +176,16 @@ function createTrendWindow(patient: PatientRecord, definition: TrendDefinition, 
 }
 
 export function usePatientTrendSeries({ kind, patient }: PatientTrendSeriesOptions) {
+  const { t } = useI18n();
   const tick = useTrendTick();
   const definition = trendDefinitions[kind];
   const data = useMemo(() => createTrendWindow(patient, definition, tick), [definition, patient, tick]);
 
   return {
-    ariaLabel: `${patient.bed} ${kind} trend`,
+    ariaLabel: t("dashboard.patientMonitoring.aria.trend", {
+      bed: patient.bed,
+      vital: t(`dashboard.patientMonitoring.vital.${TREND_VITAL_KEYS[kind]}`),
+    }),
     data,
     domain: definition.domain,
     ticks: definition.ticks,
@@ -185,6 +198,7 @@ export function usePatientWaveformSeries({
   lead = "II",
   patient,
 }: PatientWaveformSeriesOptions) {
+  const { t } = useI18n();
   const tick = useWaveformTick(compact);
   const tickInterval = compact ? COMPACT_WAVEFORM_TICK_INTERVAL_MS : DETAIL_WAVEFORM_TICK_INTERVAL_MS;
   const sampleCount = compact ? 160 : 400;
@@ -194,7 +208,11 @@ export function usePatientWaveformSeries({
   );
 
   return {
-    ariaLabel: `${patient.bed} ${lead} ${kind} waveform`,
+    ariaLabel: t("dashboard.patientMonitoring.aria.waveform", {
+      bed: patient.bed,
+      kind: t(`dashboard.patientMonitoring.waveformKind.${kind}`),
+      lead,
+    }),
     data,
     domain: getSignalDomain(patient, kind),
   };

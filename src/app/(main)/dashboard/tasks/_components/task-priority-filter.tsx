@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DataTableFeatures } from "@/lib/data-table-features";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import { priorities } from "./data";
 
@@ -22,6 +23,7 @@ interface TaskPriorityFilterProps<TData extends RowData> {
 }
 
 export function TaskPriorityFilter<TData extends RowData>({ table }: TaskPriorityFilterProps<TData>) {
+  const { t } = useI18n();
   const column = table.getColumn("priority");
 
   if (!column) {
@@ -56,12 +58,12 @@ export function TaskPriorityFilter<TData extends RowData>({ table }: TaskPriorit
           className={cn("border-dashed", selectedValues.size > 0 && "border-solid bg-muted text-foreground")}
         >
           <ListFilter data-icon="inline-start" />
-          Priority
+          {t("dashboard.tasks.column.priority")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-50">
         <DropdownMenuGroup>
-          {priorities.map((priority) => {
+          {priorities(t).map((priority) => {
             const isSelected = selectedValues.has(priority.value);
 
             return (
@@ -83,7 +85,7 @@ export function TaskPriorityFilter<TData extends RowData>({ table }: TaskPriorit
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={clearFilter} className="justify-center text-center">
                 <X />
-                Clear filters
+                {t("dashboard.tasks.toolbar.clearFilters")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </>

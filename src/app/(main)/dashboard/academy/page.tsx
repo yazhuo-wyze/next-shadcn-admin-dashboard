@@ -2,6 +2,7 @@ import { BookOpenCheck, Megaphone, Plus } from "lucide-react";
 import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
+import { getT } from "@/lib/i18n/server";
 
 import { AssignmentStatus } from "./_components/assignment-status";
 import { ClassSchedule } from "./_components/class-schedule";
@@ -9,38 +10,45 @@ import { KpiCards } from "./_components/kpi-cards";
 import { PerformanceHighlights } from "./_components/performance-highlights";
 import { UpcomingEvents } from "./_components/upcoming-events";
 
-export const metadata: Metadata = {
-  title: "Open Source Education Dashboard with shadcn/ui",
-  description:
-    "Explore an open source education dashboard with class schedules, assignments, performance insights, and upcoming events.",
-  alternates: {
-    canonical: "/dashboard/academy",
-  },
-};
+/**
+ * 页面标题/描述是模块级常量，拿不到 t，所以改成 generateMetadata 异步函数。
+ * alternates 与语言无关，原样保留。
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
 
-export default function Page() {
+  return {
+    title: t("dashboard.academy.metadataTitle"),
+    description: t("dashboard.academy.metadataDescription"),
+    alternates: {
+      canonical: "/dashboard/academy",
+    },
+  };
+}
+
+export default async function Page() {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl tracking-tight">Academy Dashboard</h1>
-          <p className="text-muted-foreground text-sm">
-            Good morning, Teacher. Here's a quick overview of today's activity.
-          </p>
+          <h1 className="text-3xl tracking-tight">{t("dashboard.academy.title")}</h1>
+          <p className="text-muted-foreground text-sm">{t("dashboard.academy.subtitle")}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2 lg:w-fit">
           <Button size="sm">
             <Megaphone />
-            New Announcement
+            {t("dashboard.academy.actions.newAnnouncement")}
           </Button>
           <Button size="sm" variant="outline">
             <BookOpenCheck />
-            Gradebook
+            {t("dashboard.academy.actions.gradebook")}
           </Button>
           <Button size="sm" variant="outline">
             <Plus />
-            Add Assignment
+            {t("dashboard.academy.actions.addAssignment")}
           </Button>
         </div>
       </div>

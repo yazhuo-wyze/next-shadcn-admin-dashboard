@@ -15,12 +15,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { getT } from "@/lib/i18n/server";
 
-export function FileManagerToolbar() {
+export async function FileManagerToolbar() {
+  const t = await getT();
+
   return (
     <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
       <InputGroup className="md:max-w-lg">
-        <InputGroupInput placeholder="Search files and folders..." aria-label="Search files and folders" />
+        <InputGroupInput
+          placeholder={t("dashboard.fileManager.toolbar.searchPlaceholder")}
+          aria-label={t("dashboard.fileManager.toolbar.searchAriaLabel")}
+        />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
@@ -30,16 +36,18 @@ export function FileManagerToolbar() {
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
               <SlidersHorizontal data-icon="inline-start" />
-              Filter & sort
+              {t("dashboard.fileManager.toolbar.filterSort")}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Show</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("dashboard.fileManager.toolbar.show")}</DropdownMenuLabel>
               <DropdownMenuRadioGroup value="all">
-                <DropdownMenuRadioItem value="all">All files</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="starred">Starred</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="shared">Shared</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="all">{t("dashboard.fileManager.allFiles")}</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="starred">
+                  {t("dashboard.fileManager.toolbar.starred")}
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="shared">{t("dashboard.fileManager.shared")}</DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -47,17 +55,26 @@ export function FileManagerToolbar() {
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <SlidersHorizontal />
-                  File type
+                  {t("dashboard.fileManager.toolbar.fileType")}
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent sideOffset={8}>
                   <DropdownMenuGroup>
+                    {/* 选项 value 是筛选依赖的英文枚举值，显示文案走 common.enums.fileKind.* */}
                     <DropdownMenuRadioGroup value="all">
-                      <DropdownMenuRadioItem value="all">All types</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="archive">Archive</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="design">Design</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="document">Document</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="pdf">PDF</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="spreadsheet">Spreadsheet</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="all">
+                        {t("dashboard.fileManager.toolbar.allTypes")}
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="archive">
+                        {t("common.enums.fileKind.archive")}
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="design">{t("common.enums.fileKind.design")}</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="document">
+                        {t("common.enums.fileKind.document")}
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="pdf">{t("common.enums.fileKind.pdf")}</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="spreadsheet">
+                        {t("common.enums.fileKind.spreadsheet")}
+                      </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuGroup>
                 </DropdownMenuSubContent>
@@ -65,14 +82,20 @@ export function FileManagerToolbar() {
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <ArrowUpDown />
-                  Sort by
+                  {t("dashboard.fileManager.toolbar.sortBy")}
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent sideOffset={8}>
                   <DropdownMenuGroup>
                     <DropdownMenuRadioGroup value="modified">
-                      <DropdownMenuRadioItem value="modified">Last modified</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="name">Name</DropdownMenuRadioItem>
-                      <DropdownMenuRadioItem value="size">File size</DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="modified">
+                        {t("dashboard.fileManager.toolbar.lastModified")}
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="name">
+                        {t("dashboard.fileManager.field.name")}
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem value="size">
+                        {t("dashboard.fileManager.field.size")}
+                      </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
                   </DropdownMenuGroup>
                 </DropdownMenuSubContent>

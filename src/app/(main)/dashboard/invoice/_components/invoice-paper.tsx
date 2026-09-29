@@ -1,3 +1,6 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { formatCurrency } from "@/lib/utils";
 
 import {
@@ -13,10 +16,15 @@ import {
   type InvoiceFormValues,
 } from "./data";
 
+// 本组件被客户端组件 `InvoicePreview` / `PrintInvoice` 引用，属于客户端渲染树，因此用 `useI18n()` 取词。
 export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
+  const { t } = useI18n();
   const taxOption = getInvoiceTaxOption(invoice);
   const discountValue = Number.isFinite(invoice.discountValue) ? invoice.discountValue : 0;
-  const discountLabel = invoice.discountType === "percent" ? `Discount ${discountValue}%` : "Discount";
+  const discountLabel =
+    invoice.discountType === "percent"
+      ? t("dashboard.invoice.paper.discountPercent", { value: discountValue })
+      : t("dashboard.invoice.paper.discount");
 
   return (
     <article
@@ -32,38 +40,38 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
             <rect y="28" width="20" height="20" rx="3" fill="currentColor" />
             <rect x="28" y="28" width="20" height="20" rx="3" fill="currentColor" />
           </svg>
-          <h2 className="text-4xl uppercase tracking-widest">Invoice</h2>
+          <h2 className="text-4xl uppercase tracking-widest">{t("nav.item.invoice")}</h2>
         </div>
 
         <section className="grid grid-cols-2 gap-14 text-sm leading-relaxed">
           <div>
-            <p>Reference: {invoice.referenceNumber}</p>
-            <p>Issued: {invoice.issuedDate}</p>
-            <p>Payment due: {invoice.paymentDueDate}</p>
+            <p>{t("dashboard.invoice.paper.reference", { reference: invoice.referenceNumber })}</p>
+            <p>{t("dashboard.invoice.paper.issued", { date: invoice.issuedDate })}</p>
+            <p>{t("dashboard.invoice.paper.paymentDue", { date: invoice.paymentDueDate })}</p>
           </div>
           <div>
-            <p>Payment account</p>
+            <p>{t("dashboard.invoice.paper.paymentAccount")}</p>
             <p>{invoice.from.paymentAccountName}</p>
-            <p>Routing no. {invoice.from.routingNumber}</p>
+            <p>{t("dashboard.invoice.paper.routingNumber", { number: invoice.from.routingNumber })}</p>
           </div>
         </section>
 
         <section className="grid grid-cols-2 gap-14 text-sm leading-relaxed">
           <div>
-            <p className="mb-4 font-semibold uppercase">From</p>
+            <p className="mb-4 font-semibold uppercase">{t("dashboard.invoice.paper.from")}</p>
             <p>{invoice.from.name}</p>
             {invoice.from.addressLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
-            <p>Tax ID: {invoice.from.taxId}</p>
+            <p>{t("dashboard.invoice.paper.taxId", { id: invoice.from.taxId })}</p>
           </div>
           <div>
-            <p className="mb-4 font-semibold uppercase">Bill to</p>
+            <p className="mb-4 font-semibold uppercase">{t("dashboard.invoice.paper.billTo")}</p>
             <p>{invoice.to.name}</p>
             {invoice.to.addressLines.map((line) => (
               <p key={line}>{line}</p>
             ))}
-            <p>Tax ID: {invoice.to.taxId}</p>
+            <p>{t("dashboard.invoice.paper.taxId", { id: invoice.to.taxId })}</p>
           </div>
         </section>
       </header>
@@ -71,10 +79,10 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
       <div className="flex flex-col gap-5">
         <section className="text-sm">
           <div className="grid grid-cols-[1fr_74px_116px_116px] bg-stone-200 px-3 py-3 font-semibold uppercase">
-            <span>Description</span>
-            <span className="text-right">Units</span>
-            <span className="text-right">Unit cost</span>
-            <span className="text-right">Line total</span>
+            <span>{t("dashboard.invoice.items.description")}</span>
+            <span className="text-right">{t("dashboard.invoice.items.units")}</span>
+            <span className="text-right">{t("dashboard.invoice.items.unitCost")}</span>
+            <span className="text-right">{t("dashboard.invoice.items.lineTotal")}</span>
           </div>
           {getInvoiceItems(invoice).map((item) => (
             <div
@@ -93,7 +101,7 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
           <section className="col-start-2 space-y-2">
             <div>
               <div className="flex justify-between gap-8">
-                <span>Net amount</span>
+                <span>{t("dashboard.invoice.paper.netAmount")}</span>
                 <span>{formatInvoiceCurrency(getInvoiceSubtotal(invoice))}</span>
               </div>
               <div className="flex justify-between gap-8">
@@ -102,14 +110,14 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
               </div>
               <div className="flex justify-between gap-8">
                 <span>
-                  {taxOption.name} {taxOption.rate}%
+                  {t(`common.enums.tax.${taxOption.name}`)} {taxOption.rate}%
                 </span>
                 <span>{formatInvoiceCurrency(getInvoiceTax(invoice))}</span>
               </div>
             </div>
             <div className="border-current border-y-2 py-3">
               <div className="flex justify-between gap-8">
-                <span className="font-semibold uppercase">Balance due</span>
+                <span className="font-semibold uppercase">{t("dashboard.invoice.paper.balanceDue")}</span>
                 <span className="font-semibold">{formatInvoiceCurrency(getInvoiceTotal(invoice))}</span>
               </div>
             </div>
@@ -124,8 +132,8 @@ export function InvoicePaper({ invoice }: { invoice: InvoiceFormValues }) {
           <p>{invoice.from.website}</p>
         </div>
         <div>
-          <p>Prepared for prompt processing.</p>
-          <p>Issued by {invoice.from.issuerName}</p>
+          <p>{t("dashboard.invoice.paper.footerNote")}</p>
+          <p>{t("dashboard.invoice.paper.issuedBy", { name: invoice.from.issuerName })}</p>
         </div>
       </footer>
     </article>

@@ -6,6 +6,7 @@ import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from "@/compone
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useSidebar } from "@/components/ui/sidebar";
 import { setClientCookie } from "@/lib/cookie.client";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 import type { Mail } from "./data";
 import { MailInbox } from "./mail-inbox";
@@ -24,6 +25,7 @@ interface MailProps {
 }
 
 export function MailComponent({ mails, defaultLayout = [...DEFAULT_MAIL_LAYOUT] }: MailProps) {
+  const { t } = useI18n();
   const { isMobile } = useSidebar();
   const [isMounted, setIsMounted] = React.useState(false);
 
@@ -33,7 +35,9 @@ export function MailComponent({ mails, defaultLayout = [...DEFAULT_MAIL_LAYOUT] 
 
   if (!isMounted) {
     return (
-      <div className="flex size-full items-center justify-center text-muted-foreground text-sm">Loading mail...</div>
+      <div className="flex size-full items-center justify-center text-muted-foreground text-sm">
+        {t("mail.loading")}
+      </div>
     );
   }
 
@@ -45,6 +49,7 @@ export function MailComponent({ mails, defaultLayout = [...DEFAULT_MAIL_LAYOUT] 
 }
 
 function MailMobileLayout({ mails }: Pick<MailProps, "mails">) {
+  const { t } = useI18n();
   const [mail] = useMail();
   const [isMailOpen, setIsMailOpen] = React.useState(false);
   const selectedMail = mails.find((item) => item.id === mail.selected) || null;
@@ -55,8 +60,8 @@ function MailMobileLayout({ mails }: Pick<MailProps, "mails">) {
 
       <Drawer open={isMailOpen} onOpenChange={setIsMailOpen}>
         <DrawerContent>
-          <DrawerTitle className="sr-only">Mail message</DrawerTitle>
-          <DrawerDescription className="sr-only">Read the selected email message</DrawerDescription>
+          <DrawerTitle className="sr-only">{t("mail.drawer.title")}</DrawerTitle>
+          <DrawerDescription className="sr-only">{t("mail.drawer.description")}</DrawerDescription>
           <MailView mail={selectedMail} onClose={() => setIsMailOpen(false)} />
         </DrawerContent>
       </Drawer>

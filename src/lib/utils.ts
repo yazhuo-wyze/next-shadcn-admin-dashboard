@@ -22,7 +22,8 @@ export function formatCurrency(
     noDecimals?: boolean;
   },
 ) {
-  const { currency = "USD", locale = "en-US", minimumFractionDigits, maximumFractionDigits, noDecimals } = opts ?? {};
+  // 默认按中文环境格式化（日期/数字/货币）；调用方可通过 opts.locale 覆盖为 "en-US"。
+  const { currency = "USD", locale = "zh-CN", minimumFractionDigits, maximumFractionDigits, noDecimals } = opts ?? {};
 
   const formatOptions: Intl.NumberFormatOptions = {
     style: "currency",
