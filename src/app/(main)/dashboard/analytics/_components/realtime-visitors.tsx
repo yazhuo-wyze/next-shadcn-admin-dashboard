@@ -5,6 +5,7 @@ import { Bar, BarChart, type BarShapeProps, XAxis, YAxis } from "recharts";
 
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const realtimeData = [
   { minute: 1, visitors: 0 },
@@ -38,13 +39,6 @@ const realtimeData = [
   { minute: 29, visitors: 0 },
   { minute: 30, visitors: 4 },
 ];
-
-const chartConfig = {
-  visitors: {
-    color: "var(--chart-3)",
-    label: "Visitors",
-  },
-} satisfies ChartConfig;
 
 function RealtimeBarShape(props: BarShapeProps) {
   const { height, payload, width, x, y } = props;
@@ -89,10 +83,20 @@ function RealtimeBarShape(props: BarShapeProps) {
 }
 
 export function RealtimeVisitors() {
+  const { t } = useI18n();
+
+  // 图例/tooltip 标签要跟随语言，故从模块级挪进组件
+  const chartConfig = {
+    visitors: {
+      color: "var(--chart-3)",
+      label: t("analytics.visitors"),
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="font-normal">Realtime Visitors</CardTitle>
+        <CardTitle className="font-normal">{t("analytics.realtimeVisitors")}</CardTitle>
         <CardAction>
           <Ellipsis className="size-4" />
         </CardAction>
@@ -102,14 +106,14 @@ export function RealtimeVisitors() {
         <div className="flex items-end justify-between">
           <div className="flex items-baseline gap-1">
             <span className="text-2xl tabular-nums leading-none tracking-tight">24</span>
-            <span className="text-muted-foreground text-sm">per minute</span>
+            <span className="text-muted-foreground text-sm">{t("analytics.perMinute")}</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground text-sm">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-green-500 opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-green-500" />
             </span>
-            <span>Live</span>
+            <span>{t("analytics.live")}</span>
           </div>
         </div>
         <ChartContainer config={chartConfig} className="h-36 w-full">

@@ -5,6 +5,7 @@ import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const qualitySeries = [
   { date: "2026-04-01T00:00:00.000Z", actualQuality: 0.4, baselineQuality: -1.2 },
@@ -93,17 +94,6 @@ const qualitySeries = [
   { date: "2026-04-28T16:00:00.000Z", actualQuality: 4.8, baselineQuality: 4.8 },
 ];
 
-const chartConfig = {
-  actualQuality: {
-    color: "var(--chart-3)",
-    label: "Actual quality",
-  },
-  baselineQuality: {
-    color: "var(--muted-foreground)",
-    label: "Baseline quality",
-  },
-} satisfies ChartConfig;
-
 const chartData = qualitySeries.map((item, index) => ({
   ...item,
   dayIndex: 1 + (index * 27) / (qualitySeries.length - 1),
@@ -118,10 +108,24 @@ function formatWeek(value: number) {
 }
 
 export function TrafficQuality() {
+  const { t } = useI18n();
+
+  // 图例/tooltip 标签跟随语言，故从模块级挪进组件
+  const chartConfig = {
+    actualQuality: {
+      color: "var(--chart-3)",
+      label: t("analytics.actualQuality"),
+    },
+    baselineQuality: {
+      color: "var(--muted-foreground)",
+      label: t("analytics.baselineQuality"),
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle className="font-normal">Traffic Quality</CardTitle>
+        <CardTitle className="font-normal">{t("analytics.trafficQuality")}</CardTitle>
         <CardAction>
           <Ellipsis className="size-4" />
         </CardAction>

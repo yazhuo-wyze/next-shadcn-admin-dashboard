@@ -6,13 +6,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, type LabelProps, XAxis, YAxis 
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const chartConfig = {
-  visitors: {
-    color: "var(--chart-1)",
-    label: "Visitors",
-  },
-} satisfies ChartConfig;
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 type TrafficSourceDatum = {
   label: string;
@@ -62,9 +56,9 @@ function renderValueLabel(props: LabelProps) {
   );
 }
 
-function TrafficSourceBarChart({ data }: { data: TrafficSourceDatum[] }) {
+function TrafficSourceBarChart({ data, config }: { data: TrafficSourceDatum[]; config: ChartConfig }) {
   return (
-    <ChartContainer config={chartConfig} className="h-64 w-full">
+    <ChartContainer config={config} className="h-64 w-full">
       <BarChart
         accessibilityLayer
         data={data}
@@ -88,10 +82,19 @@ function TrafficSourceBarChart({ data }: { data: TrafficSourceDatum[] }) {
 }
 
 export function TopTrafficSources() {
+  const { t } = useI18n();
+
+  const chartConfig = {
+    visitors: {
+      color: "var(--chart-1)",
+      label: t("analytics.visitors"),
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="h-full gap-2">
       <CardHeader>
-        <CardTitle className="font-normal">Traffic Sources</CardTitle>
+        <CardTitle className="font-normal">{t("analytics.trafficSources")}</CardTitle>
         <CardAction>
           <Ellipsis className="size-4" />
         </CardAction>
@@ -112,14 +115,14 @@ export function TopTrafficSources() {
           </TabsList>
 
           <TabsContent value="sources" className="px-4">
-            <TrafficSourceBarChart data={sourcesData} />
+            <TrafficSourceBarChart config={chartConfig} data={sourcesData} />
           </TabsContent>
 
           <TabsContent value="campaigns" className="px-4">
-            <TrafficSourceBarChart data={campaignsData} />
+            <TrafficSourceBarChart config={chartConfig} data={campaignsData} />
           </TabsContent>
           <TabsContent value="referrers" className="px-4">
-            <TrafficSourceBarChart data={referrersData} />
+            <TrafficSourceBarChart config={chartConfig} data={referrersData} />
           </TabsContent>
         </Tabs>
       </CardContent>
