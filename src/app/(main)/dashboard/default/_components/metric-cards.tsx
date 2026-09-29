@@ -2,8 +2,11 @@ import { DollarSign, TrendingDown, TrendingUp, UserPlus, Users, Waves } from "lu
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getT } from "@/lib/i18n/server";
 
-export function MetricCards() {
+export async function MetricCards() {
+  const t = await getT();
+
   return (
     <div className="grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs xl:grid-cols-4 dark:*:data-[slot=card]:bg-card">
       <Card>
@@ -13,7 +16,7 @@ export function MetricCards() {
               <DollarSign className="size-4" />
             </div>
           </CardTitle>
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>{t("dashboard.default.metric.totalRevenue")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -23,7 +26,7 @@ export function MetricCards() {
               +12.5%
             </Badge>
           </div>
-          <p className="text-muted-foreground text-sm">Visitors for the last 6 months</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.default.metric.visitorsLast6Months")}</p>
         </CardContent>
       </Card>
 
@@ -34,7 +37,7 @@ export function MetricCards() {
               <UserPlus className="size-4" />
             </div>
           </CardTitle>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>{t("dashboard.default.metric.newCustomers")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -44,7 +47,7 @@ export function MetricCards() {
               -20%
             </Badge>
           </div>
-          <p className="text-muted-foreground text-sm">Acquisition needs attention</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.default.metric.acquisitionNeedsAttention")}</p>
         </CardContent>
       </Card>
 
@@ -55,7 +58,7 @@ export function MetricCards() {
               <Users className="size-4" />
             </div>
           </CardTitle>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>{t("dashboard.default.metric.activeAccounts")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -65,7 +68,7 @@ export function MetricCards() {
               +12.5%
             </Badge>
           </div>
-          <p className="text-muted-foreground text-sm">Engagement exceeds targets</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.default.metric.engagementExceedsTargets")}</p>
         </CardContent>
       </Card>
 
@@ -76,7 +79,7 @@ export function MetricCards() {
               <Waves className="size-4" />
             </div>
           </CardTitle>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>{t("dashboard.default.metric.growthRate")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -86,7 +89,7 @@ export function MetricCards() {
               +4.5%
             </Badge>
           </div>
-          <p className="text-muted-foreground text-sm">Meets growth projections</p>
+          <p className="text-muted-foreground text-sm">{t("dashboard.default.metric.meetsGrowthProjections")}</p>
         </CardContent>
       </Card>
     </div>

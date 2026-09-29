@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 
 const chartValues = [
   { newCustomers: 23840, activeAccounts: 6630, returningUsers: 4880 },
@@ -214,59 +215,64 @@ const chartData = chartValues.map((point, index) => ({
   ...point,
 }));
 
-const chartConfig = {
-  newCustomers: {
-    label: "New Customers",
-    color: "var(--chart-1)",
-  },
-  activeAccounts: {
-    label: "Active Accounts",
-    color: "var(--chart-2)",
-  },
-  returningUsers: {
-    label: "Returning Users",
-    color: "var(--chart-3)",
-  },
-} satisfies ChartConfig;
-
 export function PerformanceOverview() {
+  const { t } = useI18n();
+
+  // 图例与 tooltip 的标签要跟着语言走，所以从模块级挪进组件内
+  const chartConfig = {
+    newCustomers: {
+      label: t("dashboard.default.metric.newCustomers"),
+      color: "var(--chart-1)",
+    },
+    activeAccounts: {
+      label: t("dashboard.default.metric.activeAccounts"),
+      color: "var(--chart-2)",
+    },
+    returningUsers: {
+      label: t("dashboard.default.performance.returningUsers"),
+      color: "var(--chart-3)",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle className="leading-none">Customer Activity</CardTitle>
+        <CardTitle className="leading-none">{t("dashboard.default.performance.customerActivity")}</CardTitle>
         <CardDescription>
-          <span className="@[540px]/card:block hidden">Customer activity for the last 3 months</span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
+          <span className="@[540px]/card:block hidden">
+            {t("dashboard.default.performance.customerActivityLast3Months")}
+          </span>
+          <span className="@[540px]/card:hidden">{t("common.time.last3Months")}</span>
         </CardDescription>
         <CardAction className="flex items-center gap-2">
           <Select defaultValue="quarter">
             <SelectTrigger size="sm" className="w-28">
-              <SelectValue placeholder="3 months" />
+              <SelectValue placeholder={t("dashboard.default.performance.threeMonths")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Period</SelectLabel>
-                <SelectItem value="quarter">3 months</SelectItem>
+                <SelectLabel>{t("dashboard.default.performance.period")}</SelectLabel>
+                <SelectItem value="quarter">{t("dashboard.default.performance.threeMonths")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
 
           <Select defaultValue="all">
             <SelectTrigger size="sm" className="w-32">
-              <SelectValue placeholder="All segments" />
+              <SelectValue placeholder={t("dashboard.default.performance.allSegments")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Segments</SelectLabel>
-                <SelectItem value="all">All segments</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="organic">Organic</SelectItem>
+                <SelectLabel>{t("dashboard.default.performance.segments")}</SelectLabel>
+                <SelectItem value="all">{t("dashboard.default.performance.allSegments")}</SelectItem>
+                <SelectItem value="paid">{t("common.options.paid")}</SelectItem>
+                <SelectItem value="organic">{t("dashboard.default.performance.organic")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
 
           <Button variant="outline" size="sm">
-            View report
+            {t("dashboard.default.performance.viewReport")}
           </Button>
         </CardAction>
       </CardHeader>
