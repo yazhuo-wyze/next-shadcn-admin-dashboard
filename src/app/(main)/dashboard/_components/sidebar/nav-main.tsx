@@ -27,6 +27,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { cn } from "@/lib/utils";
 import type {
   NavBadge,
@@ -84,6 +85,7 @@ function hasSubItems(item: NavMainItem): item is NavMainParentItem {
 
 export function NavMain({ items }: NavMainProps) {
   const path = usePathname();
+  const { t } = useI18n();
 
   const isItemActive = (item: NavMainItem) => {
     if (hasSubItems(item)) {
@@ -108,11 +110,11 @@ export function NavMain({ items }: NavMainProps) {
           <SidebarMenu>
             <SidebarMenuItem className="flex items-center gap-2">
               <SidebarMenuButton
-                tooltip="Quick Create"
+                tooltip={t("shell.quickCreate")}
                 className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
               >
                 <PlusCircleIcon />
-                <span>Quick Create</span>
+                <span>{t("shell.quickCreate")}</span>
               </SidebarMenuButton>
               <Button
                 size="icon"
@@ -120,7 +122,7 @@ export function NavMain({ items }: NavMainProps) {
                 variant="outline"
               >
                 <MailIcon />
-                <span className="sr-only">Inbox</span>
+                <span className="sr-only">{t("shell.inbox")}</span>
               </Button>
             </SidebarMenuItem>
           </SidebarMenu>

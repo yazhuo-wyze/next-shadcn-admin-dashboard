@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { getInitials } from "@/lib/utils";
 
 export function NavUser({
@@ -25,6 +26,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const { t } = useI18n();
 
   return (
     <SidebarMenu>
@@ -68,21 +70,21 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <CircleUser />
-                Account
+                {t("shell.account")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Billing
+                {t("shell.billing")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <MessageSquareDot />
-                Notifications
+                {t("shell.notifications")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              Log out
+              {t("shell.logout")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

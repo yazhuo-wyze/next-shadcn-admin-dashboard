@@ -107,6 +107,14 @@ export const zhCN = {
     billing: "账单",
     settings: "设置",
     commands: "命令",
+    quickCreate: "快速新建",
+    inbox: "收件箱",
+  },
+
+  support: {
+    title: "还想要更多功能？",
+    body: "欢迎提 issue，或通过以下方式联系我：",
+    ctaX: "在 X 上联系我",
   },
 
   search: {

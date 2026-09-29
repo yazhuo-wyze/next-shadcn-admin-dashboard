@@ -105,6 +105,14 @@ export const en = {
     billing: "Billing",
     settings: "Settings",
     commands: "Commands",
+    quickCreate: "Quick Create",
+    inbox: "Inbox",
+  },
+
+  support: {
+    title: "Looking for something more?",
+    body: "Open an issue or do reach out to me on",
+    ctaX: "Reach out on X",
   },
 
   search: {

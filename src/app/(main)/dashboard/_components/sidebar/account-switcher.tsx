@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import { cn, getInitials } from "@/lib/utils";
 
 export function AccountSwitcher({
@@ -27,6 +28,7 @@ export function AccountSwitcher({
   }>;
 }) {
   const [activeUser, setActiveUser] = useState(users[0]);
+  const { t } = useI18n();
 
   if (!activeUser) {
     return null;
@@ -72,21 +74,21 @@ export function AccountSwitcher({
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <BadgeCheck />
-            Account
+            {t("shell.account")}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <CreditCard />
-            Billing
+            {t("shell.billing")}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Bell />
-            Notifications
+            {t("shell.notifications")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOut />
-          Log out
+          {t("shell.logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
