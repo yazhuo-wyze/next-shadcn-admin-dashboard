@@ -17,8 +17,9 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { useI18n } from "@/lib/i18n/i18n-provider";
 import type { NavMainItem } from "@/navigation/sidebar/sidebar-items";
-import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
+import { getSidebarItems } from "@/navigation/sidebar/sidebar-items";
 
 type SearchItem = {
   id: string;
@@ -30,44 +31,51 @@ type SearchItem = {
   newTab?: boolean;
 };
 
-const sidebarGroupLabels = new Set(sidebarItems.flatMap((group) => (group.label ? [group.label] : [])));
-
-function getSubItemGroup(groupLabel: string | undefined, itemTitle: string) {
-  return sidebarGroupLabels.has(itemTitle) ? (groupLabel ?? "Other") : itemTitle;
+function getSubItemGroup(
+  sidebarGroupLabels: Set<string>,
+  groupLabel: string | undefined,
+  itemTitle: string,
+  other: string,
+) {
+  return sidebarGroupLabels.has(itemTitle) ? (groupLabel ?? other) : itemTitle;
 }
 
-const searchItems: SearchItem[] = sidebarItems.flatMap((group) =>
-  group.items.flatMap((item) => {
-    if (item.subItems) {
-      return item.subItems.map((sub) => ({
-        id: sub.id,
-        group: getSubItemGroup(group.label, item.title),
-        label: sub.title,
-        url: sub.url,
-        icon: item.icon,
-        disabled: sub.disabled,
-        newTab: sub.newTab,
-      }));
-    }
-    return [
-      {
-        id: item.id,
-        group: group.label ?? "Other",
-        label: item.title,
-        url: item.url,
-        icon: item.icon,
-        disabled: item.disabled,
-        newTab: item.newTab,
-      },
-    ];
-  }),
-);
+/** 从（已本地化的）导航数据里摊平成搜索结果条目。 */
+function buildSearchItems(navGroups: ReturnType<typeof getSidebarItems>, other: string): SearchItem[] {
+  const groups = navGroups;
+  const sidebarGroupLabels = new Set(groups.flatMap((group) => (group.label ? [group.label] : [])));
+
+  return groups.flatMap((group) =>
+    group.items.flatMap((item) => {
+      if (item.subItems) {
+        return item.subItems.map((sub) => ({
+          id: sub.id,
+          group: getSubItemGroup(sidebarGroupLabels, group.label, item.title, other),
+          label: sub.title,
+          url: sub.url,
+          icon: item.icon,
+          disabled: sub.disabled,
+          newTab: sub.newTab,
+        }));
+      }
+      return [
+        {
+          id: item.id,
+          group: group.label ?? other,
+          label: item.title,
+          url: item.url,
+          icon: item.icon,
+          disabled: item.disabled,
+          newTab: item.newTab,
+        },
+      ];
+    }),
+  );
+}
 
 function getAvailableItems(items: SearchItem[]) {
   return items.filter((item) => !item.disabled && !item.url.includes("coming-soon"));
 }
-
-const recommendations = getAvailableItems(searchItems);
 
 function groupBy(items: SearchItem[]) {
   const groups = [...new Set(items.map((item) => item.group))];
@@ -78,9 +86,16 @@ function groupBy(items: SearchItem[]) {
 }
 
 export function SearchDialog() {
+  const { t } = useI18n();
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const router = useRouter();
+
+  // 导航数据要跟着语言变，所以搜索结果也在组件内按当前语言重算
+  const { searchItems, recommendations } = React.useMemo(() => {
+    const items = buildSearchItems(getSidebarItems(t), t("search.other"));
+    return { searchItems: items, recommendations: getAvailableItems(items) };
+  }, [t]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -138,16 +153,16 @@ export function SearchDialog() {
         className="px-0! font-normal text-muted-foreground hover:no-underline"
       >
         <Search data-icon="inline-start" />
-        Search
+        {t("search.trigger")}
         <kbd className="inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-medium text-[10px]">
           <span className="text-xs">⌘</span>J
         </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <Command>
-          <CommandInput placeholder="Search dashboards, users, and more…" value={query} onValueChange={setQuery} />
+          <CommandInput placeholder={t("search.placeholder")} value={query} onValueChange={setQuery} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t("search.empty")}</CommandEmpty>
             {query ? renderGroups(searchItems) : renderGroups(recommendations)}
           </CommandList>
         </Command>

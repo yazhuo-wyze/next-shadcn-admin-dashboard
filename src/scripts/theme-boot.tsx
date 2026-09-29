@@ -56,8 +56,13 @@ export function ThemeBootScript() {
           root.setAttribute(definition.attribute, value);
         });
 
-        var mode = preferences.theme_mode;
-        var resolvedMode =
+        // 语言也要在 hydration 之前落到 <html lang> 上：
+        // 否则英文用户会被浏览器按中文处理（断词、朗读、表单校验提示都会不对）。
+        if (preferences.locale) {
+          root.lang = preferences.locale;
+        }
+
+        var mode = preferences.theme_mode;        var resolvedMode =
           mode === "system" && window.matchMedia
             ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
             : mode === "dark"

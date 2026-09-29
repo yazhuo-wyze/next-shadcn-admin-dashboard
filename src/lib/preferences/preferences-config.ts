@@ -12,6 +12,7 @@
  */
 
 import { fontKeys } from "@/lib/fonts/registry";
+import { LOCALE_VALUES } from "@/lib/i18n/locales";
 
 import {
   CONTENT_LAYOUT_VALUES,
@@ -53,6 +54,17 @@ function defineSSRPreference<
 }
 
 export const PREFERENCE_REGISTRY = {
+  /**
+   * 界面语言。用 client-cookie 持久化，所以服务端也能在渲染时读到，
+   * 服务端组件渲染的文案可以跟随用户选择（见 `@/lib/i18n/server`）。
+   */
+  locale: definePreference({
+    values: LOCALE_VALUES,
+    defaultValue: "zh-CN",
+    persistence: "client-cookie",
+    attribute: "data-locale",
+  }),
+
   theme_mode: definePreference({
     values: THEME_MODE_VALUES,
     defaultValue: "light",

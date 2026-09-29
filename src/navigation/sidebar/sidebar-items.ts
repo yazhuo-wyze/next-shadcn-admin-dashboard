@@ -21,6 +21,8 @@ import {
   Users,
 } from "lucide-react";
 
+import type { TFunction } from "@/lib/i18n/dictionary";
+
 export type NavBadge = "new" | "soon";
 
 export interface NavSubItem {
@@ -59,162 +61,164 @@ export interface NavGroup {
   items: NavMainItem[];
 }
 
-export const sidebarItems: NavGroup[] = [
-  {
-    id: 1,
-    label: "Dashboards",
-    items: [
-      {
-        id: "default",
-        title: "Default",
-        url: "/dashboard/default",
-        icon: LayoutDashboard,
-      },
-      {
-        id: "crm",
-        title: "CRM",
-        url: "/dashboard/crm",
-        icon: ChartBar,
-      },
-      {
-        id: "finance",
-        title: "Finance",
-        url: "/dashboard/finance",
-        icon: Banknote,
-      },
-      {
-        id: "analytics",
-        title: "Analytics",
-        url: "/dashboard/analytics",
-        icon: Gauge,
-      },
-      {
-        id: "productivity",
-        title: "Productivity",
-        url: "/dashboard/productivity",
-        icon: ListTodo,
-      },
-      {
-        id: "ecommerce",
-        title: "E-commerce",
-        url: "/dashboard/ecommerce",
-        icon: ShoppingBag,
-      },
-      {
-        id: "academy",
-        title: "Academy",
-        url: "/dashboard/academy",
-        icon: GraduationCap,
-      },
-      {
-        id: "logistics",
-        title: "Logistics",
-        url: "/dashboard/logistics",
-        icon: Forklift,
-      },
-      {
-        id: "infrastructure",
-        title: "Infrastructure",
-        url: "/dashboard/infrastructure",
-        icon: Server,
-        badge: "new",
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: "Pages",
-    items: [
-      {
-        id: "email",
-        title: "Email",
-        url: "/dashboard/mail",
-        icon: Mail,
-      },
-      {
-        id: "chat",
-        title: "Chat",
-        url: "/dashboard/chat",
-        icon: MessageSquare,
-      },
-      {
-        id: "calendar",
-        title: "Calendar",
-        url: "/dashboard/calendar",
-        icon: Calendar,
-      },
-      {
-        id: "kanban",
-        title: "Kanban",
-        url: "/dashboard/kanban",
-        icon: Kanban,
-      },
-      {
-        id: "tasks",
-        title: "Tasks",
-        url: "/dashboard/tasks",
-        icon: CheckSquare,
-        badge: "new",
-      },
-      {
-        id: "invoice",
-        title: "Invoice",
-        url: "/dashboard/invoice",
-        icon: ReceiptText,
-      },
-      {
-        id: "users",
-        title: "Users",
-        url: "/dashboard/users",
-        icon: Users,
-      },
-      {
-        id: "roles",
-        title: "Roles",
-        url: "/dashboard/roles",
-        icon: Lock,
-      },
-      {
-        id: "authentication",
-        title: "Authentication",
-        icon: Fingerprint,
-        subItems: [
-          { id: "auth-login-v1", title: "Login v1", url: "/auth/v1/login", newTab: true },
-          { id: "auth-login-v2", title: "Login v2", url: "/auth/v2/login", newTab: true },
-          { id: "auth-register-v1", title: "Register v1", url: "/auth/v1/register", newTab: true },
-          { id: "auth-register-v2", title: "Register v2", url: "/auth/v2/register", newTab: true },
-        ],
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: "Legacy",
-    items: [
-      {
-        id: "legacy-dashboards",
-        title: "Dashboards",
-        subItems: [
-          { id: "legacy-default", title: "Default V1", url: "/dashboard/default-v1" },
-          { id: "legacy-crm", title: "CRM V1", url: "/dashboard/crm-v1" },
-          { id: "legacy-finance", title: "Finance V1", url: "/dashboard/finance-v1" },
-          { id: "legacy-analytics", title: "Analytics V1", url: "/dashboard/analytics-v1" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 4,
-    label: "Misc",
-    items: [
-      {
-        id: "others",
-        title: "Others",
-        url: "/dashboard/coming-soon",
-        icon: SquareArrowUpRight,
-        badge: "soon",
-        disabled: true,
-      },
-    ],
-  },
-];
+export function getSidebarItems(t: TFunction): NavGroup[] {
+  return [
+    {
+      id: 1,
+      label: t("nav.group.dashboards"),
+      items: [
+        {
+          id: "default",
+          title: t("nav.item.default"),
+          url: "/dashboard/default",
+          icon: LayoutDashboard,
+        },
+        {
+          id: "crm",
+          title: t("nav.item.crm"),
+          url: "/dashboard/crm",
+          icon: ChartBar,
+        },
+        {
+          id: "finance",
+          title: t("nav.item.finance"),
+          url: "/dashboard/finance",
+          icon: Banknote,
+        },
+        {
+          id: "analytics",
+          title: t("nav.item.analytics"),
+          url: "/dashboard/analytics",
+          icon: Gauge,
+        },
+        {
+          id: "productivity",
+          title: t("nav.item.productivity"),
+          url: "/dashboard/productivity",
+          icon: ListTodo,
+        },
+        {
+          id: "ecommerce",
+          title: t("nav.item.ecommerce"),
+          url: "/dashboard/ecommerce",
+          icon: ShoppingBag,
+        },
+        {
+          id: "academy",
+          title: t("nav.item.academy"),
+          url: "/dashboard/academy",
+          icon: GraduationCap,
+        },
+        {
+          id: "logistics",
+          title: t("nav.item.logistics"),
+          url: "/dashboard/logistics",
+          icon: Forklift,
+        },
+        {
+          id: "infrastructure",
+          title: t("nav.item.infrastructure"),
+          url: "/dashboard/infrastructure",
+          icon: Server,
+          badge: "new",
+        },
+      ],
+    },
+    {
+      id: 2,
+      label: t("nav.group.pages"),
+      items: [
+        {
+          id: "email",
+          title: t("nav.item.email"),
+          url: "/dashboard/mail",
+          icon: Mail,
+        },
+        {
+          id: "chat",
+          title: t("nav.item.chat"),
+          url: "/dashboard/chat",
+          icon: MessageSquare,
+        },
+        {
+          id: "calendar",
+          title: t("nav.item.calendar"),
+          url: "/dashboard/calendar",
+          icon: Calendar,
+        },
+        {
+          id: "kanban",
+          title: t("nav.item.kanban"),
+          url: "/dashboard/kanban",
+          icon: Kanban,
+        },
+        {
+          id: "tasks",
+          title: t("nav.item.tasks"),
+          url: "/dashboard/tasks",
+          icon: CheckSquare,
+          badge: "new",
+        },
+        {
+          id: "invoice",
+          title: t("nav.item.invoice"),
+          url: "/dashboard/invoice",
+          icon: ReceiptText,
+        },
+        {
+          id: "users",
+          title: t("nav.item.users"),
+          url: "/dashboard/users",
+          icon: Users,
+        },
+        {
+          id: "roles",
+          title: t("nav.item.roles"),
+          url: "/dashboard/roles",
+          icon: Lock,
+        },
+        {
+          id: "authentication",
+          title: t("nav.item.authentication"),
+          icon: Fingerprint,
+          subItems: [
+            { id: "auth-login-v1", title: t("nav.item.loginV1"), url: "/auth/v1/login", newTab: true },
+            { id: "auth-login-v2", title: t("nav.item.loginV2"), url: "/auth/v2/login", newTab: true },
+            { id: "auth-register-v1", title: t("nav.item.registerV1"), url: "/auth/v1/register", newTab: true },
+            { id: "auth-register-v2", title: t("nav.item.registerV2"), url: "/auth/v2/register", newTab: true },
+          ],
+        },
+      ],
+    },
+    {
+      id: 3,
+      label: t("nav.group.legacy"),
+      items: [
+        {
+          id: "legacy-dashboards",
+          title: t("nav.item.dashboards"),
+          subItems: [
+            { id: "legacy-default", title: t("nav.item.defaultV1"), url: "/dashboard/default-v1" },
+            { id: "legacy-crm", title: t("nav.item.crmV1"), url: "/dashboard/crm-v1" },
+            { id: "legacy-finance", title: t("nav.item.financeV1"), url: "/dashboard/finance-v1" },
+            { id: "legacy-analytics", title: t("nav.item.analyticsV1"), url: "/dashboard/analytics-v1" },
+          ],
+        },
+      ],
+    },
+    {
+      id: 4,
+      label: t("nav.group.misc"),
+      items: [
+        {
+          id: "others",
+          title: t("nav.item.others"),
+          url: "/dashboard/coming-soon",
+          icon: SquareArrowUpRight,
+          badge: "soon",
+          disabled: true,
+        },
+      ],
+    },
+  ];
+}

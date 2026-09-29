@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { APP_CONFIG } from "@/config/app-config";
 import { fontVars } from "@/lib/fonts/registry";
+import { I18nProvider } from "@/lib/i18n/i18n-provider";
 import { PREFERENCE_DEFAULTS } from "@/lib/preferences/preferences-config";
 import { ThemeBootScript } from "@/scripts/theme-boot";
 import { PreferencesStoreProvider } from "@/stores/preferences/preferences-provider";
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     PREFERENCE_DEFAULTS;
   return (
     <html
-      lang="en"
+      lang="zh-CN"
       data-theme-mode={theme_mode}
       data-theme-preset={theme_preset}
       data-content-layout={content_layout}
@@ -39,8 +40,10 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
       <body className={`${fontVars} min-h-screen antialiased`}>
         <TooltipProvider>
           <PreferencesStoreProvider initialValues={PREFERENCE_DEFAULTS}>
-            {children}
-            <Toaster />
+            <I18nProvider>
+              {children}
+              <Toaster />
+            </I18nProvider>
           </PreferencesStoreProvider>
         </TooltipProvider>
       </body>

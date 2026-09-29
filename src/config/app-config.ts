@@ -7,8 +7,8 @@ export const APP_CONFIG = {
   version: packageJson.version,
   copyright: `© ${currentYear}, Studio Admin.`,
   meta: {
-    title: "Studio Admin - Modern Next.js Dashboard Starter Template",
+    title: "Studio Admin - 现代化 Next.js 后台管理系统模板",
     description:
-      "Studio Admin is a modern, open-source dashboard starter template built with Next.js 16, Tailwind CSS v4, and shadcn/ui. Perfect for SaaS apps, admin panels, and internal tools—fully customizable and production-ready.",
+      "Studio Admin 是一个现代化、开源的仪表盘起步模板，基于 Next.js 16、Tailwind CSS v4 与 shadcn/ui 构建。适用于 SaaS 应用、管理后台与内部工具，可完全自定义，开箱即用。",
   },
 };

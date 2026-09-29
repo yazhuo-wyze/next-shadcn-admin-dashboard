@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Link from "next/link";
 
 import { CircleHelp, ClipboardList, Command, Database, File, Search, Settings } from "lucide-react";
@@ -16,7 +18,8 @@ import {
 } from "@/components/ui/sidebar";
 import { APP_CONFIG } from "@/config/app-config";
 import { rootUser } from "@/data/users";
-import { sidebarItems } from "@/navigation/sidebar/sidebar-items";
+import { useI18n } from "@/lib/i18n/i18n-provider";
+import { getSidebarItems } from "@/navigation/sidebar/sidebar-items";
 import { usePreferencesStore } from "@/stores/preferences/preferences-provider";
 
 import { NavMain } from "./nav-main";
@@ -61,6 +64,9 @@ const _data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { t } = useI18n();
+  const navItems = useMemo(() => getSidebarItems(t), [t]);
+
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
     useShallow((s) => ({
       sidebarVariant: s.values.sidebar_variant,
@@ -87,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarItems} />
+        <NavMain items={navItems} />
         {/* <NavDocuments items={data.documents} /> */}
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
